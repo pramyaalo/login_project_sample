@@ -32,12 +32,18 @@ dependencies:
     sdk: flutter
 
 
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  carousel_slider: ^4.0.0-nullsafety.0
+  fl_chart: ^0.62.0
+  pie_chart: ^5.1.0
   quickalert: ^1.0.0
+  image_picker: ^0.8.4+3
   http: ^0.13.5
   shared_preferences: ^2.0.8
+
   fluttertoast: ^8.0.9
 dev_dependencies:
   flutter_test:
@@ -81,6 +87,48 @@ flutter:
     -  assets/images/zipcode_icon.webp
     -  assets/images/locationjpg.jpg
     -  assets/images/password_icon.png
+    -   assets/images/rupee.png
+    -   assets/images/incomeiconpng.png
+    -    assets/images/tickiconpng.png
+    -    assets/images/orderpng.png
+    -    assets/images/direct_income.png
+    -   assets/images/bonus.png
+    -     assets/images/report.png
+    -   assets/images/franchise_report.png
+    -   assets/images/franchise.png
+    -   assets/images/franchise_income.png
+    -   assets/images/refresh2.png
+    -    assets/images/account_balance.png
+    -   assets/images/withdraw2.png
+    -   assets/images/profile_icon.png
+    -   assets/images/notification_icon.png
+    -   assets/images/chat.png
+    -    assets/images/buy.png
+    -   assets/images/myadpacks.png
+    -    assets/images/transaction_png.png
+    -     assets/images/pending_png.webp
+    -     assets/images/report_png.png
+    -   assets/images/history.png
+    -     assets/images/orderpng2.webp
+    -    assets/images/referearn.png
+    -    assets/images/share.png
+    -     assets/images/email_icon.png
+    -    assets/images/phone_icon.png
+    -    assets/images/description.png
+    -    assets/images/street_icon.png
+    -   assets/images/country_icon.png
+    -    assets/images/right_arrow.png
+    -     assets/images/blankprofile.webp
+    -    assets/images/document.png
+    -    assets/images/greentick.png
+    -     assets/images/rating.png
+    -     assets/images/box.png
+    -   assets/images/id.png
+    -    assets/images/transfer.png
+    -      assets/images/money.png
+    -     assets/images/passport.png
+    -     assets/images/ipassport.png
+    -    assets/images/photoface.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

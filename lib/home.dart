@@ -4,7 +4,9 @@ import 'dart:developer';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:login_project_sample/Models/LoginModels.dart';
+import 'package:login_project_sample/BankDetails.dart';
+import 'package:login_project_sample/DashBoard.dart';
+import 'package:login_project_sample/Models/LoginModel.dart';
 import 'package:login_project_sample/signup.dart';
 import 'package:login_project_sample/utils/shared_preferences.dart';
 import 'package:quickalert/quickalert.dart';
@@ -63,6 +65,7 @@ class _MyLoginPageState extends State<LoginApp> {
                   height: 40,
                   width: 310,
                   child: TextField(
+                    controller: _userNameController,
                     decoration: InputDecoration(
                       hintText: 'Enter Username',
                       hintStyle: TextStyle(fontFamily: "Montserrat"),
@@ -77,13 +80,35 @@ class _MyLoginPageState extends State<LoginApp> {
                 SizedBox(
                   height: 40,
                   width: 310,
-                  child: PasswordField(),
+                  child: TextField(
+                    controller: _passwordController,
+                    style: TextStyle(fontFamily: "Montserrat", fontSize: 15),
+                    decoration: InputDecoration(
+                      hintText: 'Enter Password',
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.circular(1.0),
+                      ),
+                      suffixIcon: GestureDetector(
+                        child: showPassword
+                            ? Icon(Icons.visibility)
+                            : Icon(Icons.visibility_off),
+                      ),
+                    ),
+                    obscureText: showPassword,
+                  ),
                 ),
                 SizedBox(height: 10),
                 InkWell(
                   onTap: () {
                     print('Alert Dialog Clicked');
-                    _showDialog(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => bankdetails()),
+                    );
+                    //_showDialog(context);
                   },
                   child: Text(
                     'Forgot Password',
@@ -106,24 +131,55 @@ class _MyLoginPageState extends State<LoginApp> {
                               '&password=' +
                               _passwordController.text);
                       __futureLogin?.then((value) {
+                        print('Response body: ${value.body}');
+
                         String jsonResponse =
                             ResponseHandler.parseData(value.body);
-                        log('jsonResponse12 : $jsonResponse');
+
+                        print('JSON Response: ${jsonResponse}');
 
                         try {
-                          Map<String, dynamic> map = json.decode(jsonResponse);
-                          if (map.isNotEmpty) {
-                            String username = map[0]['Username'];
-                            print('Username: $username');
-                          }
+                          //Map<String, dynamic> map = json.decode(jsonResponse);
+                          List<dynamic> decodedJson = json.decode(jsonResponse);
+                          print('decodedJson: ${decodedJson}');
+                          LoginModel fm = LoginModel.fromJson(decodedJson[0]);
+                          print('decodedJson[0]: ${decodedJson[0]}');
 
-                          if (Navigator.canPop(context)) {
-                            Navigator.pop(context);
-                          }
+                          Prefs.saveStringValue(
+                              Prefs.PREFS_USER_TYPE, fm.UserType);
+                          Prefs.saveStringValue(
+                              Prefs.PREFS_USER_TYPE_ID, fm.UserTypeId);
+                          Prefs.saveStringValue(Prefs.PREFS_USER_ID, fm.UserID);
+                          print('USERID' + fm.UserID);
+                          Prefs.saveStringValue(
+                              Prefs.PREFS_USER_NAME, fm.Username);
+                          Prefs.saveStringValue(Prefs.PREFS_NAME, fm.Name);
+                          Prefs.saveStringValue(
+                              Prefs.PREFS_PASSWORD, fm.Password);
+                          Prefs.saveStringValue(
+                              Prefs.PREFS_TRANSACTION_PASSWORD,
+                              fm.TransactionPassword);
+                          Prefs.saveStringValue(Prefs.EMAIL, fm.Email);
+                          Prefs.saveStringValue(Prefs.PREFS_MOBILE, fm.Mobile);
+                          Prefs.saveStringValue(Prefs.PREFS_TIME_IN, fm.Timein);
+                          Prefs.saveStringValue(
+                              Prefs.PREFS_TIME_OUT, fm.Timeout);
+                          Prefs.saveStringValue(Prefs.STATUS, fm.Status);
+
+                          Prefs.saveStringValue(Prefs.PREFS_TWO, fm.Two);
+                          Prefs.saveStringValue(Prefs.PREFS_PHOTO, fm.Photo);
+                          Prefs.saveStringValue(Prefs.PREFS_PAYPAL, fm.Paypal);
+                          Prefs.saveStringValue(Prefs.PREFS_PAYZA, fm.Payza);
+                          Prefs.saveStringValue(
+                              Prefs.PREFS_DATE_CREATED, fm.Datecreated);
+                          Prefs.saveStringValue(
+                              Prefs.PREFS_CURRENCY, fm.Currency);
+
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (BuildContext context) => signup()));
+                                  builder: (BuildContext context) =>
+                                      Dashboard()));
                         } catch (error) {
                           Fluttertoast.showToast(msg: "Login Failed");
                           log(error.toString());
