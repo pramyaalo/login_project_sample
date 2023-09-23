@@ -2,14 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
-import 'package:login_project_sample/About.dart';
-import 'package:login_project_sample/BankDetails.dart';
-import 'package:login_project_sample/CashWalletHistory.dart';
 import 'package:login_project_sample/ForgotPassword.dart';
-import 'package:login_project_sample/NavigationDrawer.dart';
-import 'package:login_project_sample/Payouts.dart';
-import 'package:login_project_sample/Settings.dart';
 
 class EditProfile extends StatefulWidget {
   @override

@@ -38,12 +38,11 @@ dependencies:
   cupertino_icons: ^1.0.2
   carousel_slider: ^4.0.0-nullsafety.0
   fl_chart: ^0.62.0
-  pie_chart: ^5.1.0
   quickalert: ^1.0.0
   image_picker: ^0.8.4+3
   http: ^0.13.5
   shared_preferences: ^2.0.8
-
+  flutter_bloc: ^8.0.0
   fluttertoast: ^8.0.9
 dev_dependencies:
   flutter_test:
@@ -129,6 +128,14 @@ flutter:
     -     assets/images/passport.png
     -     assets/images/ipassport.png
     -    assets/images/photoface.png
+    -     assets/images/moneytransfer.png
+    -    assets/images/cartgreen.png
+    -   assets/images/wallet.webp
+    - assets/images/messages_new.webp
+    - assets/images/newsec.webp
+    - assets/images/pay.webp
+    - assets/images/share_icon.webp
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -5,19 +5,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:login_project_sample/Models/BinaryIncomeReportModel.dart';
+import 'package:login_project_sample/Models/FundWalletHistoryModel.dart';
 import 'package:login_project_sample/Models/QCashWalletHistoryModel.dart';
 import 'package:login_project_sample/Models/WalletCashHistoryModel.dart';
 import 'package:login_project_sample/utils/response_handler.dart';
 import 'package:login_project_sample/utils/shared_preferences.dart';
 
-class QCashWalletHistory extends StatefulWidget {
-  const QCashWalletHistory({Key? key}) : super(key: key);
+class FundTransferHistory extends StatefulWidget {
+  const FundTransferHistory({Key? key}) : super(key: key);
 
   @override
   _CabsListScreenState createState() => _CabsListScreenState();
 }
 
-class _CabsListScreenState extends State<QCashWalletHistory> {
+class _CabsListScreenState extends State<FundTransferHistory> {
   String _selectedMonth = 'January'; // Default selected month
 
   List<String> months = [
@@ -82,11 +83,12 @@ class _CabsListScreenState extends State<QCashWalletHistory> {
     _selectedYear = year[0];
   }
 
-  static Future<List<QCashWalletHistoryModel>?> getPartPaymentData() async {
+  static Future<List<FundWalletHistoryModel>?> getPartPaymentData() async {
     String? memberId = await Prefs.getStringValue(Prefs.PREFS_USER_ID);
-    List<QCashWalletHistoryModel> bookingCardData = [];
+    print('json : ${memberId}');
+    List<FundWalletHistoryModel> bookingCardData = [];
     Future<http.Response>? __futureLabels = ResponseHandler.performPost(
-        "GetQuCashWalletAddHistory",
+        "GetFundTransferHistory",
         "MemberId=$memberId&Month=07&Year=2021&PageIndex=1");
 
     return await __futureLabels?.then((value) {
@@ -99,8 +101,8 @@ class _CabsListScreenState extends State<QCashWalletHistory> {
         print('json : ${decodedJson}');
 
         for (int i = 0; i < decodedJson.length; i++) {
-          QCashWalletHistoryModel fm =
-              QCashWalletHistoryModel.fromJson(decodedJson[i]);
+          FundWalletHistoryModel fm =
+              FundWalletHistoryModel.fromJson(decodedJson[i]);
           bookingCardData.add(fm);
           //print('my FM: ${fm.Username}');
           //vanthu vanthu vanthuuuuu ta int strng thn thppa
@@ -129,7 +131,7 @@ class _CabsListScreenState extends State<QCashWalletHistory> {
             },
           ),
           title: const Text(
-            'QCash Wallet Report',
+            'Fund Wallet History',
             style: TextStyle(
                 color: Colors.black,
                 fontSize: 15,
@@ -148,7 +150,7 @@ class _CabsListScreenState extends State<QCashWalletHistory> {
           ],
         ),
         body: Center(
-          child: FutureBuilder<List<QCashWalletHistoryModel>?>(
+          child: FutureBuilder<List<FundWalletHistoryModel>?>(
               future: getPartPaymentData(),
               builder: (context, snapshot) {
                 if (snapshot.hasData &&
@@ -192,13 +194,8 @@ class _CabsListScreenState extends State<QCashWalletHistory> {
                                                       CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                        "CheapShop" +
-                                                            " " +
-                                                            "(" +
-                                                            snapshot
-                                                                .data![index]
-                                                                .username +
-                                                            ")",
+                                                        snapshot.data![index]
+                                                            .username,
                                                         textAlign:
                                                             TextAlign.end,
                                                         //Text(snapshot.data![index].username,
@@ -210,68 +207,13 @@ class _CabsListScreenState extends State<QCashWalletHistory> {
                                                                 FontWeight
                                                                     .bold)),
                                                     const SizedBox(
-                                                      width: 100,
-                                                    ),
-                                                    const SizedBox(
                                                       height: 4,
                                                     ),
                                                     Row(
                                                       children: [
                                                         Text(
-                                                          "Amount :" +
-                                                              " " +
-                                                              snapshot
-                                                                  .data![index]
-                                                                  .amount,
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          // Text(snapshot.data![index].message,
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  "Montserrat",
-                                                              fontSize: 13,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .normal),
-                                                        ),
-                                                        const SizedBox(
-                                                          width: 20,
-                                                        ),
-                                                        Image.asset(
-                                                          "assets/images/tickiconpng.png",
-                                                          cacheWidth: 15,
-                                                          cacheHeight: 15,
-                                                          color: Colors.red,
-                                                        ),
-                                                        Text(
-                                                            textAlign:
-                                                                TextAlign.end,
-                                                            "Cash:" +
-                                                                " " +
-                                                                snapshot
-                                                                    .data![
-                                                                        index]
-                                                                    .type,
-                                                            //Text(snapshot.data![index].username,
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    "Montserrat",
-                                                                fontSize: 12,
-                                                                color:
-                                                                    Colors.red,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold)),
-                                                      ],
-                                                    ),
-                                                    const SizedBox(
-                                                      height: 4.5,
-                                                    ),
-                                                    Row(
-                                                      children: [
-                                                        Text(
                                                           snapshot.data![index]
-                                                              .dateCreated,
+                                                              .Message,
                                                           textAlign:
                                                               TextAlign.center,
                                                           // Text(snapshot.data![index].message,
@@ -283,34 +225,6 @@ class _CabsListScreenState extends State<QCashWalletHistory> {
                                                                   FontWeight
                                                                       .normal),
                                                         ),
-                                                        const SizedBox(
-                                                          width: 60,
-                                                        ),
-                                                        Image.asset(
-                                                          "assets/images/tickiconpng.png",
-                                                          cacheWidth: 15,
-                                                          cacheHeight: 15,
-                                                          color: Colors.red,
-                                                        ),
-                                                        Text(
-                                                            textAlign:
-                                                                TextAlign.end,
-                                                            "TDS:" +
-                                                                " " +
-                                                                snapshot
-                                                                    .data![
-                                                                        index]
-                                                                    .type,
-                                                            //Text(snapshot.data![index].username,
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    "Montserrat",
-                                                                fontSize: 12,
-                                                                color:
-                                                                    Colors.red,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold)),
                                                       ],
                                                     ),
                                                     const SizedBox(
@@ -335,36 +249,54 @@ class _CabsListScreenState extends State<QCashWalletHistory> {
                                                                   horizontal: 6,
                                                                   vertical: 2),
                                                           child: const Text(
-                                                            'BINARY INCOME',
+                                                            'FUND WALLET',
                                                             style: TextStyle(
                                                                 fontSize: 11.5),
                                                           ),
                                                         ),
+                                                      ],
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 4.5,
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        Text(
+                                                          snapshot.data![index]
+                                                              .CustomerName,
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          // Text(snapshot.data![index].message,
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  "Montserrat",
+                                                              fontSize: 13,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal),
+                                                        ),
                                                         const SizedBox(
-                                                          width: 5,
+                                                          width: 40,
                                                         ),
                                                         Image.asset(
                                                           "assets/images/tickiconpng.png",
                                                           cacheWidth: 15,
                                                           cacheHeight: 15,
-                                                          color: Colors.red,
+                                                          color: Colors.green,
                                                         ),
                                                         Text(
                                                             textAlign:
                                                                 TextAlign.end,
-                                                            "Service Tax :" +
-                                                                " " +
-                                                                snapshot
-                                                                    .data![
-                                                                        index]
-                                                                    .customerName,
+                                                            snapshot
+                                                                .data![index]
+                                                                .Datecreated,
                                                             //Text(snapshot.data![index].username,
                                                             style: TextStyle(
                                                                 fontFamily:
                                                                     "Montserrat",
                                                                 fontSize: 12,
-                                                                color:
-                                                                    Colors.red,
+                                                                color: Colors
+                                                                    .green,
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .bold)),
@@ -379,14 +311,14 @@ class _CabsListScreenState extends State<QCashWalletHistory> {
                                             children: [
                                               Container(
                                                 height: 1,
-                                                width: 265,
+                                                width: 250,
                                                 // Make the Divider span the full width
                                                 child: const Divider(
                                                     thickness:
                                                         2), // Divider after GridView
                                               ),
                                               const Text(
-                                                ' Net Amount',
+                                                ' Debit Amount',
                                                 style: TextStyle(fontSize: 12),
                                               ),
                                             ],
@@ -415,14 +347,14 @@ class _CabsListScreenState extends State<QCashWalletHistory> {
                                                   width: 5,
                                                 ),
                                                 Text(
-                                                  snapshot.data![index]
-                                                      .customerName,
+                                                  snapshot
+                                                      .data![index].username,
                                                   style:
                                                       TextStyle(fontSize: 14),
                                                 ),
                                                 const SizedBox(width: 115),
                                                 Text(
-                                                  snapshot.data![index].message,
+                                                  snapshot.data![index].Amount,
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:

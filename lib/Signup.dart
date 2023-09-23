@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart'
+    show SystemChrome, SystemUiOverlayStyle, rootBundle;
 import 'package:login_project_sample/AddDispute.dart';
 import 'package:login_project_sample/BankDetails.dart';
 import 'package:login_project_sample/BinaryIncomeReport.dart';
@@ -37,8 +38,16 @@ class signup extends StatefulWidget {
 enum Gender { self, franchise }
 
 class _SignUpPageState extends State<signup> {
+  Gender? _selectedGender = Gender.self; // Set the default selection to "Self"
+  bool _isTextFieldVisible = true;
   Future<http.Response>? __futureLogin;
-  final TextEditingController _userNameController = TextEditingController();
+  String checkboxStatus = "0";
+  String checkboxStatus1 = "0";
+  bool _passwordVisible = false;
+  bool _confirmpasswordVisible = false;
+  bool _transactionpasswordVisible = false;
+  bool _confirmtransactionpasswordVisible = false;
+  final TextEditingController _ReferralId = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastnameController = TextEditingController();
@@ -50,7 +59,47 @@ class _SignUpPageState extends State<signup> {
   final TextEditingController _stateController = TextEditingController();
   final TextEditingController _pincodeController = TextEditingController();
   final TextEditingController _postalareaController = TextEditingController();
-  Gender? _selectedGender;
+  final TextEditingController _passwordcontroller = TextEditingController();
+  final TextEditingController _confirmpasswordcontroller =
+      TextEditingController();
+  final TextEditingController _transactionpasswordcontroller =
+      TextEditingController();
+  final TextEditingController _confirmtransactionpasswordcontroller =
+      TextEditingController();
+
+  String ValidateReffId = '';
+  String ValidateFName = '';
+  String ValidateLName = '';
+  String ValidateLocation = '';
+  String ValidateMobile = '';
+  String ValidateEMail = '';
+  String ValidateDOB = '';
+  String ValidateAddress1 = '';
+  String ValidateAddress2 = '';
+  String ValidateState = '';
+  String ValidateCity = '';
+  String ValidatePinCode = '';
+  String ValidatePostalArea = '';
+  String ValidatePassword = '';
+  String ValidateConfirmPassword = '';
+  String ValidateTransactionPassword = '';
+  String ValidateConfirmTransactionPassword = '';
+
+  FocusNode FocusReferralID = FocusNode();
+  FocusNode FocusFirstName = FocusNode();
+  FocusNode FocusLastName = FocusNode();
+  FocusNode FocusMoile = FocusNode();
+  FocusNode FocusEMail = FocusNode();
+  FocusNode FocusPassword = FocusNode();
+  FocusNode FocusAddress1 = FocusNode();
+  FocusNode FocusAddress2 = FocusNode();
+  FocusNode FocusState = FocusNode();
+  FocusNode FocusCity = FocusNode();
+  FocusNode FocusPinCode = FocusNode();
+  FocusNode FocusPostalArea = FocusNode();
+  FocusNode FocusLocation = FocusNode();
+
+  String? base64Image;
   XFile? _imageFile;
   String? _keyValue;
   final ImagePicker _imagePicker = ImagePicker();
@@ -88,86 +137,206 @@ class _SignUpPageState extends State<signup> {
 
   Future<void> _openCamera() async {
     final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.camera);
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
 
     if (pickedFile != null) {
+      final imageBytes = await pickedFile.readAsBytes();
+      final encodedImage = base64Encode(imageBytes);
+
       setState(() {
-        _imageFile = XFile(pickedFile.path);
+        base64Image = encodedImage;
+        print('baseeeeeeb4:$base64Image');
       });
     }
   }
 
-  String encodeImageToBase64(File image) {
-    List<int> imageBytes = image.readAsBytesSync();
-    return base64Encode(imageBytes);
+  void validateTextField() {
+    String RefrralId = _ReferralId.text.trim();
+    String FirstName = _firstNameController.text.trim();
+    String Location = _locationController.text.trim();
+    String LastName = _lastnameController.text.trim();
+    String EMail = _emailController.text.trim();
+    String MobileNumber = _mobileController.text.trim();
+    String Address1 = _address1Controller.text.trim();
+    String Address2 = _address2Controller.text.trim();
+    String City = _cityController.text.trim();
+    String State = _stateController.text.trim();
+    String PinCode = _pincodeController.text.trim();
+    String PostalArea = _postalareaController.text.trim();
+    String Password = _passwordcontroller.text.trim();
+    String ConfirmPassword = _confirmpasswordcontroller.text.trim();
+    String TransactionPassword = _transactionpasswordcontroller.text.trim();
+    String ConfirmTransactionPassword =
+        _confirmtransactionpasswordcontroller.text.trim();
+
+    if (RefrralId.isEmpty) {
+      Fluttertoast.showToast(
+        msg: 'Referral Id is empty',
+        gravity: ToastGravity.BOTTOM,
+        textColor: Colors.white,
+      );
+      FocusFirstName.requestFocus();
+    } else if (FirstName.isEmpty) {
+      Fluttertoast.showToast(
+        msg: 'First name is empty',
+        gravity: ToastGravity.BOTTOM,
+        textColor: Colors.white,
+      );
+      FocusFirstName.requestFocus();
+    } else if (LastName.isEmpty) {
+      Fluttertoast.showToast(
+        msg: 'Last name is empty',
+        gravity: ToastGravity.BOTTOM,
+        textColor: Colors.white,
+      );
+      FocusLastName.requestFocus();
+    } else if (MobileNumber.isEmpty) {
+      Fluttertoast.showToast(
+        msg: 'Phone number is empty',
+        gravity: ToastGravity.BOTTOM,
+        textColor: Colors.white,
+      );
+      FocusMoile.requestFocus();
+    } else if (PinCode.isEmpty) {
+      Fluttertoast.showToast(
+        msg: 'PinCode is empty',
+        gravity: ToastGravity.BOTTOM,
+        textColor: Colors.white,
+      );
+      FocusPinCode.requestFocus();
+    } else if (EMail.isEmpty) {
+      Fluttertoast.showToast(
+        msg: 'EMail is empty',
+        gravity: ToastGravity.BOTTOM,
+        textColor: Colors.white,
+      );
+      FocusEMail.requestFocus();
+    } else if (Address1.isEmpty) {
+      Fluttertoast.showToast(
+        msg: 'Address1 is empty',
+        gravity: ToastGravity.BOTTOM,
+        textColor: Colors.white,
+      );
+      FocusAddress1.requestFocus();
+    } else if (Address2.isEmpty) {
+      Fluttertoast.showToast(
+        msg: 'Address2 is empty',
+        gravity: ToastGravity.BOTTOM,
+        textColor: Colors.white,
+      );
+      FocusAddress2.requestFocus();
+    } else if (State.isEmpty) {
+      Fluttertoast.showToast(
+        msg: 'State is empty',
+        gravity: ToastGravity.BOTTOM,
+        textColor: Colors.white,
+      );
+      FocusState.requestFocus();
+    } else if (City.isEmpty) {
+      Fluttertoast.showToast(
+        msg: 'City is empty',
+        gravity: ToastGravity.BOTTOM,
+        textColor: Colors.white,
+      );
+      FocusCity.requestFocus();
+    } else if (PostalArea.isEmpty) {
+      Fluttertoast.showToast(
+        msg: 'PostalArea is empty',
+        gravity: ToastGravity.BOTTOM,
+        textColor: Colors.white,
+      );
+      FocusPinCode.requestFocus();
+    } else if (Password != ConfirmPassword) {
+      Fluttertoast.showToast(
+        msg: 'Passwords Does not Match',
+        gravity: ToastGravity.BOTTOM,
+        textColor: Colors.white,
+      );
+    } else if (TransactionPassword != ConfirmTransactionPassword) {
+      Fluttertoast.showToast(
+        msg: 'Transaction Passwords Does not Match',
+        gravity: ToastGravity.BOTTOM,
+        textColor: Colors.white,
+      );
+    }
+    if (checkboxStatus == "0") {
+      Fluttertoast.showToast(
+        msg: 'Please accept Terms and Conditions',
+        gravity: ToastGravity.BOTTOM,
+        textColor: Colors.white,
+      );
+    }
+    /*__futureLogin = ResponseHandler.performPost(
+        "KYCAdd",
+        'customerid=1000000'
+                '&date=&firstname=' +
+            textFNameController.text +
+            '&lastname=' +
+            textLNameController.text +
+            '&phone=' +
+            textMNumberController.text +
+            '&dob=' +
+            textDOBController.text +
+            '&gender=&telegram=&address1=' +
+            textAddress1Controller.text +
+            '&address2=' +
+            textAddress2Controller.text +
+            '&state=' +
+            textStateController.text +
+            '&city=' +
+            textCityController.text +
+            '&zip=' +
+            textZipCodeController.text +
+            '&country=' +
+            textCountryController.text +
+            '&submitdate=&submitkby=');*/
+    /*_futureLogin?.then((value) {
+      print('Response body: ${value.body}');
+
+      String jsonResponse = ResponseHandler.parseData(value.body);
+
+      print('JSON Response: ${jsonResponse}');
+      Navigator.push(context,
+          MaterialPageRoute(builder: (BuildContext context) => KYCList()));
+    });*/
   }
 
   Future<void> _uploadImageAndRegister() async {
     try {
       print('imagefile$_imageFile.path');
-      if (_imageFile?.path != null) {
-        File imagefile = File(_imageFile!.path); //convert Path to File
-        Uint8List imagebytes = await imagefile.readAsBytes(); //convert to bytes
-        String base64string =
-            base64.encode(imagebytes); //convert bytes to base64 string
-        print('Base64 Encoded Image:$base64string');
 
-        // Now you can use the base64Image in your API call or wherever needed
+      final String Username = _ReferralId.text;
+      final String FirstName = _firstNameController.text;
+      final String LastName = _lastnameController.text;
+      final String Email = _emailController.text;
+      final String location = _locationController.text;
+      final String mobile = _mobileController.text;
+      final String address1 = _address1Controller.text;
+      final String address2 = _address2Controller.text;
+      final String city = _cityController.text;
+      final String state = _stateController.text;
+      final String pincode = _pincodeController.text;
+      final String postal = _postalareaController.text;
+      SignupModel signupmodel = SignupModel(
+          customerID: "1000000",
+          firstname: FirstName,
+          lastname: LastName,
+          dateOfBirth: "",
+          gender: "1",
+          marital: "1",
+          addressLine1: address1,
+          addressLine2: address2,
+          city: city,
+          state: state,
+          zipcode: pincode,
+          country: "india",
+          phone: mobile,
+          email: Email,
+          nominee: "aa",
+          relation: "a",
+          nomineeaAge: "30");
 
-        final String Username = _userNameController.text;
-        final String FirstName = _firstNameController.text;
-        final String LastName = _lastnameController.text;
-        final String Email = _emailController.text;
-        final String location = _locationController.text;
-        final String mobile = _mobileController.text;
-        final String address1 = _address1Controller.text;
-        final String address2 = _address2Controller.text;
-        final String city = _cityController.text;
-        final String state = _stateController.text;
-        final String pincode = _pincodeController.text;
-        final String postal = _postalareaController.text;
-        SignupModel signupmodel = SignupModel(
-            customerID: "1000000",
-            firstname: FirstName,
-            lastname: LastName,
-            dateOfBirth: "",
-            gender: "1",
-            marital: "1",
-            addressLine1: address1,
-            addressLine2: address2,
-            city: city,
-            state: state,
-            zipcode: pincode,
-            country: "india",
-            phone: mobile,
-            email: Email,
-            nominee: "aa",
-            relation: "a",
-            nomineeaAge: "30");
-        final jsonData = jsonEncode(signupmodel.toJson());
-        print('jsondata:$jsonData');
-        final apiUrl = "https://d4demo.com/cheapshop/wsmember.asmx/MemberSave";
-
-        final headers = {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'SOAPAction': 'http://tempuri.org/MemberSave',
-        };
-
-        final body = {
-          "jsonString": jsonData,
-          "KeyValue": base64string,
-          "UID": "35510b94-CheapShop-11ea-a2e3-2e728ce87997",
-        };
-
-        final response =
-            await http.post(Uri.parse(apiUrl), headers: headers, body: body);
-
-        if (response.statusCode == 200) {
-          print("Request successful! Response: ${response.body}");
-        } else {
-          print("Request failed. Status code: ${response.statusCode}");
-        }
-        /* __futureLogin = ResponseHandler.performPost(
+      /* __futureLogin = ResponseHandler.performPost(
             "MemberSave", 'jsonString=$jsonData&KeyValue=$base64Image');
         __futureLogin?.then((value) {
           print('Response body: ${value.body}');
@@ -184,9 +353,6 @@ class _SignUpPageState extends State<signup> {
             Fluttertoast.showToast(msg: "Login Failed");
             log(error.toString());
           }*/
-      } else {
-        Fluttertoast.showToast(msg: "Please select an image");
-      }
     } catch (e) {
       print("Error: $e");
       Fluttertoast.showToast(msg: "An error occurred");
@@ -229,12 +395,15 @@ class _SignUpPageState extends State<signup> {
 
   Future<void> _openGallery() async {
     final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    print('+pickedFile$pickedFile');
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
     if (pickedFile != null) {
+      final imageBytes = await pickedFile.readAsBytes();
+      final encodedImage = base64Encode(imageBytes);
+
       setState(() {
-        _imageFile = XFile(pickedFile.path);
-        print('+imagegile${_imageFile?.path}');
+        base64Image = encodedImage;
+        print('baseeeeeeb4:$base64Image');
       });
     }
   }
@@ -248,6 +417,9 @@ class _SignUpPageState extends State<signup> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Color(0xFF007E01), // Dark green color
+    ));
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -283,16 +455,16 @@ class _SignUpPageState extends State<signup> {
             Padding(padding: EdgeInsets.only(top: 20)),
             Stack(
               alignment: Alignment.bottomRight,
-              children: [
+              children: <Widget>[
                 SizedBox(height: 20),
-                CircleAvatar(
-                  radius: 50,
-                  backgroundColor: Colors.white,
-                  backgroundImage: _imageFile != null
-                      ? FileImage(File(_imageFile!.path))
-                      : AssetImage('assets/images/profile.png')
-                          as ImageProvider,
-                ),
+                if (base64Image != null)
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundColor: Colors.white,
+                    backgroundImage: MemoryImage(
+                      base64Decode(base64Image!),
+                    ),
+                  ),
                 IconButton(
                   icon: Icon(Icons.camera_alt),
                   onPressed: () {
@@ -312,10 +484,10 @@ class _SignUpPageState extends State<signup> {
                       height: 45,
                       width: 310,
                       child: TextField(
-                        controller: _userNameController,
+                        controller: _ReferralId,
                         textAlignVertical: TextAlignVertical.bottom,
                         decoration: InputDecoration(
-                          hintText: 'Enter Username',
+                          hintText: 'Referral ID',
                           hintStyle: TextStyle(fontFamily: "Montserrat"),
                           prefixIcon: Image.asset(
                             "assets/images/id_icon.png",
@@ -344,7 +516,7 @@ class _SignUpPageState extends State<signup> {
                     5.0,
                   ),
                 ),
-                /*  child: Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
@@ -357,66 +529,83 @@ class _SignUpPageState extends State<signup> {
                       ),
                     ),
                     Row(
+                      // Use a Row for horizontal alignment
                       children: [
-                        ListTile(
-                          title: Text('Self'),
-                          leading: Radio<Gender>(
-                            value: Gender.self,
-                            groupValue: _selectedGender,
-                            onChanged: (Gender? value) {
-                              setState(() {
-                                _selectedGender = value;
-                              });
-                            },
+                        SizedBox(
+                          width: 129,
+                          height: 40,
+                          child: Expanded(
+                            child: ListTile(
+                              title: Text('Self'),
+                              leading: Radio<Gender>(
+                                value: Gender.self,
+                                groupValue: _selectedGender,
+                                onChanged: (Gender? value) {
+                                  setState(() {
+                                    _selectedGender = value;
+                                    _isTextFieldVisible = true;
+                                  });
+                                },
+                              ),
+                            ),
                           ),
                         ),
-                        ListTile(
-                          title: Text('Franchise'),
-                          leading: Radio<Gender>(
-                            value: Gender.franchise,
-                            groupValue: _selectedGender,
-                            onChanged: (Gender? value) {
-                              setState(() {
-                                _selectedGender = value;
-                              });
-                            },
+                        SizedBox(
+                          height: 40,
+                          width: 172,
+                          child: Flexible(
+                            child: ListTile(
+                              title: Text('Franchise'),
+                              leading: Radio<Gender>(
+                                value: Gender.franchise,
+                                groupValue: _selectedGender,
+                                onChanged: (Gender? value) {
+                                  setState(() {
+                                    _selectedGender = value;
+                                    _isTextFieldVisible = false;
+                                  });
+                                },
+                              ),
+                            ),
                           ),
                         ),
-                        Text(
-                          'Self',
-                          style: TextStyle(fontSize: 17),
-                        ),
-                        SizedBox(width: 45.0),
-                        Text('Franchise', style: TextStyle(fontSize: 17)),
                       ],
                     ),
                   ],
-                ),*/
+                ),
               ),
             ),
             SizedBox(height: 16.0),
             Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(
                       height: 45,
                       width: 310,
-                      child: TextField(
-                        controller: _locationController,
-                        textAlignVertical: TextAlignVertical.bottom,
-                        decoration: InputDecoration(
-                          hintText: 'Location',
-                          prefixIcon: Image.asset(
-                            "assets/images/location.png",
-                            alignment: Alignment.center,
-                            cacheHeight: 21,
-                            cacheWidth: 20,
-                          ),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
+                      child: Visibility(
+                        maintainSize: false,
+                        visible: _selectedGender ==
+                            Gender
+                                .franchise, // Show the TextField only when "Self" is selected
+                        child: TextField(
+                          controller: _locationController,
+                          textAlignVertical: TextAlignVertical.bottom,
+                          decoration: InputDecoration(
+                            hintText: 'Location',
+                            prefixIcon: Image.asset(
+                              "assets/images/locationjpg.jpg",
+                              alignment: Alignment.center,
+                              cacheHeight: 21,
+                              cacheWidth: 20,
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
+                            ),
                           ),
                         ),
                       ),
@@ -488,7 +677,7 @@ class _SignUpPageState extends State<signup> {
               ],
             ),
             SizedBox(height: 16.0),
-            /*Column(
+            Column(
               children: [
                 Row(
                   children: [
@@ -503,7 +692,7 @@ class _SignUpPageState extends State<signup> {
                         ),
                         borderRadius: BorderRadius.circular(5.0),
                       ),
-                     */ /* child: Center(
+                      child: Center(
                         child: SizedBox(
                           width: 40, // Adjust the width as needed
                           child: TextField(
@@ -513,7 +702,7 @@ class _SignUpPageState extends State<signup> {
                             ),
                           ),
                         ),
-                      ),*/ /*
+                      ),
                     ),
                     SizedBox(width: 8.0), // Add some space between fields
                     Container(
@@ -579,7 +768,7 @@ class _SignUpPageState extends State<signup> {
                 )
               ],
             ),
-            SizedBox(height: 16.0),*/
+            SizedBox(height: 16.0),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -590,6 +779,7 @@ class _SignUpPageState extends State<signup> {
                       height: 45,
                       width: 310,
                       child: TextField(
+                        keyboardType: TextInputType.emailAddress,
                         controller: _emailController,
                         textAlignVertical: TextAlignVertical.bottom,
                         decoration: InputDecoration(
@@ -621,6 +811,7 @@ class _SignUpPageState extends State<signup> {
                       height: 45,
                       width: 310,
                       child: TextField(
+                        keyboardType: TextInputType.phone,
                         controller: _mobileController,
                         textAlignVertical: TextAlignVertical.bottom,
                         decoration: InputDecoration(
@@ -776,6 +967,7 @@ class _SignUpPageState extends State<signup> {
                       height: 45,
                       width: 310,
                       child: TextField(
+                        keyboardType: TextInputType.phone,
                         controller: _pincodeController,
                         textAlignVertical: TextAlignVertical.bottom,
                         decoration: InputDecoration(
@@ -846,6 +1038,8 @@ class _SignUpPageState extends State<signup> {
                       height: 45,
                       width: 310,
                       child: TextField(
+                        controller: _passwordcontroller,
+                        obscureText: !_passwordVisible,
                         textAlignVertical: TextAlignVertical.bottom,
                         decoration: InputDecoration(
                           hintText: 'Password',
@@ -855,18 +1049,19 @@ class _SignUpPageState extends State<signup> {
                             cacheHeight: 21,
                             cacheWidth: 20,
                           ),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscureText
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                              color: Colors.grey,
-                            ),
-                            onPressed: () {
+                          suffixIcon: GestureDetector(
+                            onTap: () {
                               setState(() {
-                                _obscureText = !_obscureText;
+                                _passwordVisible =
+                                    !_passwordVisible; // Toggle password visibility
                               });
                             },
+                            child: Icon(
+                              _passwordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Colors.grey,
+                            ),
                           ),
                           border: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),
@@ -889,6 +1084,8 @@ class _SignUpPageState extends State<signup> {
                       height: 45,
                       width: 310,
                       child: TextField(
+                        controller: _confirmpasswordcontroller,
+                        obscureText: !_confirmpasswordVisible,
                         textAlignVertical: TextAlignVertical.bottom,
                         decoration: InputDecoration(
                           hintText: 'Confirm Password',
@@ -898,18 +1095,19 @@ class _SignUpPageState extends State<signup> {
                             cacheHeight: 21,
                             cacheWidth: 20,
                           ),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscureText
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                              color: Colors.grey,
-                            ),
-                            onPressed: () {
+                          suffixIcon: GestureDetector(
+                            onTap: () {
                               setState(() {
-                                _obscureText = !_obscureText;
+                                _confirmpasswordVisible =
+                                    !_confirmpasswordVisible; // Toggle password visibility
                               });
                             },
+                            child: Icon(
+                              _confirmpasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Colors.grey,
+                            ),
                           ),
                           border: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),
@@ -932,6 +1130,8 @@ class _SignUpPageState extends State<signup> {
                       height: 45,
                       width: 310,
                       child: TextField(
+                        controller: _transactionpasswordcontroller,
+                        obscureText: !_transactionpasswordVisible,
                         textAlignVertical: TextAlignVertical.bottom,
                         decoration: InputDecoration(
                           hintText: 'Transaction Password',
@@ -941,18 +1141,19 @@ class _SignUpPageState extends State<signup> {
                             cacheHeight: 21,
                             cacheWidth: 20,
                           ),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscureText
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                              color: Colors.grey,
-                            ),
-                            onPressed: () {
+                          suffixIcon: GestureDetector(
+                            onTap: () {
                               setState(() {
-                                _obscureText = !_obscureText;
+                                _transactionpasswordVisible =
+                                    !_transactionpasswordVisible; // Toggle password visibility
                               });
                             },
+                            child: Icon(
+                              _transactionpasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Colors.grey,
+                            ),
                           ),
                           border: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),
@@ -975,6 +1176,8 @@ class _SignUpPageState extends State<signup> {
                       height: 45,
                       width: 310,
                       child: TextField(
+                        controller: _confirmtransactionpasswordcontroller,
+                        obscureText: !_confirmtransactionpasswordVisible,
                         textAlignVertical: TextAlignVertical.bottom,
                         decoration: InputDecoration(
                           hintText: 'Confirm Transaction Password',
@@ -984,18 +1187,19 @@ class _SignUpPageState extends State<signup> {
                             cacheHeight: 21,
                             cacheWidth: 20,
                           ),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscureText
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                              color: Colors.grey,
-                            ),
-                            onPressed: () {
+                          suffixIcon: GestureDetector(
+                            onTap: () {
                               setState(() {
-                                _obscureText = !_obscureText;
+                                _confirmtransactionpasswordVisible =
+                                    !_confirmtransactionpasswordVisible; // Toggle password visibility
                               });
                             },
+                            child: Icon(
+                              _confirmtransactionpasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Colors.grey,
+                            ),
                           ),
                           border: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),
@@ -1013,21 +1217,26 @@ class _SignUpPageState extends State<signup> {
                 Align(
                   alignment: Alignment.center,
                 ),
-                Checkbox(value: false, onChanged: (value) {}),
+                Checkbox(
+                    value: checkboxStatus == "1",
+                    onChanged: (bool? newValue) {
+                      setState(() {
+                        checkboxStatus = newValue == true ? "1" : "0";
+                      });
+                      print('cjeckbosfstsyd:$checkboxStatus');
+                    }),
                 Text('Accept Terms and Conditions'),
               ],
             ),
             SizedBox(
               width: 320,
-              height: 40,
+              height: 45,
               child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Color(0xFF007E01), // Set the background color here
+                ),
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              PairIncomeReport()));
-                  // _uploadImageAndRegister();
+                  validateTextField();
                 },
                 child: Text(
                   'CREATE ACCOUNT',

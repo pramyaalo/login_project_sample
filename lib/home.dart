@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:login_project_sample/BankDetails.dart';
 import 'package:login_project_sample/DashBoard.dart';
@@ -13,6 +14,11 @@ import 'package:quickalert/quickalert.dart';
 import 'package:http/http.dart' as http;
 import 'package:login_project_sample/utils/response_handler.dart';
 
+class DataToSend {
+  final String message;
+  DataToSend(this.message);
+}
+
 class LoginApp extends StatefulWidget {
   const LoginApp({super.key});
 
@@ -21,29 +27,31 @@ class LoginApp extends StatefulWidget {
 }
 
 class _MyLoginPageState extends State<LoginApp> {
-  bool showPassword = false;
+  String MemberId = '';
+  String UserName = '';
+  bool _passwordVisible = false;
   Future<http.Response>? __futureLogin;
 
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   @override
-  void initState() {
-    showPassword = false;
-  }
-
-  @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Color(0xFF007E01), // Dark green color
+    ));
     return MaterialApp(
       home: Scaffold(
-        body: Container(
+          body: Center(
+        child: Container(
+          height: MediaQuery.of(context).size.height / .1,
           decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage('assets/images/loginbg7.png'),
               fit: BoxFit.cover,
             ),
           ),
-          child: Center(
+          child: SingleChildScrollView(
             child: Column(
               children: [
                 Padding(
@@ -57,7 +65,7 @@ class _MyLoginPageState extends State<LoginApp> {
                   'Login to your customer Account',
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.green,
+                    color: Color(0xFF007E01),
                   ),
                 ),
                 SizedBox(height: 25),
@@ -81,6 +89,7 @@ class _MyLoginPageState extends State<LoginApp> {
                   height: 40,
                   width: 310,
                   child: TextField(
+                    obscureText: !_passwordVisible,
                     controller: _passwordController,
                     style: TextStyle(fontFamily: "Montserrat", fontSize: 15),
                     decoration: InputDecoration(
@@ -92,12 +101,20 @@ class _MyLoginPageState extends State<LoginApp> {
                         borderRadius: BorderRadius.circular(1.0),
                       ),
                       suffixIcon: GestureDetector(
-                        child: showPassword
-                            ? Icon(Icons.visibility)
-                            : Icon(Icons.visibility_off),
+                        onTap: () {
+                          setState(() {
+                            _passwordVisible =
+                                !_passwordVisible; // Toggle password visibility
+                          });
+                        },
+                        child: Icon(
+                          _passwordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Colors.grey,
+                        ),
                       ),
                     ),
-                    obscureText: showPassword,
                   ),
                 ),
                 SizedBox(height: 10),
@@ -111,16 +128,16 @@ class _MyLoginPageState extends State<LoginApp> {
                     //_showDialog(context);
                   },
                   child: Text(
-                    'Forgot Password',
+                    'Forgot Password?',
                     style: TextStyle(
                       fontSize: 16,
-                      color: Colors.green,
+                      color: Color(0xFF007E01),
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 SizedBox(
-                  height: 50,
+                  height: 40,
                   width: 150,
                   child: ElevatedButton(
                     onPressed: () {
@@ -150,9 +167,12 @@ class _MyLoginPageState extends State<LoginApp> {
                           Prefs.saveStringValue(
                               Prefs.PREFS_USER_TYPE_ID, fm.UserTypeId);
                           Prefs.saveStringValue(Prefs.PREFS_USER_ID, fm.UserID);
-                          print('USERID' + fm.UserID);
+                          MemberId = fm.UserID;
+                          print('USERID' + MemberId);
                           Prefs.saveStringValue(
                               Prefs.PREFS_USER_NAME, fm.Username);
+                          UserName = fm.Username;
+                          print('Username' + UserName);
                           Prefs.saveStringValue(Prefs.PREFS_NAME, fm.Name);
                           Prefs.saveStringValue(
                               Prefs.PREFS_PASSWORD, fm.Password);
@@ -176,10 +196,12 @@ class _MyLoginPageState extends State<LoginApp> {
                               Prefs.PREFS_CURRENCY, fm.Currency);
 
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      Dashboard()));
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  Dashboard(data: MemberId, data1: UserName),
+                            ),
+                          );
                         } catch (error) {
                           Fluttertoast.showToast(msg: "Login Failed");
                           log(error.toString());
@@ -189,7 +211,7 @@ class _MyLoginPageState extends State<LoginApp> {
                     },
                     style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.green),
+                          MaterialStateProperty.all<Color>(Color(0xFF007E01)),
                     ),
                     child: Text('LOGIN',
                         style: TextStyle(
@@ -203,7 +225,7 @@ class _MyLoginPageState extends State<LoginApp> {
                   children: [
                     Text(
                       "Don't have an account?",
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                      style: TextStyle(fontSize: 16, color: Color(0xFF007E01)),
                     ),
                     SizedBox(width: 5),
                     GestureDetector(
@@ -215,7 +237,8 @@ class _MyLoginPageState extends State<LoginApp> {
                       },
                       child: Text(
                         "Sign Up",
-                        style: TextStyle(fontSize: 16, color: Colors.blue),
+                        style:
+                            TextStyle(fontSize: 16, color: Color(0xFF007E01)),
                       ),
                     ),
                   ],
@@ -224,7 +247,7 @@ class _MyLoginPageState extends State<LoginApp> {
             ),
           ),
         ),
-      ),
+      )),
     );
   }
 }

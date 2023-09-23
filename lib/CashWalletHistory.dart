@@ -651,7 +651,7 @@ class _CabsListScreenState extends State<cashwallethistory> {
                         Text("₹4,999",
                             style: TextStyle(
                                 fontFamily: "Montserrat",
-                                fontSize: 14,
+                                fon
                                 fontWeight: FontWeight.bold)),
                       ],
                     ),

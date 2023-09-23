@@ -31,7 +31,7 @@ class _MyScreenState extends State<MyScreen> {
             Navigator.of(context).pop();
           },
         ),
-        title: Text('Rating'),
+        title: Text('Rate Us'),
       ),
       body: SingleChildScrollView(
         child: Column(

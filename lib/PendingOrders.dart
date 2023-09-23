@@ -56,7 +56,7 @@ class _TabViewExampleState extends State<TabViewExample>
                   style: TextStyle(
                     color: Colors.black,
                   )),
-              Text('COMPLEED ORDERS', style: TextStyle(color: Colors.black)),
+              Text('COMPLETED ORDERS', style: TextStyle(color: Colors.black)),
             ],
           ),
           title: Text(
@@ -175,7 +175,7 @@ class _PaymentHistoryTabState extends State<Pendingorders> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                          "Cheap Shop " +
+                                          snapshot.data![index].Name +
                                               "(" +
                                               snapshot.data![index].username +
                                               ")",
@@ -196,17 +196,18 @@ class _PaymentHistoryTabState extends State<Pendingorders> {
                                           Image(
                                             image: AssetImage(
                                                 "assets/images/locationjpg.jpg"),
-                                            width: 16,
+                                            width: 10,
                                             height: 16,
                                           ),
                                           Text(
                                             snapshot.data![index].shipadd1 +
-                                                snapshot.data![index].shipadd2,
+                                                snapshot.data![index].shipadd2 +
+                                                snapshot.data![index].shipcity,
                                             textAlign: TextAlign.center,
                                             // Text(snapshot.data![index].message,
                                             style: TextStyle(
                                                 fontFamily: "Montserrat",
-                                                fontSize: 14,
+                                                fontSize: 12,
                                                 fontWeight: FontWeight.normal),
                                           ),
                                         ],
@@ -231,7 +232,7 @@ class _PaymentHistoryTabState extends State<Pendingorders> {
                                             ),
                                           ),
                                           SizedBox(
-                                            width: 50,
+                                            width: 70,
                                           ),
                                           Image.asset(
                                             "assets/images/tickiconpng.png",
@@ -240,8 +241,8 @@ class _PaymentHistoryTabState extends State<Pendingorders> {
                                           ),
                                           Text(
                                               textAlign: TextAlign.end,
-                                              "Pickup",
-                                              //Text(snapshot.data![index].username,
+                                              snapshot
+                                                  .data![index].PaymentMethod,
                                               style: TextStyle(
                                                   fontFamily: "Montserrat",
                                                   fontSize: 12,
@@ -255,7 +256,9 @@ class _PaymentHistoryTabState extends State<Pendingorders> {
                                       Row(
                                         children: [
                                           Text(
-                                            snapshot.data![index].TotalQty,
+                                            snapshot.data![index].TotalQty +
+                                                " " +
+                                                "Items",
                                             textAlign: TextAlign.center,
                                             // Text(snapshot.data![index].message,
                                             style: TextStyle(
@@ -264,7 +267,7 @@ class _PaymentHistoryTabState extends State<Pendingorders> {
                                                 fontWeight: FontWeight.normal),
                                           ),
                                           SizedBox(
-                                            width: 50,
+                                            width: 55,
                                           ),
                                           Image.asset(
                                             "assets/images/tickiconpng.png",
@@ -292,12 +295,12 @@ class _PaymentHistoryTabState extends State<Pendingorders> {
                                 Container(
                                   height: 1,
                                   width:
-                                      265, // Make the Divider span the full width
+                                      215, // Make the Divider span the full width
                                   child: Divider(
                                       thickness: 2), // Divider after GridView
                                 ),
                                 Text(
-                                  ' Net Amount',
+                                  'Order Total(Incl.TAX)',
                                   style: TextStyle(fontSize: 12),
                                 ),
                               ],
@@ -327,11 +330,11 @@ class _PaymentHistoryTabState extends State<Pendingorders> {
                                     snapshot.data![index].OrderId,
                                     style: TextStyle(fontSize: 14),
                                   ),
-                                  SizedBox(width: 118),
+                                  SizedBox(width: 168),
                                   Text(
                                     snapshot.data![index].Total,
                                     style: TextStyle(
-                                        fontSize: 14,
+                                        fontSize: 17,
                                         fontWeight: FontWeight.bold),
                                   ),
                                   // User Type on the left side
@@ -436,7 +439,11 @@ class _PendingPaymentsTabState extends State<CompletedOrders> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text("Cheap Shop(CS1000000)",
+                                      Text(
+                                          snapshot.data![index].Name +
+                                              "(" +
+                                              snapshot.data![index].username +
+                                              ")",
                                           textAlign: TextAlign.end,
                                           //Text(snapshot.data![index].username,
                                           style: TextStyle(
@@ -454,16 +461,18 @@ class _PendingPaymentsTabState extends State<CompletedOrders> {
                                           Image(
                                             image: AssetImage(
                                                 "assets/images/locationjpg.jpg"),
-                                            width: 16,
+                                            width: 10,
                                             height: 16,
                                           ),
                                           Text(
-                                            "729/A,Parappu vilai,Arumanai",
+                                            snapshot.data![index].shipadd1 +
+                                                snapshot.data![index].shipadd2 +
+                                                snapshot.data![index].shipcity,
                                             textAlign: TextAlign.center,
                                             // Text(snapshot.data![index].message,
                                             style: TextStyle(
                                                 fontFamily: "Montserrat",
-                                                fontSize: 14,
+                                                fontSize: 12,
                                                 fontWeight: FontWeight.normal),
                                           ),
                                         ],
@@ -483,7 +492,7 @@ class _PendingPaymentsTabState extends State<CompletedOrders> {
                                             padding: EdgeInsets.symmetric(
                                                 horizontal: 6, vertical: 2),
                                             child: Text(
-                                              'Delivered',
+                                              snapshot.data![index].Ostatus,
                                               style: TextStyle(fontSize: 13),
                                             ),
                                           ),
@@ -497,7 +506,8 @@ class _PendingPaymentsTabState extends State<CompletedOrders> {
                                           ),
                                           Text(
                                               textAlign: TextAlign.end,
-                                              "By Hand",
+                                              snapshot
+                                                  .data![index].PaymentMethod,
                                               //Text(snapshot.data![index].username,
                                               style: TextStyle(
                                                   fontFamily: "Montserrat",
@@ -512,7 +522,9 @@ class _PendingPaymentsTabState extends State<CompletedOrders> {
                                       Row(
                                         children: [
                                           Text(
-                                            "2 items",
+                                            snapshot.data![index].TotalQty +
+                                                " " +
+                                                "Items",
                                             textAlign: TextAlign.center,
                                             // Text(snapshot.data![index].message,
                                             style: TextStyle(
@@ -530,8 +542,8 @@ class _PendingPaymentsTabState extends State<CompletedOrders> {
                                           ),
                                           Text(
                                               textAlign: TextAlign.end,
-                                              "07 Augest 2023",
-                                              //Text(snapshot.data![index].username,
+                                              snapshot
+                                                  .data![index].DeliveryDate,
                                               style: TextStyle(
                                                   fontFamily: "Montserrat",
                                                   fontSize: 12,
@@ -549,12 +561,12 @@ class _PendingPaymentsTabState extends State<CompletedOrders> {
                                 Container(
                                   height: 1,
                                   width:
-                                      265, // Make the Divider span the full width
+                                      225, // Make the Divider span the full width
                                   child: Divider(
                                       thickness: 2), // Divider after GridView
                                 ),
                                 Text(
-                                  ' Net Amount',
+                                  'Order Total(Incl.TAX)',
                                   style: TextStyle(fontSize: 12),
                                 ),
                               ],
@@ -581,12 +593,12 @@ class _PendingPaymentsTabState extends State<CompletedOrders> {
                                     width: 5,
                                   ),
                                   Text(
-                                    '40',
+                                    snapshot.data![index].OrderId,
                                     style: TextStyle(fontSize: 14),
                                   ),
-                                  SizedBox(width: 160),
+                                  SizedBox(width: 185),
                                   Text(
-                                    '₹100.000',
+                                    snapshot.data![index].Total,
                                     style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold),

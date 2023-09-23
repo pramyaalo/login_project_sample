@@ -6,7 +6,7 @@ class CompletedOrderModel {
   final String Name;
   final String Total;
   final String PaymentMethod;
-  final String ostatus;
+  final String Ostatus;
   final String shipphone;
   final String shipadd1;
   final String shipadd2;
@@ -25,7 +25,7 @@ class CompletedOrderModel {
       required this.Name,
       required this.Total,
       required this.PaymentMethod,
-      required this.ostatus,
+      required this.Ostatus,
       required this.shipphone,
       required this.shipadd1,
       required this.shipadd2,
@@ -45,7 +45,7 @@ class CompletedOrderModel {
       Name: json['Name'].toString(),
       Total: json['Total'].toString(),
       PaymentMethod: json['PaymentMethod'].toString(),
-      ostatus: json['ostatus'].toString(),
+      Ostatus: json['Ostatus'].toString(),
       shipphone: json['shipphone'].toString(),
       shipadd1: json['shipadd1'].toString(),
       shipadd2: json['shipadd2'].toString(),
