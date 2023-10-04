@@ -14,7 +14,6 @@ import 'package:login_project_sample/FundTransfer.dart';
 import 'package:login_project_sample/FundTransferHistory.dart';
 import 'package:login_project_sample/KYCApplication.dart';
 import 'package:login_project_sample/KYCList.dart';
-import 'package:login_project_sample/KYCProcessing.dart';
 import 'package:login_project_sample/PendingOrders.dart';
 import 'package:login_project_sample/ReferandEarn.dart';
 import 'package:login_project_sample/Reported_Dispute.dart';
@@ -22,7 +21,6 @@ import 'package:login_project_sample/Testimonal.dart';
 import 'package:login_project_sample/Wallet_n.dart';
 import 'package:login_project_sample/WithDrawFund.dart';
 import 'package:login_project_sample/WithdrawList.dart';
-import 'package:login_project_sample/home.dart';
 import 'package:login_project_sample/utils/response_handler.dart';
 import 'package:login_project_sample/utils/shared_preferences.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -82,7 +80,6 @@ class _CorDashboardState extends State<Dashboard> {
       String jsonResponse = ResponseHandler.parseData(value.body);
 
       print('JSON Response: ${jsonResponse}');
-      String balance = "";
       try {
         //Map<String, dynamic> map = json.decode(jsonResponse);
         List<dynamic> decodedJson = json.decode(jsonResponse);
@@ -112,7 +109,6 @@ class _CorDashboardState extends State<Dashboard> {
       String jsonResponse = ResponseHandler.parseData(value.body);
 
       print('JSON Response: ${jsonResponse}');
-      String balance = "";
       try {
         //Map<String, dynamic> map = json.decode(jsonResponse);
         List<dynamic> decodedJson = json.decode(jsonResponse);
@@ -144,7 +140,6 @@ class _CorDashboardState extends State<Dashboard> {
       String jsonResponse = ResponseHandler.parseData(value.body);
 
       print('JSON Response: ${jsonResponse}');
-      String balance = "";
       try {
         //Map<String, dynamic> map = json.decode(jsonResponse);
         List<dynamic> decodedJson = json.decode(jsonResponse);
@@ -207,12 +202,6 @@ class _CorDashboardState extends State<Dashboard> {
 
   int currentIndex = 0;
   PageController pageController = PageController(initialPage: 0);
-  final List<Widget> _pages = [
-    /* HomePage(),
-    ProductsPage(),
-    OrdersPage(),*/
-    Settings(),
-  ];
 
   @override
   void dispose() {
@@ -226,17 +215,6 @@ class _CorDashboardState extends State<Dashboard> {
     });
   }
 
-  Map<String, double> dataMap = {
-    "Food Items": 18.47,
-    "Clothes": 17.70,
-    "Technology": 4.25,
-    "Cosmetics": 3.51,
-    "Other": 2.83,
-  };
-
-  // Colors for each segment
-  // of the pie chart
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -247,7 +225,7 @@ class _CorDashboardState extends State<Dashboard> {
         title: Row(
           children: [
             Padding(
-              padding: const EdgeInsets.all(0), // Remove any leading padding
+              padding: const EdgeInsets.all(0),
               child: IconButton(
                 icon: Icon(
                   Icons.menu,
@@ -354,8 +332,7 @@ class _CorDashboardState extends State<Dashboard> {
                         ),
                       ),
                     ),
-                    SizedBox(
-                        width: 10), // Add some space between the image and text
+                    SizedBox(width: 10),
                     Padding(
                       padding: const EdgeInsets.only(top: 30, left: 10),
                       child: Column(
@@ -385,7 +362,6 @@ class _CorDashboardState extends State<Dashboard> {
               ),
               InkWell(
                 onTap: () {
-                  // Handle the tap
                   Navigator.of(context).pop();
                   Navigator.push(
                       context,
@@ -411,8 +387,7 @@ class _CorDashboardState extends State<Dashboard> {
               Divider(),
               InkWell(
                 onTap: () {
-                  // Handle the tap
-                  Navigator.of(context).pop(); // Close the drawer
+                  Navigator.of(context).pop();
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => EditProfile()));
                 },
@@ -474,8 +449,6 @@ class _CorDashboardState extends State<Dashboard> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => ComposeMessage()));
-                  //ComposeMessage.dart
-                  // Navigate to the desired screen or perform an action
                 },
                 child: Padding(
                   padding: EdgeInsets.only(left: 16, top: 7, bottom: 10),
@@ -500,10 +473,7 @@ class _CorDashboardState extends State<Dashboard> {
               Divider(),
               InkWell(
                 onTap: () {
-                  // Handle the tap
                   Navigator.of(context).pop();
-                  //BankDetails.dart// Close the drawer
-                  // Navigate to the desired screen or perform an action
                 },
                 child: Padding(
                   padding: EdgeInsets.only(left: 16, top: 7, bottom: 10),
@@ -528,8 +498,7 @@ class _CorDashboardState extends State<Dashboard> {
               Divider(),
               InkWell(
                 onTap: () {
-                  // Handle the tap
-                  Navigator.of(context).pop(); // Close the drawer
+                  Navigator.of(context).pop();
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => bankdetails()));
                 },
@@ -556,9 +525,7 @@ class _CorDashboardState extends State<Dashboard> {
               Divider(),
               InkWell(
                 onTap: () {
-                  // Handle the tap
                   Navigator.of(context).pop(); // Close the drawer
-                  // Navigate to the desired screen or perform an action
                 },
                 child: Padding(
                   padding: EdgeInsets.only(left: 16, top: 7, bottom: 10),
@@ -583,9 +550,7 @@ class _CorDashboardState extends State<Dashboard> {
               Divider(),
               InkWell(
                 onTap: () {
-                  // Handle the tap
                   Navigator.of(context).pop(); // Close the drawer
-                  // Navigate to the desired screen or perform an action
                 },
                 child: Padding(
                   padding: EdgeInsets.only(left: 16, top: 7, bottom: 10),
@@ -713,9 +678,9 @@ class _CorDashboardState extends State<Dashboard> {
                                         primary: Colors.white, // Button color
                                         onPrimary: Colors.white,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              10.0), // Change radius here
-                                        ), // Text color
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
                                       ),
                                       child: Center(
                                         child: Text(
@@ -778,19 +743,17 @@ class _CorDashboardState extends State<Dashboard> {
                           Column(
                             children: [
                               Text(
-                                'Orders', // Replace with your desired text
+                                'Orders',
                                 style: TextStyle(
-                                  fontSize:
-                                      15, // Adjust the font size as needed
+                                  fontSize: 15,
                                 ),
                               ),
                               Text(
-                                TotalOrders, // Replace with your desired text
+                                TotalOrders,
                                 style: TextStyle(
                                   color: Colors.lightBlue,
                                   fontWeight: FontWeight.bold,
-                                  fontSize:
-                                      15, // Adjust the font size as needed
+                                  fontSize: 15,
                                 ),
                               ),
                             ],
@@ -931,17 +894,14 @@ class _CorDashboardState extends State<Dashboard> {
                                       ]),
 
                                   height: 120,
-
-                                  // Card content for the first card
                                 ),
                               ),
                             ),
                           ),
-                          SizedBox(width: 1.5), // Adjust spacing between cards
+                          SizedBox(width: 1.5),
                           Expanded(
                             child: Card(
-                              color:
-                                  Color(0xFF1DAD9F), // Change color as needed
+                              color: Color(0xFF1DAD9F),
                               elevation: 2,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0),
@@ -969,7 +929,6 @@ class _CorDashboardState extends State<Dashboard> {
                                             fontFamily: "Montserrat"),
                                       )
                                     ]),
-                                // Card content for the second card
                               ),
                             ),
                           ),
@@ -1008,15 +967,13 @@ class _CorDashboardState extends State<Dashboard> {
                                     ),
                                   ],
                                 ),
-                                // Card content for the third card
                               ),
                             ),
                           ),
-                          SizedBox(width: 1.5), // Adjust spacing between cards
+                          SizedBox(width: 1.5),
                           Expanded(
                             child: Card(
-                              color:
-                                  Color(0xFFF8709D), // Change color as needed
+                              color: Color(0xFFF8709D),
                               elevation: 2,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0),
@@ -1051,7 +1008,6 @@ class _CorDashboardState extends State<Dashboard> {
                                       ),
                                     ],
                                   ),
-                                  // Card content for the fourth card
                                 ),
                               ),
                             ),
@@ -1069,7 +1025,7 @@ class _CorDashboardState extends State<Dashboard> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
-//FundTransferHistory
+
                               child: GestureDetector(
                                 onTap: () {
                                   Navigator.of(context).push(
@@ -1153,7 +1109,7 @@ class _CorDashboardState extends State<Dashboard> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
-//PendingOrders
+
                               child: GestureDetector(
                                 onTap: () {
                                   Navigator.of(context).push(
@@ -1183,12 +1139,10 @@ class _CorDashboardState extends State<Dashboard> {
                                       ),
                                     ],
                                   ),
-                                  // Card content for the third card
                                 ),
                               ),
                             ),
                           ),
-                          // Add more rows with different background colors and card contents if needed
                         ],
                       ),
                       SizedBox(height: 5),
@@ -1196,8 +1150,7 @@ class _CorDashboardState extends State<Dashboard> {
                         children: [
                           Expanded(
                             child: Card(
-                              color:
-                                  Color(0xFF1DAD9F), // Change color as needed
+                              color: Color(0xFF1DAD9F),
                               elevation: 2,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0),
@@ -1231,16 +1184,14 @@ class _CorDashboardState extends State<Dashboard> {
                                       ),
                                     ],
                                   ),
-                                  // Card content for the third card
                                 ),
                               ),
                             ),
                           ),
-                          SizedBox(width: 1.5), // Adjust spacing between cards
+                          SizedBox(width: 1.5),
                           Expanded(
                             child: Card(
-                              color:
-                                  Color(0xFFF8709D), // Change color as needed
+                              color: Color(0xFFF8709D),
                               elevation: 2,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0),
@@ -1274,7 +1225,6 @@ class _CorDashboardState extends State<Dashboard> {
                                       ),
                                     ],
                                   ),
-                                  // Card content for the fourth card
                                 ),
                               ),
                             ),
@@ -1326,15 +1276,13 @@ class _CorDashboardState extends State<Dashboard> {
                                     ),
                                   ],
                                 ),
-                                // Card content for the third card
                               ),
                             ),
                           ),
-                          SizedBox(width: 1.5), // Adjust spacing between cards
+                          SizedBox(width: 1.5),
                           Expanded(
                             child: Card(
-                              color:
-                                  Color(0xFF566DF1), // Change color as needed
+                              color: Color(0xFF566DF1),
                               elevation: 2,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0),
@@ -1361,7 +1309,6 @@ class _CorDashboardState extends State<Dashboard> {
                                     ),
                                   ],
                                 ),
-                                // Card content for the fourth card
                               ),
                             ),
                           ),
@@ -1378,7 +1325,7 @@ class _CorDashboardState extends State<Dashboard> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
-//ComposeMessage
+
                               child: GestureDetector(
                                 onTap: () {
                                   Navigator.of(context).push(
@@ -1408,15 +1355,14 @@ class _CorDashboardState extends State<Dashboard> {
                                       ),
                                     ],
                                   ),
-                                  // Card content for the third card
                                 ),
                               ),
                             ),
                           ),
-                          SizedBox(width: 1.5), // Adjust spacing between cards
+                          SizedBox(width: 1.5),
                           Expanded(
                             child: Card(
-                              color: Colors.lightBlue, // Change color as needed
+                              color: Colors.lightBlue,
                               elevation: 2,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0),
@@ -1450,7 +1396,6 @@ class _CorDashboardState extends State<Dashboard> {
                                       ),
                                     ],
                                   ),
-                                  // Card content for the fourth card
                                 ),
                               ),
                             ),
@@ -1465,7 +1410,6 @@ class _CorDashboardState extends State<Dashboard> {
           ),
           Center(child: Text('Buy Products Page')),
           Center(child: Text('My Orders Page')),
-          // Add your separate body content for the "Accounts" tab here
           Center(child: Settings()),
         ],
       ),
@@ -1499,996 +1443,6 @@ class _CorDashboardState extends State<Dashboard> {
             );
           });
         },
-      ),
-    );
-  }
-}
-
-class YourAccountsBody extends StatefulWidget {
-  @override
-  _YourAccountsBodyState createState() => _YourAccountsBodyState();
-  late final String data, data1;
-  // Use the constructor to receive the data
-  YourAccountsBody({required this.data, required this.data1});
-}
-
-class _YourAccountsBodyState extends State<YourAccountsBody> {
-  Future<http.Response>? __futureLogin;
-  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  late String Balance = "",
-      affiliate = "",
-      TotalEarnings = "",
-      AvailableBalance = "",
-      DirectIncome = "",
-      LevelIncome = "",
-      BinaryIncome = "",
-      Notification = "",
-      Kyc = "",
-      UnusedEpins = "",
-      UsedEpins = "",
-      TransferedEpins = "",
-      ReceivedEpins = "",
-      TotalWithdrawals = "",
-      FundTrasnfered = "",
-      FundReceived = "",
-      MessageSent = "",
-      Inbox = "",
-      TotalOrders = "",
-      NewOrders = "",
-      CompletedOrders = "",
-      PersonalMember = "",
-      TeamMember = "";
-  String? UserId;
-  String? Name;
-  String? UserName;
-  bool ispremium = false;
-  @override
-  void initState() {
-    retrieveUsername();
-    "Received Data: ${widget.data}";
-    //String userid = Prefs.getStringValue(Prefs.PREFS_USER_ID);
-    __futureLogin = ResponseHandler.performPost(
-        "GetEwalletbalanceTranspwd", 'MemberId=${widget.data}');
-    __futureLogin?.then((value) {
-      print('Response body: ${value.body}');
-
-      String jsonResponse = ResponseHandler.parseData(value.body);
-
-      print('JSON Response: ${jsonResponse}');
-      String balance = "";
-      try {
-        //Map<String, dynamic> map = json.decode(jsonResponse);
-        List<dynamic> decodedJson = json.decode(jsonResponse);
-        Map<String, dynamic> firstUser = decodedJson[0];
-
-        print('CustomerId ${firstUser["CustomerId"]}');
-        print('Balance ${firstUser["Balance"]}');
-        setState(() {
-          Balance = firstUser["Balance"].toString();
-
-          print('Balance:$Balance');
-        });
-
-        print('TransactionPassword: ${firstUser["TransactionPassword"]}');
-        print('------------------');
-      } catch (error) {
-        Fluttertoast.showToast(msg: "Login Failed");
-        log(error.toString());
-      }
-    });
-
-    __futureLogin = ResponseHandler.performPost(
-        "PremiumMember", 'username=${widget.data1}');
-    __futureLogin?.then((value) {
-      print('Responsejhg body: ${value.body}');
-
-      String jsonResponse = ResponseHandler.parseData(value.body);
-
-      print('JSON Response: ${jsonResponse}');
-      String balance = "";
-      try {
-        //Map<String, dynamic> map = json.decode(jsonResponse);
-        List<dynamic> decodedJson = json.decode(jsonResponse);
-        Map<String, dynamic> firstUser = decodedJson[0];
-
-        print('affiliate ${firstUser["affiliate"]}');
-
-        setState(() {
-          if (affiliate == 0) {
-            ispremium = false;
-          } else {
-            ispremium = true;
-          }
-
-          print('ispremium:$ispremium');
-        });
-
-        print('----------fgth--------');
-      } catch (error) {
-        Fluttertoast.showToast(msg: "Login Failed");
-        log(error.toString());
-      }
-    });
-    __futureLogin = ResponseHandler.performPost(
-        "GetMemberdashboardApp", 'MemberId=${widget.data}&PageIndex=1');
-    __futureLogin?.then((value) {
-      print('Responsejhsaarg body: ${value.body}');
-
-      String jsonResponse = ResponseHandler.parseData(value.body);
-
-      print('JSON Response: ${jsonResponse}');
-      String balance = "";
-      try {
-        //Map<String, dynamic> map = json.decode(jsonResponse);
-        List<dynamic> decodedJson = json.decode(jsonResponse);
-        Map<String, dynamic> firstUser = decodedJson[0];
-
-        print('TotalEarnings ${firstUser["TotalEarnings"]}');
-
-        setState(() {
-          TotalEarnings = firstUser["TotalEarnings"].toString();
-          AvailableBalance = firstUser["AvailableBalance"].toString();
-
-          DirectIncome = firstUser["DirectIncome"].toString();
-          LevelIncome = firstUser["LevelIncome"].toString();
-          BinaryIncome = firstUser["BinaryIncome"].toString();
-          Notification = firstUser["Notification"].toString();
-          Kyc = firstUser["Kyc"].toString();
-          UnusedEpins = firstUser["UnusedEpins"].toString();
-          UsedEpins = firstUser["UsedEpins"].toString();
-          TransferedEpins = firstUser["TransferedEpins"].toString();
-          ReceivedEpins = firstUser["ReceivedEpins"].toString();
-          TotalWithdrawals = firstUser["TotalWithdrawals"].toString();
-          FundTrasnfered = firstUser["FundTrasnfered"].toString();
-          FundReceived = firstUser["FundReceived"].toString();
-          MessageSent = firstUser["MessageSent"].toString();
-          Inbox = firstUser["Inbox"].toString();
-          TotalEarnings = firstUser["TotalEarnings"].toString();
-          TotalOrders = firstUser["TotalOrders"].toString();
-          TotalEarnings = firstUser["TotalEarnings"].toString();
-          NewOrders = firstUser["NewOrders"].toString();
-          CompletedOrders = firstUser["CompletedOrders"].toString();
-          PersonalMember = firstUser["PersonalMember"].toString();
-          TeamMember = firstUser["TeamMember"].toString();
-          print('TotalEarnings:$TotalEarnings');
-        });
-
-        print('---TotalWithdrawals-----:$TotalWithdrawals');
-      } catch (error) {
-        Fluttertoast.showToast(msg: "Login Failed");
-        log(error.toString());
-      }
-    });
-
-    super.initState();
-  }
-
-  // Add your state variables and logic here
-  void retrieveUsername() async {
-    String? storedUserid = await Prefs.getStringValue(Prefs.PREFS_USER_ID);
-    String? storedUserName = await Prefs.getStringValue(Prefs.PREFS_USER_NAME);
-    String? storedName = await Prefs.getStringValue(Prefs.PREFS_NAME);
-
-    setState(() {
-      UserId = storedUserid;
-      UserName = storedUserName;
-      Name = storedName;
-      print('Userid$UserId');
-      print('Name$Name');
-      print('UserName$UserName');
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Container(
-            height: 150,
-            color: Colors.green,
-            child: Row(
-              children: [
-                CircleAvatar(
-                  backgroundImage: AssetImage(
-                    'assets/images/blankprofile.webp',
-                  ),
-                  radius: 40.0,
-                ),
-                SizedBox(width: 16.0),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: Row(
-                        children: [
-                          Text(
-                            Name!,
-                            //"Received Data: ${widget.data}",
-                            style: TextStyle(
-                                fontSize: 17.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
-                          ),
-                          SizedBox(width: 90.0),
-                          Text('Available',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15,
-                                  color: Colors.white)),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 8.0),
-                    Row(
-                      children: [
-                        Text(
-                          UserName!,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(width: 70.0),
-                        Text("₹" + Balance,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 22)),
-                      ],
-                    ),
-                    SizedBox(height: 8.0),
-                    Row(
-                      children: [
-                        Container(
-                          height: 25,
-                          width: 58,
-                          child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            EditProfile()));
-                              },
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors.white, // Button color
-                                onPrimary: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      10.0), // Change radius here
-                                ), // Text color
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'EDIT',
-                                  style: TextStyle(
-                                      fontSize: 12, color: Colors.green),
-                                ),
-                              )),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                /*  Spacer(),
-            ElevatedButton(
-              onPressed: () {
-                // Handle Edit Button click
-              },
-              child: Text('Edit'),
-            ),*/
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 12,
-          ),
-          Row(
-            children: [
-              SizedBox(
-                width: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 25),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => WithdrawFund()));
-                  },
-                  child: Column(
-                    children: [
-                      Image.asset(
-                        'assets/images/withdraw2.png',
-                        cacheHeight: 65,
-                        cacheWidth: 65,
-                      ),
-                      Text('WithDraw')
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(
-                width: 80,
-              ),
-              Stack(
-                alignment: Alignment.bottomCenter,
-                children: [
-                  Column(
-                    children: [
-                      Text(
-                        'Orders', // Replace with your desired text
-                        style: TextStyle(
-                          fontSize: 15, // Adjust the font size as needed
-                        ),
-                      ),
-                      Text(
-                        TotalOrders, // Replace with your desired text
-                        style: TextStyle(
-                          color: Colors.lightBlue,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15, // Adjust the font size as needed
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 40),
-                    child: Center(
-                      child: Container(
-                        height: 30,
-                        width: 30,
-                        child: PieChart(
-                          PieChartData(
-                            sections: [
-                              PieChartSectionData(
-                                color: Colors.blue,
-                                value: 70,
-                                title: '40%',
-                                radius: 30,
-                                titleStyle: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.blue),
-                              ),
-                              PieChartSectionData(
-                                color: Colors.green,
-                                value: 45,
-                                radius: 30,
-                                titleStyle: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.green),
-                              ),
-                              PieChartSectionData(
-                                color: Colors.red,
-                                value: 30,
-                                radius: 30,
-                                titleStyle: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.red),
-                              ),
-                            ],
-                            sectionsSpace: 3,
-                            centerSpaceRadius: 40,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                width: 75,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 25),
-                //FundTransfer
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => FundTransfer()));
-                  },
-                  child: Column(
-                    children: [
-                      Image.asset(
-                        'assets/images/transfer.png',
-                        cacheHeight: 65,
-                        cacheWidth: 65,
-                      ),
-                      Text('Transfer')
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 12,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 25, left: 10),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                Notification,
-                style: TextStyle(color: Colors.blue, fontSize: 18),
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 12,
-          ),
-          Column(
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Card(
-                      color: Colors.green, // Change color as needed
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => Wallet_n()),
-                          );
-                        },
-                        child: Container(
-                          //walletn
-
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "₹" + TotalEarnings,
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 17,
-                                      fontFamily: "Montserrat"),
-                                ),
-                                SizedBox(
-                                  height: 4.5,
-                                ),
-                                Text(
-                                  'Total Earning',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 17,
-                                      fontFamily: "Montserrat"),
-                                )
-                              ]),
-
-                          height: 120,
-
-                          // Card content for the first card
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 1.5), // Adjust spacing between cards
-                  Expanded(
-                    child: Card(
-                      color: Color(0xFF1DAD9F), // Change color as needed
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                      child: Container(
-                        height: 120,
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "₹" + LevelIncome,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 17,
-                                    fontFamily: "Montserrat"),
-                              ),
-                              SizedBox(
-                                height: 4.5,
-                              ),
-                              Text(
-                                'QuKart Cash',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 17,
-                                    fontFamily: "Montserrat"),
-                              )
-                            ]),
-                        // Card content for the second card
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 5), // Adjust spacing between rows
-              Row(
-                children: [
-                  Expanded(
-                    child: Card(
-                      color: Colors.lightBlue, // Change color as needed
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-
-                      child: Container(
-                        height: 120,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              '₹0.00',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 17,
-                                  fontFamily: "Montserrat"),
-                            ),
-                            SizedBox(height: 4.5),
-                            Text(
-                              'Fund Wallet',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 17,
-                                  fontFamily: "Montserrat"),
-                            ),
-                          ],
-                        ),
-                        // Card content for the third card
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 1.5), // Adjust spacing between cards
-                  Expanded(
-                    child: Card(
-                      color: Color(0xFFF8709D), // Change color as needed
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => WithdrawList()),
-                          );
-                        },
-                        child: Container(
-                          height: 120,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                '₹' + TotalWithdrawals,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 17,
-                                    fontFamily: "Montserrat"),
-                              ),
-                              SizedBox(height: 4.5),
-                              //WithdrawList
-                              Text(
-                                'Total Withdrawals',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 17,
-                                    fontFamily: "Montserrat"),
-                              ),
-                            ],
-                          ),
-                          // Card content for the fourth card
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 5),
-              Row(
-                children: [
-                  Expanded(
-                    child: Card(
-                      color: Color(0xFF566DF1), // Change color as needed
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-//FundTransferHistory
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => FundTransferHistory()),
-                          );
-                        },
-                        child: Container(
-                          height: 120,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                '₹' + FundTrasnfered,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 17,
-                                    fontFamily: "Montserrat"),
-                              ),
-                              SizedBox(height: 4.5),
-                              Text(
-                                'Fund Transferred',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 17,
-                                    fontFamily: "Montserrat"),
-                              ),
-                            ],
-                          ),
-                          // Card content for the third card
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 1.5), // Adjust spacing between cards
-                  Expanded(
-                    child: Card(
-                      color: Colors.deepPurpleAccent, // Change color as needed
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                      child: Container(
-                        height: 120,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              '₹' + FundReceived,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 17,
-                                  fontFamily: "Montserrat"),
-                            ),
-                            SizedBox(height: 4.5),
-                            Text(
-                              'Fund Received',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 17,
-                                  fontFamily: "Montserrat"),
-                            ),
-                          ],
-                        ),
-                        // Card content for the fourth card
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 5),
-              Row(
-                children: [
-                  Expanded(
-                    child: Card(
-                      color: Color(0xFFF07E01), // Change color as needed
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-//PendingOrders
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => PendingOrders()),
-                          );
-                        },
-                        child: Container(
-                          height: 120,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                TotalOrders,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 17,
-                                    fontFamily: "Montserrat"),
-                              ),
-                              SizedBox(height: 4.5),
-                              Text(
-                                'Total Orders',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 17,
-                                    fontFamily: "Montserrat"),
-                              ),
-                            ],
-                          ),
-                          // Card content for the third card
-                        ),
-                      ),
-                    ),
-                  ),
-                  // Add more rows with different background colors and card contents if needed
-                ],
-              ),
-              SizedBox(height: 5),
-              Row(
-                children: [
-                  Expanded(
-                    child: Card(
-                      color: Color(0xFF1DAD9F), // Change color as needed
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => PendingOrders()),
-                          );
-                        },
-                        child: Container(
-                          height: 120,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                NewOrders,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 17,
-                                    fontFamily: "Montserrat"),
-                              ),
-                              SizedBox(height: 4.5),
-                              Text(
-                                'New Orders',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 17,
-                                    fontFamily: "Montserrat"),
-                              ),
-                            ],
-                          ),
-                          // Card content for the third card
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 1.5), // Adjust spacing between cards
-                  Expanded(
-                    child: Card(
-                      color: Color(0xFFF8709D), // Change color as needed
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => PendingOrders()),
-                          );
-                        },
-                        child: Container(
-                          height: 120,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                CompletedOrders,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 17,
-                                    fontFamily: "Montserrat"),
-                              ),
-                              SizedBox(height: 4.5),
-                              Text(
-                                'Completed Orders',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 17,
-                                    fontFamily: "Montserrat"),
-                              ),
-                            ],
-                          ),
-                          // Card content for the fourth card
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 5),
-              Row(
-                children: [
-                  Expanded(
-                    child: Card(
-                      color: Colors.deepPurpleAccent, // Change color as needed
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-
-                      child: Container(
-                        height: 120,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'KYC Status',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15,
-                                  fontFamily: "Montserrat"),
-                            ),
-                            SizedBox(height: 7.5),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset(
-                                  'assets/images/greentick.png',
-                                  cacheHeight: 20,
-                                  cacheWidth: 20,
-                                ),
-                                Text(
-                                  Kyc,
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 17,
-                                      fontFamily: "Montserrat"),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        // Card content for the third card
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 1.5), // Adjust spacing between cards
-                  Expanded(
-                    child: Card(
-                      color: Color(0xFF566DF1), // Change color as needed
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                      child: Container(
-                        height: 120,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              PersonalMember,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 17,
-                                  fontFamily: "Montserrat"),
-                            ),
-                            SizedBox(height: 4.5),
-                            Text(
-                              'Direct Members',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 17,
-                                  fontFamily: "Montserrat"),
-                            ),
-                          ],
-                        ),
-                        // Card content for the fourth card
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 5),
-              Row(
-                children: [
-                  Expanded(
-                    child: Card(
-                      color: Colors.green, // Change color as needed
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-//ComposeMessage
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => ComposeMessage()),
-                          );
-                        },
-                        child: Container(
-                          height: 120,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                MessageSent,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 17,
-                                    fontFamily: "Montserrat"),
-                              ),
-                              SizedBox(height: 4.5),
-                              Text(
-                                'Message Sent',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 17,
-                                    fontFamily: "Montserrat"),
-                              ),
-                            ],
-                          ),
-                          // Card content for the third card
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 1.5), // Adjust spacing between cards
-                  Expanded(
-                    child: Card(
-                      color: Colors.lightBlue, // Change color as needed
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => ComposeMessage()),
-                          );
-                        },
-                        child: Container(
-                          height: 120,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                Inbox,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 17,
-                                    fontFamily: "Montserrat"),
-                              ),
-                              SizedBox(height: 4.5),
-                              Text(
-                                'Inbox Messages',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 17,
-                                    fontFamily: "Montserrat"),
-                              ),
-                            ],
-                          ),
-                          // Card content for the fourth card
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
       ),
     );
   }

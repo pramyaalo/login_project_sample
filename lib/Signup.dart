@@ -13,6 +13,7 @@ import 'package:login_project_sample/AddDispute.dart';
 import 'package:login_project_sample/BankDetails.dart';
 import 'package:login_project_sample/BinaryIncomeReport.dart';
 import 'package:login_project_sample/CashWalletHistory.dart';
+import 'package:login_project_sample/DashBoard.dart';
 import 'package:login_project_sample/DirectIncomeReport.dart';
 import 'package:login_project_sample/EditProfile.dart';
 import 'package:login_project_sample/IncomeReport.dart';
@@ -29,6 +30,8 @@ import 'package:login_project_sample/WithDrawFund.dart';
 import 'package:login_project_sample/WithdrawList.dart';
 import 'package:login_project_sample/pairIncomeReport.dart';
 import 'package:login_project_sample/utils/response_handler.dart';
+import 'package:login_project_sample/utils/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class signup extends StatefulWidget {
   @override
@@ -38,11 +41,23 @@ class signup extends StatefulWidget {
 enum Gender { self, franchise }
 
 class _SignUpPageState extends State<signup> {
-  Gender? _selectedGender = Gender.self; // Set the default selection to "Self"
+  Gender? _selectedGender = Gender.self;
+  String selectedYear = '2020'; // Set the default selection to "Self"
   bool _isTextFieldVisible = true;
   Future<http.Response>? __futureLogin;
   String checkboxStatus = "0";
   String checkboxStatus1 = "0";
+  late String memberId, UserName;
+  late String FirstName,
+      LastName,
+      Email,
+      mobile,
+      address1,
+      address2,
+      city,
+      state,
+      pincode,
+      postal;
   bool _passwordVisible = false;
   bool _confirmpasswordVisible = false;
   bool _transactionpasswordVisible = false;
@@ -50,6 +65,8 @@ class _SignUpPageState extends State<signup> {
   final TextEditingController _ReferralId = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _MonthController = TextEditingController();
   final TextEditingController _lastnameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _mobileController = TextEditingController();
@@ -103,6 +120,7 @@ class _SignUpPageState extends State<signup> {
   XFile? _imageFile;
   String? _keyValue;
   final ImagePicker _imagePicker = ImagePicker();
+
   void _showSelectionDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -154,6 +172,8 @@ class _SignUpPageState extends State<signup> {
     String RefrralId = _ReferralId.text.trim();
     String FirstName = _firstNameController.text.trim();
     String Location = _locationController.text.trim();
+    String Date = _dateController.text.trim();
+    String Month = _MonthController.text.trim();
     String LastName = _lastnameController.text.trim();
     String EMail = _emailController.text.trim();
     String MobileNumber = _mobileController.text.trim();
@@ -301,95 +321,290 @@ class _SignUpPageState extends State<signup> {
     });*/
   }
 
-  Future<void> _uploadImageAndRegister() async {
+  Future<void> saveImageToPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('user_image', base64Image!);
+    await prefs.setString('firstName', FirstName);
+
+    await prefs.setString('lastName', LastName);
+    await prefs.setString('email', Email);
+    await prefs.setString('mobile', mobile);
+    await prefs.setString('address1', address1);
+    await prefs.setString('address2', address2);
+    await prefs.setString('city', city);
+    await prefs.setString('state', state);
+    await prefs.setString('pincode', pincode);
+    await prefs.setString('postal', postal);
+  }
+
+  Future<void> _getUserId() async {
+    memberId = await Prefs.getStringValue(Prefs.PREFS_USER_ID);
+    UserName = await Prefs.getStringValue(Prefs.PREFS_USER_NAME);
+
+    log("memberId" + UserName!);
     try {
       print('imagefile$_imageFile.path');
 
-      final String Username = _ReferralId.text;
-      final String FirstName = _firstNameController.text;
-      final String LastName = _lastnameController.text;
-      final String Email = _emailController.text;
-      final String location = _locationController.text;
-      final String mobile = _mobileController.text;
-      final String address1 = _address1Controller.text;
-      final String address2 = _address2Controller.text;
-      final String city = _cityController.text;
-      final String state = _stateController.text;
-      final String pincode = _pincodeController.text;
-      final String postal = _postalareaController.text;
-      SignupModel signupmodel = SignupModel(
-          customerID: "1000000",
-          firstname: FirstName,
-          lastname: LastName,
-          dateOfBirth: "",
-          gender: "1",
-          marital: "1",
-          addressLine1: address1,
-          addressLine2: address2,
-          city: city,
-          state: state,
-          zipcode: pincode,
-          country: "india",
-          phone: mobile,
-          email: Email,
-          nominee: "aa",
-          relation: "a",
-          nomineeaAge: "30");
+      FirstName = _firstNameController.text.toString();
+      LastName = _lastnameController.text.toString();
+      Email = _emailController.text.toString();
+      mobile = _mobileController.text.toString();
+      address1 = _address1Controller.text.toString();
+      address2 = _address2Controller.text.toString();
+      city = _cityController.text.toString();
+      state = _stateController.text.toString();
+      pincode = _pincodeController.text.toString();
+      postal = _postalareaController.text.toString();
+      __futureLogin = ResponseHandler.performPost("MemberID", 'Username=0');
 
-      /* __futureLogin = ResponseHandler.performPost(
-            "MemberSave", 'jsonString=$jsonData&KeyValue=$base64Image');
-        __futureLogin?.then((value) {
-          print('Response body: ${value.body}');
+      /*   __futureLogin = ResponseHandler.performPost(
+          "JoinnowSave",
+          'CustomerID=0&PlacementID=1000000&FirstName=Pramya&LastName=A&DateofBirth=12/12/1990&Gender=1&Marital=1&AddressLine1=Colachel'
+              '&AddressLine2=Ritapuram&city=Nagercoil&state=TN&Zipcode=629789&PostalArea=629159&Country="India"&Phone=8675784378&Email=aa@gmail.com'
+              '&Username=CS1000000&Password=123456&TransactionPassword=123456&SponsorID=1000000&RankName=&AccountName='
+              '&AccountNumber=&BankName=&Branch=&BankCode=&AccountType=&Relation=&status=1&NomineeaAge=25&Expiry=&KeyValue=/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAGAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAX/xAAfEAACAgEEAwAAAAAAAAAAAAABAgMEAAUREmEhIjH/xAAVAQEBAAAAAAAAAAAAAAAAAAACA//EABcRAQEBAQAAAAAAAAAAAAAAAAEAAhH/2gAMAwEAAhEDEQA/AJVPVF1B5Evh3ZQpQr87385EsS0xYlCwSAczt794xgKml7f/2Q==');*/
+      /*print('CustomerID=0');
+      print('PlacementID=$memberId');
+      print('FirstName=$FirstName');
+      print('LastName=$LastName');
+      print('DateofBirth=$DOB');
+      print('Gender=1');
+      print('Marital=1');
+      print('address1=$address1');
+      print('address2=$address2');
+      print('city=$city');
+      print('state=$state');
+      print('Zipcode=$pincode');
+      print('PostalArea=$postal');
+      print('Country=India');
+      print('Phone=$mobile');
+      print('Email=$Email');
+      print('Username=CS10000000');
+      print('Password=$password');
+      print('TransactionPassword=$TransactionPassword');
+      print('SponsorID=1000000');
+      print('RankName=');
+      print('AccountName=');
+      print('AccountNumber=');
+      print('BankName=');
+      print('Branch=');
+      print('BankCode=');
+      print('AccountType=');
+      print('Relation=');
+      print('status=1');
+      print('NomineeaAge=25');
+      print('Expiry=');
+      print('KeyValue=$base64Image');*/
+      __futureLogin?.then((value) {
+        print('Response body: ${value.body}');
 
-          String jsonResponse = ResponseHandler.parseData(value.body);
+        String jsonResponse = ResponseHandler.parseData(value.body);
 
-          print('JSON Response: ${jsonResponse}');
+        print('JSON Response: ${jsonResponse}');
 
-          try {
-            //Map<String, dynamic> map = json.decode(jsonResponse);
-            List<dynamic> decodedJson = json.decode(jsonResponse);
-            print('decodedJson: ${decodedJson}');
-          } catch (error) {
-            Fluttertoast.showToast(msg: "Login Failed");
-            log(error.toString());
-          }*/
+        if (jsonResponse == "1") {
+          Fluttertoast.showToast(msg: 'Joined successfully');
+          //saveImageToPrefs();
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Dashboard(
+                        data: memberId,
+                        data1: UserName,
+                      )));
+        } else if (jsonResponse == "Not Allowed") {
+          Fluttertoast.showToast(msg: 'Unable to join');
+        }
+        /* try {
+          //Map<String, dynamic> map = json.decode(jsonResponse);
+          List<dynamic> decodedJson = json.decode(jsonResponse);
+          print('decodedJson: ${decodedJson}');
+        } catch (error) {
+          Fluttertoast.showToast(msg: "Login Failed");
+          log(error.toString());
+        }*/
+      });
     } catch (e) {
       print("Error: $e");
       Fluttertoast.showToast(msg: "An error occurred");
     }
+
+    Future<void> _saveImageAndGetKeyValue() async {
+      if (_imageFile == null) {
+        return; // No image selected
+      }
+
+      final bytes = await _imageFile!.readAsBytes();
+      final imageEncoded = base64Encode(bytes);
+
+      final String USER_AGENT = "Mozilla/5.0";
+
+      try {
+        final url =
+            Uri.parse("https://lapay.app/webserviceimages.asmx/SaveImage");
+        final response = await http.post(
+          url,
+          headers: {"User-Agent": USER_AGENT},
+          body: {"KeyId": imageEncoded},
+        );
+
+        if (response.statusCode == 200) {
+          // Successfully received the response
+          final jsonData = json.decode(response.body) as Map<String, dynamic>;
+          final keyValue = jsonData["keyId"] as int;
+          setState(() {
+            // _keyValue = keyValue.toString();
+          });
+        } else {
+          // Handle error response
+        }
+      } catch (e) {
+        // Handle exceptions
+      }
+    }
   }
 
-  Future<void> _saveImageAndGetKeyValue() async {
-    if (_imageFile == null) {
-      return; // No image selected
+  Future<void> _uploadImageAndRegister() async {
+    memberId = await Prefs.getStringValue(Prefs.PREFS_USER_ID);
+    UserName = await Prefs.getStringValue(Prefs.PREFS_USER_NAME);
+
+    log("memberId" + UserName!);
+    try {
+      print('imagefile$_imageFile.path');
+
+      final String RefferalId = _ReferralId.text.toString();
+      FirstName = _firstNameController.text.toString();
+      LastName = _lastnameController.text.toString();
+      final String Date = _dateController.text.toString();
+      final String Month = _MonthController.text.toString();
+      Email = _emailController.text.toString();
+      String Year = selectedYear.toString();
+      String DOB = '$Date/$Month/$Year';
+      final String location = _locationController.text.toString();
+      mobile = _mobileController.text.toString();
+      address1 = _address1Controller.text.toString();
+      address2 = _address2Controller.text.toString();
+      city = _cityController.text.toString();
+      state = _stateController.text.toString();
+      pincode = _pincodeController.text.toString();
+      postal = _postalareaController.text.toString();
+      final String password = _passwordcontroller.text.toString();
+      final String cpassword = _confirmpasswordcontroller.text.toString();
+      final String TransactionPassword =
+          _transactionpasswordcontroller.text.toString();
+      //saveImageToPrefs(base64Image!);
+      __futureLogin = ResponseHandler.performPost(
+          "JoinnowSave",
+          'CustomerID=0&PlacementID=$memberId&FirstName=$FirstName&LastName=$LastName&DateofBirth=$DOB&Gender=1&Marital=1&AddressLine1=$address1'
+              '&AddressLine2=$address2&city=$city&state=$state&Zipcode=$pincode&PostalArea=$postal&Country=India&Phone=$mobile&Email=$Email'
+              '&Username=$mobile&Password=$cpassword&TransactionPassword=$TransactionPassword&SponsorID=$memberId&RankName=&AccountName='
+              '&AccountNumber=&BankName=&Branch=&BankCode=&AccountType=&Relation=&status=1&NomineeaAge=25&Expiry=&KeyValue=$base64Image');
+
+      /*   __futureLogin = ResponseHandler.performPost(
+          "JoinnowSave",
+          'CustomerID=0&PlacementID=1000000&FirstName=Pramya&LastName=A&DateofBirth=12/12/1990&Gender=1&Marital=1&AddressLine1=Colachel'
+              '&AddressLine2=Ritapuram&city=Nagercoil&state=TN&Zipcode=629789&PostalArea=629159&Country="India"&Phone=8675784378&Email=aa@gmail.com'
+              '&Username=CS1000000&Password=123456&TransactionPassword=123456&SponsorID=1000000&RankName=&AccountName='
+              '&AccountNumber=&BankName=&Branch=&BankCode=&AccountType=&Relation=&status=1&NomineeaAge=25&Expiry=&KeyValue=/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAGAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAX/xAAfEAACAgEEAwAAAAAAAAAAAAABAgMEAAUREmEhIjH/xAAVAQEBAAAAAAAAAAAAAAAAAAACA//EABcRAQEBAQAAAAAAAAAAAAAAAAEAAhH/2gAMAwEAAhEDEQA/AJVPVF1B5Evh3ZQpQr87385EsS0xYlCwSAczt794xgKml7f/2Q==');*/
+      print('CustomerID=0');
+      print('PlacementID=$memberId');
+      print('FirstName=$FirstName');
+      print('LastName=$LastName');
+      print('DateofBirth=$DOB');
+      print('Gender=1');
+      print('Marital=1');
+      print('address1=$address1');
+      print('address2=$address2');
+      print('city=$city');
+      print('state=$state');
+      print('Zipcode=$pincode');
+      print('PostalArea=$postal');
+      print('Country=India');
+      print('Phone=$mobile');
+      print('Email=$Email');
+      print('Username=$mobile');
+      print('Password=$cpassword');
+      print('TransactionPassword=$TransactionPassword');
+      print('SponsorID=1000000');
+      print('RankName=');
+      print('AccountName=');
+      print('AccountNumber=');
+      print('BankName=');
+      print('Branch=');
+      print('BankCode=');
+      print('AccountType=');
+      print('Relation=');
+      print('status=1');
+      print('NomineeaAge=25');
+      print('Expiry=');
+      print('KeyValue=$base64Image');
+      __futureLogin?.then((value) {
+        print('Response body: ${value.body}');
+
+        String jsonResponse = ResponseHandler.parseData(value.body);
+
+        print('JSON Response: ${jsonResponse}');
+
+        if (jsonResponse == "1") {
+          Fluttertoast.showToast(msg: 'Joined successfully');
+          saveImageToPrefs();
+
+          /*Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Dashboard(
+                        data: memberId,
+                        data1: UserName,
+                      )));*/
+        } else if (jsonResponse == "Not Allowed") {
+          Fluttertoast.showToast(msg: 'Unable to join');
+        }
+        /* try {
+          //Map<String, dynamic> map = json.decode(jsonResponse);
+          List<dynamic> decodedJson = json.decode(jsonResponse);
+          print('decodedJson: ${decodedJson}');
+        } catch (error) {
+          Fluttertoast.showToast(msg: "Login Failed");
+          log(error.toString());
+        }*/
+      });
+    } catch (e) {
+      print("Error: $e");
+      Fluttertoast.showToast(msg: "An error occurred");
     }
 
-    final bytes = await _imageFile!.readAsBytes();
-    final imageEncoded = base64Encode(bytes);
-
-    final String USER_AGENT = "Mozilla/5.0";
-
-    try {
-      final url =
-          Uri.parse("https://lapay.app/webserviceimages.asmx/SaveImage");
-      final response = await http.post(
-        url,
-        headers: {"User-Agent": USER_AGENT},
-        body: {"KeyId": imageEncoded},
-      );
-
-      if (response.statusCode == 200) {
-        // Successfully received the response
-        final jsonData = json.decode(response.body) as Map<String, dynamic>;
-        final keyValue = jsonData["keyId"] as int;
-        setState(() {
-          _keyValue = keyValue.toString();
-        });
-      } else {
-        // Handle error response
+    Future<void> _saveImageAndGetKeyValue() async {
+      if (_imageFile == null) {
+        return; // No image selected
       }
-    } catch (e) {
-      // Handle exceptions
+
+      final bytes = await _imageFile!.readAsBytes();
+      final imageEncoded = base64Encode(bytes);
+
+      final String USER_AGENT = "Mozilla/5.0";
+
+      try {
+        final url =
+            Uri.parse("https://lapay.app/webserviceimages.asmx/SaveImage");
+        final response = await http.post(
+          url,
+          headers: {"User-Agent": USER_AGENT},
+          body: {"KeyId": imageEncoded},
+        );
+
+        if (response.statusCode == 200) {
+          // Successfully received the response
+          final jsonData = json.decode(response.body) as Map<String, dynamic>;
+          final keyValue = jsonData["keyId"] as int;
+          setState(() {
+            _keyValue = keyValue.toString();
+          });
+        } else {
+          // Handle error response
+        }
+      } catch (e) {
+        // Handle exceptions
+      }
     }
   }
 
@@ -417,6 +632,10 @@ class _SignUpPageState extends State<signup> {
 
   @override
   Widget build(BuildContext context) {
+    List<String> years = List.generate(121, (int index) {
+      int year = 1900 + index;
+      return year.toString();
+    });
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Color(0xFF007E01), // Dark green color
     ));
@@ -441,7 +660,8 @@ class _SignUpPageState extends State<signup> {
           Padding(
             padding: EdgeInsets.only(right: 16.0, bottom: 10),
             child: Image.asset(
-              'assets/images/logor.jpg', // Replace 'your_image.png' with your image asset path
+              'assets/images/logor.jpg',
+              // Replace 'your_image.png' with your image asset path
               width: 90,
               height: 35,
             ),
@@ -589,9 +809,8 @@ class _SignUpPageState extends State<signup> {
                       width: 310,
                       child: Visibility(
                         maintainSize: false,
-                        visible: _selectedGender ==
-                            Gender
-                                .franchise, // Show the TextField only when "Self" is selected
+                        visible: _selectedGender == Gender.franchise,
+                        // Show the TextField only when "Self" is selected
                         child: TextField(
                           controller: _locationController,
                           textAlignVertical: TextAlignVertical.bottom,
@@ -696,6 +915,8 @@ class _SignUpPageState extends State<signup> {
                         child: SizedBox(
                           width: 40, // Adjust the width as needed
                           child: TextField(
+                            controller: _MonthController,
+                            keyboardType: TextInputType.phone,
                             decoration: InputDecoration(
                               hintText: 'MM',
                               border: InputBorder.none,
@@ -719,6 +940,8 @@ class _SignUpPageState extends State<signup> {
                         child: SizedBox(
                           width: 40, // Adjust the width as needed
                           child: TextField(
+                            controller: _dateController,
+                            keyboardType: TextInputType.phone,
                             decoration: InputDecoration(
                               hintText: 'DD',
                               border: InputBorder.none,
@@ -743,23 +966,20 @@ class _SignUpPageState extends State<signup> {
                         child: SizedBox(
                           width: 7, // Adjust the width as needed
                           child: DropdownButton<String>(
-                            items: <String>[
-                              'YYYY',
-                              '2022',
-                              '2023',
-                              '2024', // Add more years here
-                            ].map<DropdownMenuItem<String>>(
-                              (String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              },
-                            ).toList(),
-                            onChanged: (String) {},
-                            value: 'YYYY', // Set the initial value
-                            underline:
-                                Container(), // Hide the default underline
+                            value: selectedYear,
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                selectedYear = newValue!;
+                                print('Selected Year: $selectedYear');
+                              });
+                            },
+                            items: years
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
                           ),
                         ),
                       ),
@@ -1237,6 +1457,7 @@ class _SignUpPageState extends State<signup> {
                 ),
                 onPressed: () {
                   validateTextField();
+                  _uploadImageAndRegister();
                 },
                 child: Text(
                   'CREATE ACCOUNT',

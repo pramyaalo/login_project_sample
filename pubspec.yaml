@@ -40,6 +40,7 @@ dependencies:
   fl_chart: ^0.62.0
   quickalert: ^1.0.0
   image_picker: ^0.8.4+3
+  date_range_picker: ^1.0.5
   http: ^0.13.5
   shared_preferences: ^2.0.8
   flutter_bloc: ^8.0.0
@@ -135,6 +136,9 @@ flutter:
     - assets/images/newsec.webp
     - assets/images/pay.webp
     - assets/images/share_icon.webp
+    -   assets/images/idfront.png
+    - assets/images/idback.png
+    - assets/images/idriver.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

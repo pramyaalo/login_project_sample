@@ -401,7 +401,7 @@ class _CabsListScreenState extends State<PairIncomeBonusReport> {
                                                                               4),
                                                                 ),
                                                                 padding: const EdgeInsets
-                                                                        .symmetric(
+                                                                    .symmetric(
                                                                     horizontal:
                                                                         6,
                                                                     vertical:

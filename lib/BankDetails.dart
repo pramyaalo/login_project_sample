@@ -20,54 +20,137 @@ class bankdetails extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<bankdetails> {
+  Future<http.Response>? __futureLogin;
+
   final TextEditingController AccountHolderName = TextEditingController();
   final TextEditingController AccountNumber = TextEditingController();
   final TextEditingController BankName = TextEditingController();
   final TextEditingController BranchName = TextEditingController();
   final TextEditingController IFSC = TextEditingController();
 
-  String selectedAccountType = 'Savings'; // Initial value
+  String selectedAccountType = 'Savings';
   List<String> accountTypes = ['Savings', 'Current'];
   String accType = "1";
+  String memberId = '';
+  late String Balance = "";
+  @override
+  void initState() {
+    _loadmemberid();
+    //String userid = Prefs.getStringValue(Prefs.PREFS_USER_ID);
 
-  Future<void> _uploadImageAndRegister() async {
+    super.initState();
+  }
+
+  Future<void> _loadmemberid() async {
     try {
-      Future<http.Response>? __futureLogin;
-      String memberId = await Prefs.getStringValue(Prefs.PREFS_USER_ID);
-      log("memberId" + memberId);
-      final String AccountName = AccountHolderName.text;
-      final String Accountnmber = AccountNumber.text;
-      final String bankname = BankName.text;
-      final String branchname = BranchName.text;
-      final String ifsc = IFSC.text;
-      BankDetailsModel bankDetailsModel = BankDetailsModel(
-          AccountName: AccountName,
-          AccountNumber: Accountnmber,
-          AccountType: accType,
-          BankCode: ifsc,
-          BankName: bankname,
-          Branch: branchname,
-          CustomerID: memberId,
-          Username: '');
-      final jsonData = jsonEncode(bankDetailsModel.toJson());
-      print('jsondata:$jsonData');
+      memberId = await Prefs.getStringValue(Prefs.PREFS_USER_ID);
+      log("memberfhhjykkId" + memberId);
 
       __futureLogin = ResponseHandler.performPost(
-          "MemberSave", 'jsonString=$jsonData&KeyValue=');
+          "GetEwalletbalanceTranspwd", 'MemberId=${memberId}');
+      print('memberdfgfdgghId: ${memberId}');
       __futureLogin?.then((value) {
         print('Response body: ${value.body}');
 
         String jsonResponse = ResponseHandler.parseData(value.body);
 
         print('JSON Response: ${jsonResponse}');
-
         try {
           //Map<String, dynamic> map = json.decode(jsonResponse);
           List<dynamic> decodedJson = json.decode(jsonResponse);
-          print('decodedJson: ${decodedJson}');
+          Map<String, dynamic> firstUser = decodedJson[0];
+
+          print('CustomerId ${firstUser["CustomerId"]}');
+          print('Balance ${firstUser["Balance"]}');
+          setState(() {
+            Balance = firstUser["Balance"].toString();
+
+            print('Balance:$Balance');
+          });
+
+          print('TransactionPassword: ${firstUser["TransactionPassword"]}');
+          print('------------------');
         } catch (error) {
           Fluttertoast.showToast(msg: "Login Failed");
           log(error.toString());
+        }
+      });
+
+      __futureLogin = ResponseHandler.performPost(
+          "MemberbankSearch", 'MemberId=${memberId}');
+      print('memberdfgfdgghId: ${memberId}');
+      __futureLogin?.then((value) {
+        print('Response dgrgebody: ${value.body}');
+
+        String jsonResponse = ResponseHandler.parseData(value.body);
+
+        print('JSON Redghyjsponse: ${jsonResponse}');
+        try {
+          //Map<String, dynamic> map = json.decode(jsonResponse);
+          List<dynamic> decodedJson = json.decode(jsonResponse);
+          Map<String, dynamic> firstUser = decodedJson[0];
+
+          // print('CustomerId ${firstUser["CustomerId"]}');
+          print('Firstname ${firstUser["Firstname"]}');
+          setState(() {
+            AccountHolderName.text = firstUser['AccountName'].toString();
+            AccountNumber.text = firstUser['AccountNumber'];
+            BankName.text = firstUser['BankName'];
+            BranchName.text = firstUser['Branch'];
+            IFSC.text = firstUser['BankCode'];
+            accType = firstUser['AccountType'];
+            if (accType == '2') {
+              selectedAccountType = 'Current';
+            } else {
+              selectedAccountType = 'Savings';
+            }
+            // _emailController.text = jsonData['Email'];
+            String Firstname = firstUser["Firstname"].toString();
+
+            print('Firstname:$Firstname');
+          });
+
+          print('TransactionPassword: ${firstUser["TransactionPassword"]}');
+          print('------------------');
+        } catch (error) {
+          Fluttertoast.showToast(msg: "Login Failed");
+          log(error.toString());
+        }
+      });
+    } catch (e) {
+      print("Error: $e");
+      Fluttertoast.showToast(msg: "An error occurred");
+    }
+  }
+
+  Future<void> _uploadImageAndRegister() async {
+    try {
+      Future<http.Response>? __futureLogin;
+      String memberId = await Prefs.getStringValue(Prefs.PREFS_USER_ID);
+      log("memberId" + memberId);
+      String username = await Prefs.getStringValue(Prefs.PREFS_USER_NAME);
+      log("usegdfhrname" + username);
+      final String AccountName = AccountHolderName.text;
+      final String Accountnmber = AccountNumber.text;
+      final String bankname = BankName.text;
+      log("usegdfhrname" + bankname);
+
+      final String branchname = BranchName.text;
+      final String ifsc = IFSC.text;
+
+      __futureLogin = ResponseHandler.performPost(
+          "MemberbankSave",
+          'CustomerID=$memberId&Username=$username&AccountName=$AccountName&AccountNumber=$Accountnmber&BankName=$bankname&BranchName=$branchname'
+              '&IFSCCode=$ifsc&Accounttype=$accType&KeyValue=');
+      __futureLogin?.then((value) {
+        print('Response body: ${value.body}');
+
+        String jsonResponse = ResponseHandler.parseData(value.body);
+
+        print('JSON Response: ${jsonResponse}');
+        if (jsonResponse == "1") {
+          Fluttertoast.showToast(msg: 'Bank Details Added Sucessfully');
+          Navigator.of(context).pop();
         }
       });
     } catch (e) {
@@ -100,7 +183,6 @@ class _MyHomePageState extends State<bankdetails> {
             padding: EdgeInsets.only(right: 16.0, bottom: 10),
             child: Image.asset(
               'assets/images/logor.jpg',
-              // Replace 'your_image.png' with your image asset path
               width: 90,
               height: 35,
             ),
@@ -131,7 +213,7 @@ class _MyHomePageState extends State<bankdetails> {
                             SizedBox(height: 8),
                             SizedBox(
                               width: 280,
-                              child: Text('₹100.00',
+                              child: Text(Balance,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
@@ -203,6 +285,7 @@ class _MyHomePageState extends State<bankdetails> {
                           height: 45,
                           width: 300,
                           child: TextField(
+                            controller: BankName,
                             decoration: InputDecoration(
                                 border: OutlineInputBorder(),
                                 prefixIcon: Image.asset(
@@ -223,6 +306,7 @@ class _MyHomePageState extends State<bankdetails> {
                           height: 45,
                           width: 310,
                           child: TextField(
+                            controller: BranchName,
                             decoration: InputDecoration(
                                 border: OutlineInputBorder(),
                                 prefixIcon: Image.asset(
@@ -275,6 +359,7 @@ class _MyHomePageState extends State<bankdetails> {
                           height: 45,
                           width: 310,
                           child: TextField(
+                            controller: IFSC,
                             decoration: InputDecoration(
                                 border: OutlineInputBorder(),
                                 prefixIcon: Image.asset(
@@ -296,11 +381,12 @@ class _MyHomePageState extends State<bankdetails> {
                           children: [
                             ElevatedButton(
                               onPressed: () {
-                                Navigator.push(
+                                _uploadImageAndRegister();
+                                /*  Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (BuildContext context) =>
-                                            ReferandEarn()));
+                                            ReferandEarn()));*/
                               },
                               style: ElevatedButton.styleFrom(
                                 primary:
