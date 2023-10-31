@@ -85,9 +85,10 @@ class _CabsListScreenState extends State<DirectIncomeReport> {
                 style: TextStyle(
                     color: Colors.black,
                     fontSize: 16,
-                    fontFamily: "Montserrat",
+
                     fontWeight: FontWeight.bold),
-              ),
+              ), titleSpacing: 15,
+              leadingWidth: 30,
               actions: [
                 Padding(
                   padding: const EdgeInsets.only(right: 16.0, bottom: 10),
@@ -265,8 +266,7 @@ class _CabsListScreenState extends State<DirectIncomeReport> {
                                                                   TextAlign.end,
                                                               //Text(snapshot.data![index].username,
                                                               style: TextStyle(
-                                                                  fontFamily:
-                                                                      "Montserrat",
+
                                                                   fontSize: 14,
                                                                   fontWeight:
                                                                       FontWeight
@@ -288,8 +288,7 @@ class _CabsListScreenState extends State<DirectIncomeReport> {
                                                                     TextAlign
                                                                         .center,
                                                                 style: TextStyle(
-                                                                    fontFamily:
-                                                                        "Montserrat",
+
                                                                     fontSize:
                                                                         13,
                                                                     fontWeight:
@@ -317,8 +316,7 @@ class _CabsListScreenState extends State<DirectIncomeReport> {
                                                                           .qcash,
                                                                   //Text(snapshot.data![index].username,
                                                                   style: TextStyle(
-                                                                      fontFamily:
-                                                                          "Montserrat",
+
                                                                       fontSize:
                                                                           12,
                                                                       color: Colors
@@ -344,8 +342,7 @@ class _CabsListScreenState extends State<DirectIncomeReport> {
                                                                         .center,
                                                                 // Text(snapshot.data![index].message,
                                                                 style: TextStyle(
-                                                                    fontFamily:
-                                                                        "Montserrat",
+
                                                                     fontSize:
                                                                         13,
                                                                     fontWeight:
@@ -372,8 +369,7 @@ class _CabsListScreenState extends State<DirectIncomeReport> {
                                                                               index]
                                                                           .TDS,
                                                                   style: TextStyle(
-                                                                      fontFamily:
-                                                                          "Montserrat",
+
                                                                       fontSize:
                                                                           12,
                                                                       color: Colors
@@ -433,8 +429,7 @@ class _CabsListScreenState extends State<DirectIncomeReport> {
                                                                       TextAlign
                                                                           .end,
                                                                   style: TextStyle(
-                                                                      fontFamily:
-                                                                          "Montserrat",
+
                                                                       fontSize:
                                                                           12,
                                                                       color: Colors

@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:http/http.dart' as http;
+ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:login_project_sample/Models/CompletedOrderModel.dart';
@@ -31,6 +30,7 @@ class TabViewExample extends StatefulWidget {
 class _TabViewExampleState extends State<TabViewExample>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+
   List<String> tabTitles = ['PENDING ORDERS', 'COMPLETED ORDERS'];
 
   @override
@@ -50,20 +50,54 @@ class _TabViewExampleState extends State<TabViewExample>
             },
           ),
           bottom: TabBar(
-            indicatorColor: Colors.green,
+            indicatorColor: Color(0xFF007E01),
+            labelColor: Colors.black,
             tabs: [
-              Text('PENDING ORDERS',
-                  style: TextStyle(
-                    color: Colors.black,
-                  )),
-              Text('COMPLETED ORDERS', style: TextStyle(color: Colors.black)),
+              Tab(
+                text: ("PENDING ORDERS"),
+              ),
+              Tab(
+                text: ("COMPLETED ORDERS"),
+              ),
             ],
+            indicator: BoxDecoration(
+              color: Color(0xFFF5F5F5), // Background color of the selected tab
+              border: Border(
+                bottom: BorderSide(
+                  color: Color(0xFF007E01), // Indicator line color
+                  width: 2.0, // Adjust the line thickness as needed
+                ),
+              ),
+            ),
+            unselectedLabelStyle: TextStyle(
+              color: Colors.white, // Define the text color for unselected tabs
+              fontSize: 16, // Define the text font size
+              fontWeight: FontWeight.w500, // Define the text font weight
+              // You can add other text style properties as needed
+            ),
           ),
-          title: Text(
-            'Pending Orders',
-            style: TextStyle(
-                color: Colors.black, fontSize: 17, fontWeight: FontWeight.bold),
-          ),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                _PaymentHistoryTabState.Username,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(
+                height: 3,
+                width: 3,
+              ),
+              Text(
+                _PaymentHistoryTabState.Name,
+                style: TextStyle(fontSize: 14, color: Colors.black),
+              ),
+            ],
+          ), titleSpacing: 15,
+          leadingWidth: 30,
           actions: [
             Padding(
               padding: EdgeInsets.only(right: 16.0, bottom: 10),
@@ -92,9 +126,19 @@ class Pendingorders extends StatefulWidget {
 }
 
 class _PaymentHistoryTabState extends State<Pendingorders> {
+  static String memberId = '', Username = '', Name = '';
   @override
+  void initState() {
+    super.initState();
+
+    _Payments = getPayment();
+  }
+
   static Future<List<PendingOrderModel>?> getPayment() async {
-    String? memberId = await Prefs.getStringValue(Prefs.PREFS_USER_ID);
+    memberId = await Prefs.getStringValue(Prefs.PREFS_USER_ID);
+    Username = await Prefs.getStringValue(Prefs.PREFS_USER_NAME);
+    Name = await Prefs.getStringValue(Prefs.PREFS_NAME);
+    log('Name :' + Name!);
     List<PendingOrderModel> bookingCardData = [];
     Future<http.Response>? __futureLabels = ResponseHandler.performPost(
         "MyOrderDetail", "MemberId=${memberId}&PageIndex=1");
@@ -124,11 +168,6 @@ class _PaymentHistoryTabState extends State<Pendingorders> {
   }
 
   Future<List<PendingOrderModel>?>? _Payments;
-  void initState() {
-    super.initState();
-
-    _Payments = getPayment();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -182,7 +221,6 @@ class _PaymentHistoryTabState extends State<Pendingorders> {
                                           textAlign: TextAlign.end,
                                           //Text(snapshot.data![index].username,
                                           style: TextStyle(
-                                              fontFamily: "Montserrat",
                                               fontSize: 14,
                                               fontWeight: FontWeight.bold)),
                                       SizedBox(
@@ -206,7 +244,6 @@ class _PaymentHistoryTabState extends State<Pendingorders> {
                                             textAlign: TextAlign.center,
                                             // Text(snapshot.data![index].message,
                                             style: TextStyle(
-                                                fontFamily: "Montserrat",
                                                 fontSize: 12,
                                                 fontWeight: FontWeight.normal),
                                           ),
@@ -244,7 +281,6 @@ class _PaymentHistoryTabState extends State<Pendingorders> {
                                               snapshot
                                                   .data![index].PaymentMethod,
                                               style: TextStyle(
-                                                  fontFamily: "Montserrat",
                                                   fontSize: 12,
                                                   color: Colors.green,
                                                   fontWeight: FontWeight.bold)),
@@ -262,7 +298,6 @@ class _PaymentHistoryTabState extends State<Pendingorders> {
                                             textAlign: TextAlign.center,
                                             // Text(snapshot.data![index].message,
                                             style: TextStyle(
-                                                fontFamily: "Montserrat",
                                                 fontSize: 13,
                                                 fontWeight: FontWeight.normal),
                                           ),
@@ -279,7 +314,6 @@ class _PaymentHistoryTabState extends State<Pendingorders> {
                                               snapshot.data![index].Date,
                                               //Text(snapshot.data![index].username,
                                               style: TextStyle(
-                                                  fontFamily: "Montserrat",
                                                   fontSize: 12,
                                                   color: Colors.green,
                                                   fontWeight: FontWeight.bold)),
@@ -447,7 +481,6 @@ class _PendingPaymentsTabState extends State<CompletedOrders> {
                                           textAlign: TextAlign.end,
                                           //Text(snapshot.data![index].username,
                                           style: TextStyle(
-                                              fontFamily: "Montserrat",
                                               fontSize: 14,
                                               fontWeight: FontWeight.bold)),
                                       SizedBox(
@@ -471,7 +504,6 @@ class _PendingPaymentsTabState extends State<CompletedOrders> {
                                             textAlign: TextAlign.center,
                                             // Text(snapshot.data![index].message,
                                             style: TextStyle(
-                                                fontFamily: "Montserrat",
                                                 fontSize: 12,
                                                 fontWeight: FontWeight.normal),
                                           ),
@@ -510,7 +542,6 @@ class _PendingPaymentsTabState extends State<CompletedOrders> {
                                                   .data![index].PaymentMethod,
                                               //Text(snapshot.data![index].username,
                                               style: TextStyle(
-                                                  fontFamily: "Montserrat",
                                                   fontSize: 12,
                                                   color: Colors.green,
                                                   fontWeight: FontWeight.bold)),
@@ -528,7 +559,6 @@ class _PendingPaymentsTabState extends State<CompletedOrders> {
                                             textAlign: TextAlign.center,
                                             // Text(snapshot.data![index].message,
                                             style: TextStyle(
-                                                fontFamily: "Montserrat",
                                                 fontSize: 13,
                                                 fontWeight: FontWeight.normal),
                                           ),
@@ -545,7 +575,6 @@ class _PendingPaymentsTabState extends State<CompletedOrders> {
                                               snapshot
                                                   .data![index].DeliveryDate,
                                               style: TextStyle(
-                                                  fontFamily: "Montserrat",
                                                   fontSize: 12,
                                                   color: Colors.green,
                                                   fontWeight: FontWeight.bold)),
@@ -600,7 +629,7 @@ class _PendingPaymentsTabState extends State<CompletedOrders> {
                                   Text(
                                     snapshot.data![index].Total,
                                     style: TextStyle(
-                                        fontSize: 14,
+                                        fontSize: 17,
                                         fontWeight: FontWeight.bold),
                                   ),
                                   // User Type on the left side

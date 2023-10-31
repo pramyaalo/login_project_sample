@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
- import 'package:login_project_sample/home.dart';
+import 'package:login_project_sample/home.dart';
 
 void main() {
   runApp(MyApp());
@@ -32,7 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Timer(
         Duration(seconds: 3),
         () => Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => LoginApp())));
+            context, MaterialPageRoute(builder: (conteFxt) => LoginApp())));
   }
 
   @override

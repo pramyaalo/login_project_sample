@@ -26,84 +26,82 @@ class AddFundWallet extends StatefulWidget {
 class _MyHomePageState extends State<AddFundWallet> {
   bool isTextFieldEnabled = false;
   Future<http.Response>? __futureLogin;
-  final TextEditingController _EBalanceController = TextEditingController();
+  String memberId = '', Username = '', Name = '';
   bool _isFieldEmpty = false;
 
-  late String Balance = "";
+  late String Balance = "", formattedBalance = "";
   final TextEditingController _AmountController = TextEditingController();
-  void _validateAndSubmit() {
-    setState(() {
-      _isFieldEmpty = _AmountController.text.isEmpty;
-      print('Submitted: ${_isFieldEmpty}');
-      Fluttertoast.showToast(msg: 'Please Enter Withdraw Amount');
-    });
-
-    if (!_isFieldEmpty) {
-      _function2();
-      // Perform your action with the non-empty value
-      print('Submitted: ${_AmountController.text}');
-    }
-  }
 
   void _function2() async {
-    String memberid = await Prefs.getStringValue(Prefs.PREFS_USER_ID);
+    String AMount = _AmountController.text;
+
     __futureLogin = ResponseHandler.performPost(
-        "WithdrawfundSave",
-        'MemberId=1000000'
-                '&Debit=' +
-            _AmountController.text);
+        "AddFundWallet", 'MemberId=${memberId}&Amount=$AMount');
     __futureLogin?.then((value) {
       print('Response body: ${value.body}');
 
       String jsonResponse = ResponseHandler.parseData(value.body);
 
-      print('JSON Response: ${jsonResponse}');
-      Navigator.push(context,
-          MaterialPageRoute(builder: (BuildContext context) => IncomeReport()));
+      print('JSON Resdfsdcdfsponse: ${jsonResponse}');
+      if (jsonResponse == "Allowed") {
+        Fluttertoast.showToast(
+          msg: "Fund Addedd Sucessfully",
+          gravity: ToastGravity.BOTTOM,
+          textColor: Colors.white,
+        );
+        Navigator.pop(context);
+      }
     });
-    log('buttonPress' + _AmountController.text);
-  }
-
-  @override
-  void dispose() {
-    _AmountController.dispose();
-    super.dispose();
   }
 
   @override
   void initState() {
-    //String userid = Prefs.getStringValue(Prefs.PREFS_USER_ID);
-    __futureLogin = ResponseHandler.performPost(
-        "GetEwalletbalanceTranspwd", 'MemberId=1000000');
-    __futureLogin?.then((value) {
-      print('Response body: ${value.body}');
-
-      String jsonResponse = ResponseHandler.parseData(value.body);
-
-      print('JSON Response: ${jsonResponse}');
-      String balance = "";
-      try {
-        //Map<String, dynamic> map = json.decode(jsonResponse);
-        List<dynamic> decodedJson = json.decode(jsonResponse);
-        Map<String, dynamic> firstUser = decodedJson[0];
-
-        print('CustomerId ${firstUser["CustomerId"]}');
-        print('Balance ${firstUser["Balance"]}');
-        setState(() {
-          Balance = firstUser["Balance"].toString();
-
-          print('Balance:$Balance');
-        });
-
-        print('TransactionPassword: ${firstUser["TransactionPassword"]}');
-        print('------------------');
-      } catch (error) {
-        Fluttertoast.showToast(msg: "Login Failed");
-        log(error.toString());
-      }
-    });
+    _loadmemberid();
 
     super.initState();
+  }
+
+  Future<void> _loadmemberid() async {
+    try {
+      memberId = await Prefs.getStringValue(Prefs.PREFS_USER_ID);
+      Username = await Prefs.getStringValue(Prefs.PREFS_USER_NAME);
+      Name = await Prefs.getStringValue(Prefs.PREFS_NAME);
+      log("memberfhhjykkId" + Name);
+
+      __futureLogin = ResponseHandler.performPost(
+          "GetFundwalletbalance", 'MemberId=${memberId}');
+      __futureLogin?.then((value) {
+        print('Response body: ${value.body}');
+
+        String jsonResponse = ResponseHandler.parseData(value.body);
+
+        print('JSON Response: ${jsonResponse}');
+        try {
+          //Map<String, dynamic> map = json.decode(jsonResponse);
+          List<dynamic> decodedJson = json.decode(jsonResponse);
+          Map<String, dynamic> firstUser = decodedJson[0];
+
+          print('CustomerId ${firstUser["CustomerId"]}');
+          print('Balance ${firstUser["Balance"]}');
+          setState(() {
+            Balance = firstUser["Balance"].toString();
+            double doubleValue = double.parse(Balance);
+            formattedBalance = doubleValue.toStringAsFixed(2);
+
+            print('Balancesdfg:$formattedBalance');
+          });
+
+          print('TransactionPassword: ${firstUser["TransactionPassword"]}');
+          print('------------------');
+        } catch (error) {
+          Fluttertoast.showToast(msg: "Login Failed");
+          log(error.toString());
+        }
+      });
+    } catch (e) {
+      print("Error: $e");
+      Fluttertoast.showToast(msg: "An error occurred");
+    }
   }
 
   @override
@@ -116,7 +114,9 @@ class _MyHomePageState extends State<AddFundWallet> {
             Icons.arrow_back,
             color: Colors.black,
           ),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
         title: Text(
           'Withdraw Funds',
@@ -152,22 +152,23 @@ class _MyHomePageState extends State<AddFundWallet> {
                             "assets/images/rupee.png",
                             height: 40,
                             width: 40,
-                            color: Colors.green,
+                            color: Color(0xFF007E01),
                           ),
                           SizedBox(height: 8),
                           SizedBox(
                             width: 280,
-                            child: Text(Balance,
+                            child: Text("₹" + formattedBalance,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 20)),
+                                    fontWeight: FontWeight.bold, fontSize: 30)),
                           ),
-                          SizedBox(height: 8),
+                          SizedBox(height: 4),
                           SizedBox(
                             width: 310,
-                            child: Text('Available E - Wallet Balance',
+                            child: Text('Available Fund Wallet Balance',
                                 textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 13)),
+                                style: TextStyle(
+                                    fontSize: 13, fontWeight: FontWeight.w500)),
                           ),
                         ],
                       ),
@@ -201,35 +202,38 @@ class _MyHomePageState extends State<AddFundWallet> {
                             SizedBox(
                               width: 25,
                             ),
-                            Text("User Name",
+                            Text(Name,
                                 style: TextStyle(
-                                  fontFamily: "Montserrat",
-                                  fontSize: 16,
-                                )),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black)),
                           ],
                         ),
                       ),
                       SizedBox(height: 16),
-                      SizedBox(
-                        height: 45,
-                        child: TextField(
-                          controller: _AmountController,
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              prefixIcon: Image.asset('assets/images/id.png',
-                                  alignment: Alignment.center,
-                                  cacheHeight: 20,
-                                  cacheWidth: 20,
-                                  color: Colors.green),
-                              hintText: 'User Id',
-                              errorText: _isFieldEmpty
-                                  ? 'Field can\'t be empty'
-                                  : null,
-                              hintStyle: TextStyle(fontFamily: "Montserrat"),
-                              contentPadding: EdgeInsets.only(bottom: 5)),
-                          style: TextStyle(
-                            fontSize: 17,
-                          ),
+                      Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(3),
+                        ),
+                        child: Row(
+                          children: [
+                            Image.asset(
+                              'assets/images/id.png',
+                              cacheHeight: 20,
+                              color: Colors.green,
+                              cacheWidth: 20,
+                            ),
+                            SizedBox(
+                              width: 25,
+                            ),
+                            Text(Username,
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black)),
+                          ],
                         ),
                       ),
                       SizedBox(height: 16),
@@ -237,20 +241,21 @@ class _MyHomePageState extends State<AddFundWallet> {
                         height: 45,
                         width: 300,
                         child: TextField(
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              prefixIcon: Image.asset('assets/images/money.png',
-                                  alignment: Alignment.center,
-                                  cacheHeight: 20,
-                                  cacheWidth: 20,
-                                  color: Colors.green),
-                              hintText: 'Amount',
-                              hintStyle: TextStyle(fontFamily: "Montserrat"),
-                              contentPadding: EdgeInsets.only(bottom: 5)),
-                          style: TextStyle(
-                            fontSize: 17,
-                          ),
-                        ),
+                            controller: _AmountController,
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                prefixIcon: Image.asset(
+                                    'assets/images/money.png',
+                                    alignment: Alignment.center,
+                                    cacheHeight: 20,
+                                    cacheWidth: 20,
+                                    color: Colors.green),
+                                hintText: 'Amount',
+                                contentPadding: EdgeInsets.only(bottom: 5)),
+                            style: TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black)),
                       ),
                       SizedBox(height: 16),
                       Row(
@@ -261,8 +266,11 @@ class _MyHomePageState extends State<AddFundWallet> {
                               _function2();
                             },
                             style: ElevatedButton.styleFrom(
-                              primary: Colors.deepPurpleAccent, // Button color
-                              onPrimary: Colors.white, // Text color
+                              primary: Colors.indigoAccent, // Button color
+                              onPrimary: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ), // Text color
                             ),
                             child: SizedBox(
                                 width: 115,
@@ -281,15 +289,14 @@ class _MyHomePageState extends State<AddFundWallet> {
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          Payouts()));
+                              Navigator.pop(context);
                             },
                             style: ElevatedButton.styleFrom(
                               primary: Colors.green, // Button color
-                              onPrimary: Colors.white, // Text color
+                              onPrimary: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ), // Text color
                             ),
                             child: SizedBox(
                                 width: 115,

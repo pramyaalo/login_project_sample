@@ -82,9 +82,10 @@ class _CabsListScreenState extends State<FranchiseIncome> {
                 style: TextStyle(
                     color: Colors.black,
                     fontSize: 16,
-                    fontFamily: "Montserrat",
+
                     fontWeight: FontWeight.bold),
-              ),
+              ), titleSpacing: 15,
+              leadingWidth: 30,
               actions: [
                 Padding(
                   padding: const EdgeInsets.only(right: 16.0, bottom: 10),
@@ -262,8 +263,7 @@ class _CabsListScreenState extends State<FranchiseIncome> {
                                                                   TextAlign.end,
                                                               //Text(snapshot.data![index].username,
                                                               style: TextStyle(
-                                                                  fontFamily:
-                                                                      "Montserrat",
+
                                                                   fontSize: 14,
                                                                   fontWeight:
                                                                       FontWeight
@@ -285,8 +285,7 @@ class _CabsListScreenState extends State<FranchiseIncome> {
                                                                     TextAlign
                                                                         .center,
                                                                 style: TextStyle(
-                                                                    fontFamily:
-                                                                        "Montserrat",
+
                                                                     fontSize:
                                                                         13,
                                                                     fontWeight:
@@ -314,8 +313,7 @@ class _CabsListScreenState extends State<FranchiseIncome> {
                                                                           .qcash,
                                                                   //Text(snapshot.data![index].username,
                                                                   style: TextStyle(
-                                                                      fontFamily:
-                                                                          "Montserrat",
+
                                                                       fontSize:
                                                                           12,
                                                                       color: Colors
@@ -341,8 +339,7 @@ class _CabsListScreenState extends State<FranchiseIncome> {
                                                                         .center,
                                                                 // Text(snapshot.data![index].message,
                                                                 style: TextStyle(
-                                                                    fontFamily:
-                                                                        "Montserrat",
+
                                                                     fontSize:
                                                                         13,
                                                                     fontWeight:
@@ -369,8 +366,7 @@ class _CabsListScreenState extends State<FranchiseIncome> {
                                                                               index]
                                                                           .TDS,
                                                                   style: TextStyle(
-                                                                      fontFamily:
-                                                                          "Montserrat",
+
                                                                       fontSize:
                                                                           12,
                                                                       color: Colors
@@ -430,8 +426,7 @@ class _CabsListScreenState extends State<FranchiseIncome> {
                                                                       TextAlign
                                                                           .end,
                                                                   style: TextStyle(
-                                                                      fontFamily:
-                                                                          "Montserrat",
+
                                                                       fontSize:
                                                                           12,
                                                                       color: Colors

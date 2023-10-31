@@ -5,15 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:login_project_sample/AddReview.dart';
-import 'package:login_project_sample/CashWalletHistory.dart';
-import 'package:login_project_sample/ComposeMessage.dart';
-import 'package:login_project_sample/IncomeReport.dart';
-import 'package:login_project_sample/PayoutHistory.dart';
-import 'package:login_project_sample/KYCApplication.dart';
-import 'package:login_project_sample/KYCList.dart';
-import 'package:login_project_sample/Payouts.dart';
-import 'package:login_project_sample/PendingOrders.dart';
-import 'package:login_project_sample/WithdrawList.dart';
+
 import 'package:login_project_sample/utils/response_handler.dart';
 import 'package:http/http.dart' as http;
 import 'package:login_project_sample/utils/shared_preferences.dart';
@@ -25,12 +17,13 @@ class SendTestimonal extends StatefulWidget {
 
 class _MyHomePageState extends State<SendTestimonal> {
   Future<http.Response>? _futureLogin;
-  late String memberId;
+  late String memberId, UserName = '', Name = '';
   int title = 0;
   String? base64Image;
   late String Description;
   final TextEditingController _titlecontroller = TextEditingController();
   final TextEditingController _descriptioncontroller = TextEditingController();
+
   void validateTextField() {
     String Title = _titlecontroller.text.trim();
     String Description = _descriptioncontroller.text.trim();
@@ -39,7 +32,6 @@ class _MyHomePageState extends State<SendTestimonal> {
       title = int.parse(Title);
       print('gghhj$title');
     } catch (e) {
-      // Handle the case where the title cannot be parsed as an integer.
       Fluttertoast.showToast(
         msg: 'Title must be an integer',
         gravity: ToastGravity.BOTTOM,
@@ -55,7 +47,21 @@ class _MyHomePageState extends State<SendTestimonal> {
       );
     }
     _uploadImageAndRegister(title);
-    // FocusFirstName.requestFocus();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _loadmemberid();
+  }
+
+  Future<void> _loadmemberid() async {
+    memberId = await Prefs.getStringValue(Prefs.PREFS_USER_ID);
+    log("memberId" + memberId);
+    UserName = await Prefs.getStringValue(Prefs.PREFS_USER_NAME);
+    log("UserNameUserNameUserName" + UserName);
+    Name = await Prefs.getStringValue(Prefs.PREFS_NAME);
   }
 
   Future<void> _uploadImageAndRegister(int title) async {
@@ -77,36 +83,105 @@ class _MyHomePageState extends State<SendTestimonal> {
     });
   }
 
-  void _showSelectionDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Select Source"),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: [
-                GestureDetector(
-                  child: Text("Open Camera"),
-                  onTap: () {
-                    _openCamera();
-                    Navigator.of(context).pop(); // Close the dialog
-                  },
-                ),
-                SizedBox(height: 16),
-                GestureDetector(
-                  child: Text("Open Gallery"),
-                  onTap: () {
-                    _openGallery();
-                    Navigator.of(context).pop(); // Close the dialog
-                  },
-                ),
-              ],
+  Future _showSelectionDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            titlePadding: EdgeInsets.all(0),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
             ),
-          ),
-        );
-      },
-    );
+            title: Container(
+              height: 50,
+              decoration: BoxDecoration(
+                color: Color(0xFF007E01),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+              ),
+              child: Center(
+                child: Text(
+                  "Add Photo",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            contentPadding: EdgeInsets.only(top: 10.0),
+            content: Container(
+              width: 100.0,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: GestureDetector(
+                      child: Center(
+                          child: Text("Gallery",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500, fontSize: 17))),
+                      onTap: () {
+                        _openGallery();
+                        Navigator.of(context).pop(); // Close the dialog
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Divider(color: Colors.grey, thickness: 1),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  GestureDetector(
+                    child: Center(
+                        child: Text("Take Photo",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500, fontSize: 17))),
+                    onTap: () {
+                      _openCamera();
+                      Navigator.of(context).pop(); // Close the dialog
+                    },
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  InkWell(
+                    child: Container(
+                        padding: EdgeInsets.only(top: 15.0, bottom: 10.0),
+                        decoration: BoxDecoration(
+                          color: Color(0xFF007E01),
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(20),
+                              bottomRight: Radius.circular(20)),
+                        ),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            "Cancel",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        )),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
   }
 
   Future<void> _openCamera() async {
@@ -158,6 +233,8 @@ class _MyHomePageState extends State<SendTestimonal> {
           style: TextStyle(
               color: Colors.black, fontSize: 17, fontWeight: FontWeight.bold),
         ),
+        titleSpacing: 15,
+        leadingWidth: 30,
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 16.0, bottom: 10),
@@ -180,7 +257,8 @@ class _MyHomePageState extends State<SendTestimonal> {
                   child: Card(
                     elevation: 4,
                     child: Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.only(
+                          top: 8, bottom: 8, left: 15, right: 15),
                       child: Column(
                         children: [
                           Stack(
@@ -194,34 +272,37 @@ class _MyHomePageState extends State<SendTestimonal> {
                                   backgroundImage: MemoryImage(
                                     base64Decode(base64Image!),
                                   ),
-                                ),
-                              IconButton(
+                                )
+                              else
+                                Image.asset("assets/images/profile.png",
+                                    width: 70, height: 70),
+                              /* IconButton(
                                 icon: Icon(Icons.camera_alt),
                                 onPressed: () {
                                   _showSelectionDialog(context);
                                 },
-                              ),
+                              ),*/
                             ],
                           ),
                           SizedBox(height: 8),
                           SizedBox(
                             width: 280,
-                            child: Text('CS1000000',
+                            child: Text(UserName,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                    fontFamily: "Montserrat")),
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 25,
+                                )),
                           ),
-                          SizedBox(height: 8),
+                          SizedBox(height: 2),
                           SizedBox(
                             width: 310,
-                            child: Text('Pies',
+                            child: Text(Name,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: "Montserrat")),
+                                  fontSize: 19,
+                                  fontWeight: FontWeight.w700,
+                                )),
                           ),
                         ],
                       ),
@@ -245,16 +326,16 @@ class _MyHomePageState extends State<SendTestimonal> {
                             vertical: 10, horizontal: 8),
                         child: Text('Send Testimonial',
                             style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                fontFamily: "Montserrat")),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            )),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: 10, horizontal: 8),
                         child: Text('Testimonial Title',
                             style: TextStyle(
-                                fontSize: 16, fontFamily: "Montserrat")),
+                                fontSize: 16, fontWeight: FontWeight.w500)),
                       ),
                       SizedBox(
                         height: 45,
@@ -263,11 +344,9 @@ class _MyHomePageState extends State<SendTestimonal> {
                           decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               hintText: '  Testimonial Title',
-                              hintStyle: TextStyle(fontFamily: "Montserrat"),
                               contentPadding: EdgeInsets.only(bottom: 5)),
                           style: TextStyle(
-                            fontSize: 17,
-                          ),
+                              fontSize: 17, fontWeight: FontWeight.w500),
                         ),
                       ),
                       Padding(
@@ -275,7 +354,7 @@ class _MyHomePageState extends State<SendTestimonal> {
                             vertical: 10, horizontal: 8),
                         child: Text('Testimonial Description',
                             style: TextStyle(
-                                fontSize: 16, fontFamily: "Montserrat")),
+                                fontSize: 16, fontWeight: FontWeight.w500)),
                       ),
                       Container(
                         height: 160,
@@ -290,12 +369,10 @@ class _MyHomePageState extends State<SendTestimonal> {
                           controller: _descriptioncontroller,
                           decoration: InputDecoration(
                             hintText: '  Testimonial Description',
-                            hintStyle: TextStyle(fontFamily: "Montserrat"),
                             border: InputBorder.none,
                           ),
                           style: TextStyle(
-                            fontSize: 17,
-                          ),
+                              fontSize: 17, fontWeight: FontWeight.w500),
                         ),
                       ),
                       SizedBox(
@@ -314,7 +391,11 @@ class _MyHomePageState extends State<SendTestimonal> {
                                           KYCApplication()));*/
                             },
                             style: ElevatedButton.styleFrom(
-                              primary: Colors.deepPurpleAccent, // Button color
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    10), // Adjust the radius as needed
+                              ),
+                              primary: Colors.indigoAccent, // Button color
                               onPrimary: Colors.white, // Text color
                             ),
                             child: SizedBox(
@@ -341,7 +422,11 @@ class _MyHomePageState extends State<SendTestimonal> {
                                           AddReview()));
                             },
                             style: ElevatedButton.styleFrom(
-                              primary: Colors.green, // Button color
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    10), // Adjust the radius as needed
+                              ),
+                              primary: Color(0xFF007E01), // Button color
                               onPrimary: Colors.white, // Text color
                             ),
                             child: SizedBox(

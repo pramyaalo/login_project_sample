@@ -21,10 +21,12 @@ import 'package:login_project_sample/Testimonal.dart';
 import 'package:login_project_sample/Wallet_n.dart';
 import 'package:login_project_sample/WithDrawFund.dart';
 import 'package:login_project_sample/WithdrawList.dart';
+import 'package:login_project_sample/home.dart';
 import 'package:login_project_sample/utils/response_handler.dart';
 import 'package:login_project_sample/utils/shared_preferences.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Dashboard extends StatefulWidget {
   final String data, data1;
@@ -40,6 +42,7 @@ class _CorDashboardState extends State<Dashboard> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   late String Balance = "",
+      Balance1 = '',
       affiliate = "",
       TotalEarnings = "",
       AvailableBalance = "",
@@ -64,12 +67,14 @@ class _CorDashboardState extends State<Dashboard> {
       TeamMember = "";
   String? UserId;
   String? Name;
+  String imageUrl = '';
   String? UserName;
   bool ispremium = false;
 
   @override
   void initState() {
     retrieveUsername();
+
     "Received Data: ${widget.data}";
     //String userid = Prefs.getStringValue(Prefs.PREFS_USER_ID);
     __futureLogin = ResponseHandler.performPost(
@@ -88,7 +93,8 @@ class _CorDashboardState extends State<Dashboard> {
         print('CustomerId ${firstUser["CustomerId"]}');
         print('Balance ${firstUser["Balance"]}');
         setState(() {
-          Balance = firstUser["Balance"].toString();
+          Balance =
+              double.parse(firstUser["Balance"].toString()).toStringAsFixed(2);
 
           print('Balance:$Balance');
         });
@@ -96,7 +102,36 @@ class _CorDashboardState extends State<Dashboard> {
         print('TransactionPassword: ${firstUser["TransactionPassword"]}');
         print('------------------');
       } catch (error) {
-        Fluttertoast.showToast(msg: "Login Failed");
+        Fluttertoast.showToast(msg: "Loginulll Failed");
+        log(error.toString());
+      }
+    });
+
+    __futureLogin = ResponseHandler.performPost(
+        "GetFundwalletbalance", 'MemberId=${widget.data}');
+    __futureLogin?.then((value) {
+      print('Response body: ${value.body}');
+
+      String jsonResponse = ResponseHandler.parseData(value.body);
+
+      print('JSON Response: ${jsonResponse}');
+      try {
+        //Map<String, dynamic> map = json.decode(jsonResponse);
+        List<dynamic> decodedJson = json.decode(jsonResponse);
+        Map<String, dynamic> firstUser = decodedJson[0];
+
+        print('CustomerId ${firstUser["CustomerId"]}');
+        print('Balance ${firstUser["Balance"]}');
+        setState(() {
+          Balance1 = firstUser["Balance"].toString();
+
+          print('Balancesdfg:$Balance1');
+        });
+
+        print('TransactionPassword: ${firstUser["TransactionPassword"]}');
+        print('------------------');
+      } catch (error) {
+        Fluttertoast.showToast(msg: "Loginty Failed");
         log(error.toString());
       }
     });
@@ -128,7 +163,7 @@ class _CorDashboardState extends State<Dashboard> {
 
         print('----------fgth--------');
       } catch (error) {
-        Fluttertoast.showToast(msg: "Login Failed");
+        Fluttertoast.showToast(msg: "Loginrtwe Failed");
         log(error.toString());
       }
     });
@@ -141,7 +176,6 @@ class _CorDashboardState extends State<Dashboard> {
 
       print('JSON Response: ${jsonResponse}');
       try {
-        //Map<String, dynamic> map = json.decode(jsonResponse);
         List<dynamic> decodedJson = json.decode(jsonResponse);
         Map<String, dynamic> firstUser = decodedJson[0];
 
@@ -177,7 +211,7 @@ class _CorDashboardState extends State<Dashboard> {
 
         print('---TotalWithdrawals-----:$TotalWithdrawals');
       } catch (error) {
-        Fluttertoast.showToast(msg: "Login Failed");
+        Fluttertoast.showToast(msg: "Logincawq Failed");
         log(error.toString());
       }
     });
@@ -189,14 +223,20 @@ class _CorDashboardState extends State<Dashboard> {
     String? storedUserid = await Prefs.getStringValue(Prefs.PREFS_USER_ID);
     String? storedUserName = await Prefs.getStringValue(Prefs.PREFS_USER_NAME);
     String? storedName = await Prefs.getStringValue(Prefs.PREFS_NAME);
+    String Photo = await Prefs.getStringValue(Prefs.PREFS_PHOTO);
 
     setState(() {
       UserId = storedUserid;
       UserName = storedUserName;
       Name = storedName;
+      imageUrl = Photo;
+      if (imageUrl.startsWith('..')) {
+        imageUrl = imageUrl.substring(2);
+      }
       print('Userid$UserId');
       print('Name$Name');
-      print('UserName$UserName');
+      print('UsrttterName$UserName');
+      print('imageUrl$imageUrl');
     });
   }
 
@@ -244,7 +284,7 @@ class _CorDashboardState extends State<Dashboard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Pios Uriyil',
+                  Name!,
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 17,
@@ -252,7 +292,7 @@ class _CorDashboardState extends State<Dashboard> {
                   ),
                 ),
                 Text(
-                  'CS1000000',
+                  UserName!,
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 14,
@@ -260,26 +300,28 @@ class _CorDashboardState extends State<Dashboard> {
                 ),
               ],
             ),
-            SizedBox(width: 40), // Add some space between elements
+            SizedBox(width: 20),
             Image.asset(
-              'assets/images/logor.jpg', alignment: Alignment.topLeft,
-              width: 100, // Adjust the width as needed
-              height: 50, // Adjust the height as needed
+              'assets/images/logor.jpg',
+              alignment: Alignment.topLeft,
+              width: 100,
+              height: 50,
             ),
             SizedBox(width: 20),
             Stack(
               children: [
                 Image.asset(
                   'assets/images/cartgreen.png',
-                  width: 30, // Adjust the width as needed
-                  height: 40, // Adjust the height as needed
+                  width: 30,
+                  height: 40,
                 ),
                 Positioned(
                   right: -3,
                   top: 4,
                   child: CircleAvatar(
                     radius: 7,
-                    backgroundImage: AssetImage('assets/circle_image.jpg'),
+                    backgroundImage:
+                        NetworkImage('https://d4demo.com/cheapshop' + imageUrl),
                   ),
                 ),
                 Padding(
@@ -289,14 +331,12 @@ class _CorDashboardState extends State<Dashboard> {
                     style: TextStyle(
                       fontSize: 10,
                       color: Colors.white,
-                      backgroundColor:
-                          Colors.transparent, // Make the background transparent
+                      backgroundColor: Colors.transparent,
                     ),
                   ),
                 )
               ],
             ),
-            // Add some space between elements
           ],
         ),
       ),
@@ -315,21 +355,15 @@ class _CorDashboardState extends State<Dashboard> {
                   color: Color(0xFF007E01), // Add a border
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment
-                      .start, // Align items to the start (left)
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(
-                          top: 30,
-                          left: 20), // Add some padding around the image
+                      padding: EdgeInsets.only(top: 30, left: 20),
                       child: CircleAvatar(
                         radius: 20,
                         backgroundColor: Colors.white,
-                        child: Icon(
-                          Icons.person,
-                          size: 30,
-                          color: Colors.black54,
-                        ),
+                        backgroundImage: NetworkImage(
+                            'https://d4demo.com/cheapshop' + imageUrl),
                       ),
                     ),
                     SizedBox(width: 10),
@@ -383,7 +417,6 @@ class _CorDashboardState extends State<Dashboard> {
                   ),
                 ),
               ),
-
               Divider(),
               InkWell(
                 onTap: () {
@@ -405,7 +438,8 @@ class _CorDashboardState extends State<Dashboard> {
                       SizedBox(width: 10),
                       Text(
                         'Profile',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.w500),
                       ),
                     ],
                   ),
@@ -414,8 +448,7 @@ class _CorDashboardState extends State<Dashboard> {
               Divider(),
               InkWell(
                 onTap: () {
-                  // Handle the tap
-                  Navigator.of(context).pop(); // Close the drawer
+                  Navigator.of(context).pop();
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => ReferandEarn()));
                 },
@@ -433,13 +466,13 @@ class _CorDashboardState extends State<Dashboard> {
                       SizedBox(width: 10),
                       Text(
                         'Share and Earn',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.w500),
                       ),
                     ],
                   ),
                 ),
               ),
-
               Divider(),
               InkWell(
                 onTap: () {
@@ -464,7 +497,8 @@ class _CorDashboardState extends State<Dashboard> {
                       SizedBox(width: 10),
                       Text(
                         'Messages',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.w500),
                       ),
                     ],
                   ),
@@ -489,7 +523,8 @@ class _CorDashboardState extends State<Dashboard> {
                       SizedBox(width: 10),
                       Text(
                         'Notifications',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.w500),
                       ),
                     ],
                   ),
@@ -516,7 +551,8 @@ class _CorDashboardState extends State<Dashboard> {
                       SizedBox(width: 10),
                       Text(
                         'Bank Details',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.w500),
                       ),
                     ],
                   ),
@@ -525,7 +561,7 @@ class _CorDashboardState extends State<Dashboard> {
               Divider(),
               InkWell(
                 onTap: () {
-                  Navigator.of(context).pop(); // Close the drawer
+                  Navigator.of(context).pop();
                 },
                 child: Padding(
                   padding: EdgeInsets.only(left: 16, top: 7, bottom: 10),
@@ -541,7 +577,8 @@ class _CorDashboardState extends State<Dashboard> {
                       SizedBox(width: 10),
                       Text(
                         'Qukart Premium',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.w500),
                       ),
                     ],
                   ),
@@ -550,7 +587,8 @@ class _CorDashboardState extends State<Dashboard> {
               Divider(),
               InkWell(
                 onTap: () {
-                  Navigator.of(context).pop(); // Close the drawer
+                  Navigator.of(context).pop();
+                  showAlertDialog(context);
                 },
                 child: Padding(
                   padding: EdgeInsets.only(left: 16, top: 7, bottom: 10),
@@ -566,25 +604,14 @@ class _CorDashboardState extends State<Dashboard> {
                       SizedBox(width: 10),
                       Text(
                         'Logout',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.w500),
                       ),
                     ],
                   ),
                 ),
               ),
               Divider(),
-              /*   ListTile(
-                  onTap: () {
-                    setState(() {
-                      index = 0;
-                    });
-                    Navigator.pop(context);
-                  },
-                  leading: Icon(Icons.home),
-                  title:
-                      Text("Home", style: TextStyle(fontFamily: "Montserrat")),
-                ),*/
-              // ListTile(onTap: (){}, leading: Icon(Icons.book_online_outlined), title:  Text("Bookings", style: TextStyle(fontFamily: "Montserrat")),),
             ],
           ),
         ),
@@ -609,9 +636,8 @@ class _CorDashboardState extends State<Dashboard> {
                         Padding(
                           padding: const EdgeInsets.only(top: 10, left: 10),
                           child: CircleAvatar(
-                            backgroundImage: AssetImage(
-                              'assets/images/blankprofile.webp',
-                            ),
+                            backgroundImage: NetworkImage(
+                                'https://d4demo.com/cheapshop' + imageUrl),
                             radius: 40.0,
                           ),
                         ),
@@ -626,13 +652,12 @@ class _CorDashboardState extends State<Dashboard> {
                                 children: [
                                   Text(
                                     Name!,
-                                    //"Received Data: ${widget.data}",
                                     style: TextStyle(
                                         fontSize: 17.0,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.white),
                                   ),
-                                  SizedBox(width: 90.0),
+                                  SizedBox(width: 70.0),
                                   Text('Available',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
@@ -651,7 +676,7 @@ class _CorDashboardState extends State<Dashboard> {
                                       fontSize: 18.0,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                SizedBox(width: 70.0),
+                                SizedBox(width: 25.0),
                                 Text("₹" + Balance,
                                     style: TextStyle(
                                         color: Colors.white,
@@ -695,13 +720,6 @@ class _CorDashboardState extends State<Dashboard> {
                             ),
                           ],
                         ),
-                        /*  Spacer(),
-            ElevatedButton(
-              onPressed: () {
-                // Handle Edit Button click
-              },
-              child: Text('Edit'),
-            ),*/
                       ],
                     ),
                   ),
@@ -729,34 +747,46 @@ class _CorDashboardState extends State<Dashboard> {
                                 cacheHeight: 65,
                                 cacheWidth: 65,
                               ),
-                              Text('WithDraw')
+                              SizedBox(
+                                height: 3,
+                              ),
+                              Text(
+                                'Withdraw',
+                                style: TextStyle(
+                                    fontSize: 17,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500),
+                              )
                             ],
                           ),
                         ),
                       ),
                       SizedBox(
-                        width: 80,
+                        width: 70,
                       ),
                       Stack(
                         alignment: Alignment.bottomCenter,
                         children: [
-                          Column(
-                            children: [
-                              Text(
-                                'Orders',
-                                style: TextStyle(
-                                  fontSize: 15,
+                          Padding(
+                            padding: const EdgeInsets.only(top: 17),
+                            child: Column(
+                              children: [
+                                Text(
+                                  'Orders',
+                                  style: TextStyle(
+                                      fontSize: 17,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500),
                                 ),
-                              ),
-                              Text(
-                                TotalOrders,
-                                style: TextStyle(
-                                  color: Colors.lightBlue,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15,
+                                Text(
+                                  TotalOrders,
+                                  style: TextStyle(
+                                      fontSize: 17,
+                                      color: Colors.lightBlue,
+                                      fontWeight: FontWeight.w500),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 40),
@@ -806,7 +836,7 @@ class _CorDashboardState extends State<Dashboard> {
                         ],
                       ),
                       SizedBox(
-                        width: 75,
+                        width: 70,
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 25),
@@ -825,7 +855,16 @@ class _CorDashboardState extends State<Dashboard> {
                                 cacheHeight: 65,
                                 cacheWidth: 65,
                               ),
-                              Text('Transfer')
+                              SizedBox(
+                                height: 3,
+                              ),
+                              Text(
+                                'Transfer',
+                                style: TextStyle(
+                                    fontSize: 17,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500),
+                              )
                             ],
                           ),
                         ),
@@ -841,7 +880,10 @@ class _CorDashboardState extends State<Dashboard> {
                       alignment: Alignment.topLeft,
                       child: Text(
                         Notification,
-                        style: TextStyle(color: Colors.blue, fontSize: 18),
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.blue,
+                            fontWeight: FontWeight.w500),
                       ),
                     ),
                   ),
@@ -854,8 +896,7 @@ class _CorDashboardState extends State<Dashboard> {
                         children: [
                           Expanded(
                             child: Card(
-                              color:
-                                  Color(0xFF007E01), // Change color as needed
+                              color: Color(0xFF007E01),
                               elevation: 2,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0),
@@ -878,18 +919,18 @@ class _CorDashboardState extends State<Dashboard> {
                                           "₹" + TotalEarnings,
                                           style: TextStyle(
                                               color: Colors.white,
-                                              fontSize: 17,
-                                              fontFamily: "Montserrat"),
+                                              fontSize: 25,
+                                              fontWeight: FontWeight.w700),
                                         ),
                                         SizedBox(
-                                          height: 4.5,
+                                          height: 5,
                                         ),
                                         Text(
                                           'Total Earning',
                                           style: TextStyle(
-                                              color: Colors.white,
                                               fontSize: 17,
-                                              fontFamily: "Montserrat"),
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w500),
                                         )
                                       ]),
 
@@ -915,18 +956,18 @@ class _CorDashboardState extends State<Dashboard> {
                                         "₹" + LevelIncome,
                                         style: TextStyle(
                                             color: Colors.white,
-                                            fontSize: 17,
-                                            fontFamily: "Montserrat"),
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.w700),
                                       ),
                                       SizedBox(
-                                        height: 4.5,
+                                        height: 5,
                                       ),
                                       Text(
                                         'QuKart Cash',
                                         style: TextStyle(
-                                            color: Colors.white,
                                             fontSize: 17,
-                                            fontFamily: "Montserrat"),
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w500),
                                       )
                                     ]),
                               ),
@@ -934,36 +975,35 @@ class _CorDashboardState extends State<Dashboard> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 5), // Adjust spacing between rows
+                      SizedBox(height: 5),
                       Row(
                         children: [
                           Expanded(
                             child: Card(
-                              color: Colors.lightBlue, // Change color as needed
+                              color: Colors.lightBlue,
                               elevation: 2,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
-
                               child: Container(
                                 height: 120,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      '₹0.00',
+                                      '₹' + Balance1,
                                       style: TextStyle(
                                           color: Colors.white,
-                                          fontSize: 17,
-                                          fontFamily: "Montserrat"),
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.w700),
                                     ),
-                                    SizedBox(height: 4.5),
+                                    SizedBox(height: 5),
                                     Text(
                                       'Fund Wallet',
                                       style: TextStyle(
-                                          color: Colors.white,
                                           fontSize: 17,
-                                          fontFamily: "Montserrat"),
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w500),
                                     ),
                                   ],
                                 ),
@@ -994,17 +1034,17 @@ class _CorDashboardState extends State<Dashboard> {
                                         '₹' + TotalWithdrawals,
                                         style: TextStyle(
                                             color: Colors.white,
-                                            fontSize: 17,
-                                            fontFamily: "Montserrat"),
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.w700),
                                       ),
-                                      SizedBox(height: 4.5),
+                                      SizedBox(height: 5),
                                       //WithdrawList
                                       Text(
                                         'Total Withdrawals',
                                         style: TextStyle(
-                                            color: Colors.white,
                                             fontSize: 17,
-                                            fontFamily: "Montserrat"),
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w500),
                                       ),
                                     ],
                                   ),
@@ -1019,13 +1059,11 @@ class _CorDashboardState extends State<Dashboard> {
                         children: [
                           Expanded(
                             child: Card(
-                              color:
-                                  Color(0xFF566DF1), // Change color as needed
+                              color: Color(0xFF566DF1),
                               elevation: 2,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
-
                               child: GestureDetector(
                                 onTap: () {
                                   Navigator.of(context).push(
@@ -1043,29 +1081,27 @@ class _CorDashboardState extends State<Dashboard> {
                                         '₹' + FundTrasnfered,
                                         style: TextStyle(
                                             color: Colors.white,
-                                            fontSize: 17,
-                                            fontFamily: "Montserrat"),
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.w700),
                                       ),
-                                      SizedBox(height: 4.5),
+                                      SizedBox(height: 5),
                                       Text(
                                         'Fund Transferred',
                                         style: TextStyle(
-                                            color: Colors.white,
                                             fontSize: 17,
-                                            fontFamily: "Montserrat"),
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w500),
                                       ),
                                     ],
                                   ),
-                                  // Card content for the third card
                                 ),
                               ),
                             ),
                           ),
-                          SizedBox(width: 1.5), // Adjust spacing between cards
+                          SizedBox(width: 1.5),
                           Expanded(
                             child: Card(
-                              color: Colors
-                                  .deepPurpleAccent, // Change color as needed
+                              color: Colors.deepPurpleAccent,
                               elevation: 2,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0),
@@ -1079,20 +1115,19 @@ class _CorDashboardState extends State<Dashboard> {
                                       '₹' + FundReceived,
                                       style: TextStyle(
                                           color: Colors.white,
-                                          fontSize: 17,
-                                          fontFamily: "Montserrat"),
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.w700),
                                     ),
-                                    SizedBox(height: 4.5),
+                                    SizedBox(height: 5),
                                     Text(
                                       'Fund Received',
                                       style: TextStyle(
-                                          color: Colors.white,
                                           fontSize: 17,
-                                          fontFamily: "Montserrat"),
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w500),
                                     ),
                                   ],
                                 ),
-                                // Card content for the fourth card
                               ),
                             ),
                           ),
@@ -1103,13 +1138,11 @@ class _CorDashboardState extends State<Dashboard> {
                         children: [
                           Expanded(
                             child: Card(
-                              color:
-                                  Color(0xFFF07E01), // Change color as needed
+                              color: Color(0xFFF07E01),
                               elevation: 2,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
-
                               child: GestureDetector(
                                 onTap: () {
                                   Navigator.of(context).push(
@@ -1126,16 +1159,16 @@ class _CorDashboardState extends State<Dashboard> {
                                         TotalOrders,
                                         style: TextStyle(
                                             color: Colors.white,
-                                            fontSize: 17,
-                                            fontFamily: "Montserrat"),
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.w700),
                                       ),
-                                      SizedBox(height: 4.5),
+                                      SizedBox(height: 5),
                                       Text(
                                         'Total Orders',
                                         style: TextStyle(
-                                            color: Colors.white,
                                             fontSize: 17,
-                                            fontFamily: "Montserrat"),
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w500),
                                       ),
                                     ],
                                   ),
@@ -1171,16 +1204,16 @@ class _CorDashboardState extends State<Dashboard> {
                                         NewOrders,
                                         style: TextStyle(
                                             color: Colors.white,
-                                            fontSize: 17,
-                                            fontFamily: "Montserrat"),
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.w700),
                                       ),
-                                      SizedBox(height: 4.5),
+                                      SizedBox(height: 5),
                                       Text(
                                         'New Orders',
                                         style: TextStyle(
-                                            color: Colors.white,
                                             fontSize: 17,
-                                            fontFamily: "Montserrat"),
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w500),
                                       ),
                                     ],
                                   ),
@@ -1212,16 +1245,16 @@ class _CorDashboardState extends State<Dashboard> {
                                         CompletedOrders,
                                         style: TextStyle(
                                             color: Colors.white,
-                                            fontSize: 17,
-                                            fontFamily: "Montserrat"),
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.w700),
                                       ),
-                                      SizedBox(height: 4.5),
+                                      SizedBox(height: 5),
                                       Text(
                                         'Completed Orders',
                                         style: TextStyle(
-                                            color: Colors.white,
                                             fontSize: 17,
-                                            fontFamily: "Montserrat"),
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w500),
                                       ),
                                     ],
                                   ),
@@ -1236,13 +1269,11 @@ class _CorDashboardState extends State<Dashboard> {
                         children: [
                           Expanded(
                             child: Card(
-                              color: Colors
-                                  .deepPurpleAccent, // Change color as needed
+                              color: Colors.deepPurpleAccent,
                               elevation: 2,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
-
                               child: Container(
                                 height: 120,
                                 child: Column(
@@ -1253,9 +1284,9 @@ class _CorDashboardState extends State<Dashboard> {
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 15,
-                                          fontFamily: "Montserrat"),
+                                          fontWeight: FontWeight.w700),
                                     ),
-                                    SizedBox(height: 7.5),
+                                    SizedBox(height: 12),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
@@ -1265,12 +1296,15 @@ class _CorDashboardState extends State<Dashboard> {
                                           cacheHeight: 20,
                                           cacheWidth: 20,
                                         ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
                                         Text(
                                           Kyc,
                                           style: TextStyle(
-                                              color: Colors.white,
                                               fontSize: 17,
-                                              fontFamily: "Montserrat"),
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w500),
                                         ),
                                       ],
                                     ),
@@ -1296,16 +1330,16 @@ class _CorDashboardState extends State<Dashboard> {
                                       PersonalMember,
                                       style: TextStyle(
                                           color: Colors.white,
-                                          fontSize: 17,
-                                          fontFamily: "Montserrat"),
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.w700),
                                     ),
-                                    SizedBox(height: 4.5),
+                                    SizedBox(height: 5),
                                     Text(
                                       'Direct Members',
                                       style: TextStyle(
-                                          color: Colors.white,
                                           fontSize: 17,
-                                          fontFamily: "Montserrat"),
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w500),
                                     ),
                                   ],
                                 ),
@@ -1319,13 +1353,11 @@ class _CorDashboardState extends State<Dashboard> {
                         children: [
                           Expanded(
                             child: Card(
-                              color:
-                                  Color(0xFF007E01), // Change color as needed
+                              color: Color(0xFF007E01),
                               elevation: 2,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
-
                               child: GestureDetector(
                                 onTap: () {
                                   Navigator.of(context).push(
@@ -1342,16 +1374,16 @@ class _CorDashboardState extends State<Dashboard> {
                                         MessageSent,
                                         style: TextStyle(
                                             color: Colors.white,
-                                            fontSize: 17,
-                                            fontFamily: "Montserrat"),
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.w700),
                                       ),
-                                      SizedBox(height: 4.5),
+                                      SizedBox(height: 5),
                                       Text(
                                         'Message Sent',
                                         style: TextStyle(
-                                            color: Colors.white,
                                             fontSize: 17,
-                                            fontFamily: "Montserrat"),
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w500),
                                       ),
                                     ],
                                   ),
@@ -1383,16 +1415,16 @@ class _CorDashboardState extends State<Dashboard> {
                                         Inbox,
                                         style: TextStyle(
                                             color: Colors.white,
-                                            fontSize: 17,
-                                            fontFamily: "Montserrat"),
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.w700),
                                       ),
-                                      SizedBox(height: 4.5),
+                                      SizedBox(height: 5),
                                       Text(
                                         'Inbox Messages',
                                         style: TextStyle(
-                                            color: Colors.white,
                                             fontSize: 17,
-                                            fontFamily: "Montserrat"),
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w500),
                                       ),
                                     ],
                                   ),
@@ -1419,15 +1451,14 @@ class _CorDashboardState extends State<Dashboard> {
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.white,
         type: BottomNavigationBarType.fixed,
-        unselectedLabelStyle: const TextStyle(fontFamily: "Montserrat"),
-        selectedLabelStyle: const TextStyle(fontFamily: "Montserrat"),
+
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: "Home",
           ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart), label: "But Products"),
+              icon: Icon(Icons.shopping_cart), label: "Buy Products"),
           BottomNavigationBarItem(
               icon: Icon(Icons.shopping_bag), label: "My Orders"),
           BottomNavigationBarItem(
@@ -1454,6 +1485,81 @@ class Settings extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<Settings> {
+  String? imageUrl = '',
+      UserName = '',
+      Address1 = '',
+      Address2 = '',
+      City = '',
+      State = '',
+      PinCode = '',
+      memberId = '',
+      Name = '';
+
+  Future<void> _loadmemberid() async {
+    Future<http.Response>? __futureLogin;
+    try {
+      memberId = await Prefs.getStringValue(Prefs.PREFS_USER_ID);
+      log("memberfhhjykkId" + memberId!);
+
+      Name = await Prefs.getStringValue(Prefs.PREFS_NAME);
+      __futureLogin =
+          ResponseHandler.performPost("MemberSearch", 'MemberId=${memberId}');
+      print('memberdfgfdgghId: ${memberId}');
+
+      __futureLogin?.then((value) {
+        print('Response dgrgebody: ${value.body}');
+
+        String jsonResponse = ResponseHandler.parseData(value.body);
+
+        print('JSON Redghyjsponse: ${jsonResponse}');
+        try {
+          //Map<String, dynamic> map = json.decode(jsonResponse);
+          List<dynamic> decodedJson = json.decode(jsonResponse);
+          Map<String, dynamic> firstUser = decodedJson[0];
+          Address1 = firstUser['AddressLine1'];
+          Address2 = firstUser['AddressLine2'];
+          City = firstUser['City'];
+          State = firstUser['State'];
+          PinCode = firstUser['Zipcode'];
+
+          print('Firstname ${firstUser["Firstname"]}');
+          setState(() {});
+
+          print('TransactionPassword: ${firstUser["TransactionPassword"]}');
+          print('------------------');
+        } catch (error) {
+          Fluttertoast.showToast(msg: "Login Failed");
+          log(error.toString());
+        }
+      });
+    } catch (e) {
+      print("Error: $e");
+      Fluttertoast.showToast(msg: "An error occurred");
+    }
+  }
+
+  void retrieveUsername() async {
+    String Photo = await Prefs.getStringValue(Prefs.PREFS_PHOTO);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    UserName = prefs.getString('username');
+
+    setState(() {
+      imageUrl = Photo;
+      print('Retrieved username: $UserName');
+      if (imageUrl!.startsWith('..')) {
+        imageUrl = imageUrl?.substring(2);
+      }
+      print('imagffffeUrl$imageUrl');
+    });
+  }
+
+  @override
+  void initState() {
+    retrieveUsername();
+    _loadmemberid();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1464,7 +1570,7 @@ class _MyHomePageState extends State<Settings> {
             child: Row(
               children: [
                 Text(
-                  "PIOS URIRIJI",
+                  Name!,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -1473,7 +1579,8 @@ class _MyHomePageState extends State<Settings> {
                 SizedBox(width: 166),
                 CircleAvatar(
                   radius: 20,
-                  backgroundImage: AssetImage('assets/circle_image.jpg'),
+                  backgroundImage:
+                      NetworkImage('https://d4demo.com/cheapshop' + imageUrl!),
                 ),
               ],
             ),
@@ -1504,7 +1611,7 @@ class _MyHomePageState extends State<Settings> {
                 children: [
                   Text(
                     'Manage Bank Details',
-                    style: TextStyle(fontSize: 16, fontFamily: "Montserrat"),
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
                   ),
                   SizedBox(width: 130),
                   Image.asset(
@@ -1517,7 +1624,6 @@ class _MyHomePageState extends State<Settings> {
             ),
           ),
           Divider(),
-          //Changepassword
           GestureDetector(
             onTap: () {
               Navigator.push(
@@ -1533,7 +1639,7 @@ class _MyHomePageState extends State<Settings> {
                 children: [
                   Text(
                     'Change Password',
-                    style: TextStyle(fontSize: 17, fontFamily: "Montserrat"),
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
                   ),
                   SizedBox(width: 145),
                   Image.asset(
@@ -1546,7 +1652,6 @@ class _MyHomePageState extends State<Settings> {
             ),
           ),
           Divider(),
-          //ChangeTransactionpassword
           GestureDetector(
             onTap: () {
               Navigator.push(
@@ -1562,7 +1667,7 @@ class _MyHomePageState extends State<Settings> {
                 children: [
                   Text(
                     'Change Transaction Password',
-                    style: TextStyle(fontSize: 17, fontFamily: "Montserrat"),
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
                   ),
                   SizedBox(width: 40),
                   Image.asset(
@@ -1575,7 +1680,6 @@ class _MyHomePageState extends State<Settings> {
             ),
           ),
           Divider(),
-          //SendTestimonal
           GestureDetector(
             onTap: () {
               Navigator.push(
@@ -1591,7 +1695,7 @@ class _MyHomePageState extends State<Settings> {
                 children: [
                   Text(
                     'Send Testimonial',
-                    style: TextStyle(fontSize: 17, fontFamily: "Montserrat"),
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
                   ),
                   SizedBox(width: 150),
                   Image.asset(
@@ -1609,12 +1713,10 @@ class _MyHomePageState extends State<Settings> {
               'KYC',
               style: TextStyle(
                   fontSize: 17,
-                  fontWeight: FontWeight.bold,
                   color: Colors.black,
-                  fontFamily: "Montserrat"),
+                  fontWeight: FontWeight.bold),
             ),
           ),
-          //KYCApplication
           GestureDetector(
             onTap: () {
               Navigator.push(
@@ -1630,7 +1732,7 @@ class _MyHomePageState extends State<Settings> {
                 children: [
                   Text(
                     'KYC Application',
-                    style: TextStyle(fontSize: 17, fontFamily: "Montserrat"),
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
                   ),
                   SizedBox(width: 155),
                   Image.asset(
@@ -1658,7 +1760,7 @@ class _MyHomePageState extends State<Settings> {
                 children: [
                   Text(
                     'KYC Details',
-                    style: TextStyle(fontSize: 17, fontFamily: "Montserrat"),
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
                   ),
                   SizedBox(width: 190),
                   Image.asset(
@@ -1675,35 +1777,41 @@ class _MyHomePageState extends State<Settings> {
             child: Text(
               'Address',
               style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                  fontFamily: "Montserrat"),
+                fontSize: 17,
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+              ),
             ),
           ),
           Divider(),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 6, horizontal: 16),
             child: Text(
-              'Address1',
+              Address1!,
               style: TextStyle(
-                  fontSize: 17, color: Colors.black, fontFamily: "Montserrat"),
+                  fontSize: 17,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500),
             ),
           ),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 6, horizontal: 16),
             child: Text(
-              'Address2',
+              Address2!,
               style: TextStyle(
-                  fontSize: 17, color: Colors.black, fontFamily: "Montserrat"),
+                  fontSize: 17,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500),
             ),
           ),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 6, horizontal: 16),
             child: Text(
-              'City',
+              City! + "," + State! + "-" + PinCode!,
               style: TextStyle(
-                  fontSize: 17, color: Colors.black, fontFamily: "Montserrat"),
+                  fontSize: 17,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500),
             ),
           ),
           Padding(
@@ -1711,10 +1819,10 @@ class _MyHomePageState extends State<Settings> {
             child: Text(
               'Settings',
               style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                  fontFamily: "Montserrat"),
+                fontSize: 17,
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+              ),
             ),
           ),
           Divider(),
@@ -1733,7 +1841,7 @@ class _MyHomePageState extends State<Settings> {
                 children: [
                   Text(
                     'Write a feedback about app',
-                    style: TextStyle(fontSize: 17, fontFamily: "Montserrat"),
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
                   ),
                   SizedBox(width: 60),
                   Image.asset(
@@ -1746,7 +1854,6 @@ class _MyHomePageState extends State<Settings> {
             ),
           ),
           Divider(),
-
           GestureDetector(
             onTap: () {
               Navigator.push(
@@ -1762,7 +1869,7 @@ class _MyHomePageState extends State<Settings> {
                 children: [
                   Text(
                     'Disputes',
-                    style: TextStyle(fontSize: 17, fontFamily: "Montserrat"),
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
                   ),
                   SizedBox(width: 225),
                   Image.asset(
@@ -1775,7 +1882,6 @@ class _MyHomePageState extends State<Settings> {
             ),
           ),
           Divider(),
-          //About
           GestureDetector(
             onTap: () {
               Navigator.push(
@@ -1791,7 +1897,7 @@ class _MyHomePageState extends State<Settings> {
                 children: [
                   Text(
                     'About',
-                    style: TextStyle(fontSize: 17, fontFamily: "Montserrat"),
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
                   ),
                   SizedBox(width: 245),
                   Image.asset(
@@ -1804,27 +1910,29 @@ class _MyHomePageState extends State<Settings> {
             ),
           ),
           Divider(),
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 1, horizontal: 16),
-            child: Row(
-              children: [
-                Text(
-                  'Sign Out',
-                  style: TextStyle(
-                      fontSize: 17,
-                      color: Colors.red,
-                      fontFamily: "Montserrat"),
-                ),
-                SizedBox(width: 225),
-                Image.asset(
-                  'assets/images/right_arrow.png',
-                  width: 16,
-                  height: 16,
-                ),
-              ],
+          GestureDetector(
+            onTap: () => showAlertDialog(context),
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 1, horizontal: 16),
+              child: Row(
+                children: [
+                  Text(
+                    'Sign Out',
+                    style: TextStyle(
+                        fontSize: 17,
+                        color: Colors.red,
+                        fontWeight: FontWeight.w500),
+                  ),
+                  SizedBox(width: 225),
+                  Image.asset(
+                    'assets/images/right_arrow.png',
+                    width: 16,
+                    height: 16,
+                  ),
+                ],
+              ),
             ),
           ),
-          // ... Other sections
         ]),
       ),
     );
@@ -1833,9 +1941,7 @@ class _MyHomePageState extends State<Settings> {
 
 Widget buildCustomRow(String text) {
   return GestureDetector(
-    onTap: () {
-      // Handle row tap
-    },
+    onTap: () {},
     child: Container(
       padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       child: Row(
@@ -1853,5 +1959,45 @@ Widget buildCustomRow(String text) {
         ],
       ),
     ),
+  );
+}
+
+showAlertDialog(BuildContext context) {
+  Widget cancelButton = TextButton(
+    child: Text("No",
+        style:
+            TextStyle(color: Colors.deepOrange, fontWeight: FontWeight.w500)),
+    onPressed: () {
+      Navigator.pop(context);
+    },
+  );
+  Widget continueButton = TextButton(
+    child: Text("Yes",
+        style:
+            TextStyle(color: Colors.deepOrange, fontWeight: FontWeight.w500)),
+    onPressed: () async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.remove('username');
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (BuildContext ctx) => LoginApp()));
+    },
+  );
+
+  AlertDialog alert = AlertDialog(
+    title: Text("Logout"),
+    content: Text("Do you want to Logout?",
+        style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500)),
+    actions: [
+      cancelButton,
+      continueButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
   );
 }

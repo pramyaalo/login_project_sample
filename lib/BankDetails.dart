@@ -63,8 +63,8 @@ class _MyHomePageState extends State<bankdetails> {
           print('CustomerId ${firstUser["CustomerId"]}');
           print('Balance ${firstUser["Balance"]}');
           setState(() {
-            Balance = firstUser["Balance"].toString();
-
+            Balance = double.parse(firstUser["Balance"].toString())
+                .toStringAsFixed(2);
             print('Balance:$Balance');
           });
 
@@ -177,7 +177,8 @@ class _MyHomePageState extends State<bankdetails> {
           'Bank Details',
           style: TextStyle(
               color: Colors.black, fontSize: 17, fontWeight: FontWeight.bold),
-        ),
+        ), titleSpacing: 15,
+        leadingWidth: 30,
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 16.0, bottom: 10),
@@ -189,7 +190,7 @@ class _MyHomePageState extends State<bankdetails> {
           ),
         ],
       ),
-      body: Center(
+      body: Container(
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -208,7 +209,7 @@ class _MyHomePageState extends State<bankdetails> {
                               "assets/images/rupee.png",
                               height: 40,
                               width: 40,
-                              color: Colors.green,
+                              color: Color(0xFF007E01),
                             ),
                             SizedBox(height: 8),
                             SizedBox(
@@ -217,7 +218,7 @@ class _MyHomePageState extends State<bankdetails> {
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 20)),
+                                      fontSize: 30)),
                             ),
                             SizedBox(height: 8),
                             SizedBox(
@@ -253,8 +254,7 @@ class _MyHomePageState extends State<bankdetails> {
                                     cacheHeight: 20,
                                     cacheWidth: 20),
                                 hintText: 'Account Holder Name',
-                                hintStyle: TextStyle(fontFamily: "Montserrat"),
-                                contentPadding: EdgeInsets.only(bottom: 5)),
+                                 contentPadding: EdgeInsets.only(bottom: 5)),
                             style: TextStyle(
                               fontSize: 17,
                             ),
@@ -273,8 +273,7 @@ class _MyHomePageState extends State<bankdetails> {
                                     cacheHeight: 20,
                                     cacheWidth: 20),
                                 hintText: 'Account Number',
-                                hintStyle: TextStyle(fontFamily: "Montserrat"),
-                                contentPadding: EdgeInsets.only(bottom: 5)),
+                                 contentPadding: EdgeInsets.only(bottom: 5)),
                             style: TextStyle(
                               fontSize: 17,
                             ),
@@ -294,8 +293,7 @@ class _MyHomePageState extends State<bankdetails> {
                                     cacheHeight: 20,
                                     cacheWidth: 20),
                                 hintText: 'Bank Name',
-                                hintStyle: TextStyle(fontFamily: "Montserrat"),
-                                contentPadding: EdgeInsets.only(bottom: 5)),
+                                 contentPadding: EdgeInsets.only(bottom: 5)),
                             style: TextStyle(
                               fontSize: 17,
                             ),
@@ -315,8 +313,7 @@ class _MyHomePageState extends State<bankdetails> {
                                     cacheHeight: 20,
                                     cacheWidth: 20),
                                 hintText: 'Branch Name',
-                                hintStyle: TextStyle(fontFamily: "Montserrat"),
-                                contentPadding: EdgeInsets.only(bottom: 5)),
+                                 contentPadding: EdgeInsets.only(bottom: 5)),
                             style: TextStyle(
                               fontSize: 17,
                             ),
@@ -336,8 +333,7 @@ class _MyHomePageState extends State<bankdetails> {
                                 cacheWidth: 20,
                               ),
                               hintText: 'Account Type',
-                              hintStyle: TextStyle(fontFamily: "Montserrat"),
-                              contentPadding: EdgeInsets.only(bottom: 5),
+                               contentPadding: EdgeInsets.only(bottom: 5),
                             ),
                             value: selectedAccountType,
                             items: accountTypes
@@ -368,8 +364,7 @@ class _MyHomePageState extends State<bankdetails> {
                                     cacheHeight: 20,
                                     cacheWidth: 20),
                                 hintText: 'IFSC',
-                                hintStyle: TextStyle(fontFamily: "Montserrat"),
-                                contentPadding: EdgeInsets.only(bottom: 5)),
+                                 contentPadding: EdgeInsets.only(bottom: 5)),
                             style: TextStyle(
                               fontSize: 17,
                             ),
@@ -389,8 +384,7 @@ class _MyHomePageState extends State<bankdetails> {
                                             ReferandEarn()));*/
                               },
                               style: ElevatedButton.styleFrom(
-                                primary:
-                                    Colors.deepPurpleAccent, // Button color
+                                primary: Colors.indigoAccent, // Button color
                                 onPrimary: Colors.white, // Text color
                               ),
                               child: SizedBox(
@@ -409,15 +403,9 @@ class _MyHomePageState extends State<bankdetails> {
                               width: 10,
                             ),
                             ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            WithdrawFund()));
-                              },
+                              onPressed: () {},
                               style: ElevatedButton.styleFrom(
-                                primary: Colors.green, // Button color
+                                primary: Color(0xFF007E01), // Button color
                                 onPrimary: Colors.white, // Text color
                               ),
                               child: SizedBox(

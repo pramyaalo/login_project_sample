@@ -67,9 +67,10 @@ class _CabsListScreenState extends State<cashwallethistory> {
                 style: TextStyle(
                     color: Colors.black,
                     fontSize: 16,
-                    fontFamily: "Montserrat",
                     fontWeight: FontWeight.bold),
               ),
+              titleSpacing: 15,
+              leadingWidth: 30,
               actions: [
                 Padding(
                   padding: EdgeInsets.only(right: 16.0, bottom: 10),
@@ -110,15 +111,15 @@ class _CabsListScreenState extends State<cashwallethistory> {
                                                 Container(
                                                   padding: EdgeInsets.all(10),
                                                   child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
                                                     children: [
                                                       Image(
                                                         image: AssetImage(
                                                             "assets/images/incomeiconpng.png"),
                                                         width: 70,
                                                         height: 80,
+                                                      ),
+                                                      SizedBox(
+                                                        width: 10,
                                                       ),
                                                       Column(
                                                         mainAxisAlignment:
@@ -135,9 +136,7 @@ class _CabsListScreenState extends State<cashwallethistory> {
                                                               textAlign:
                                                                   TextAlign.end,
                                                               style: TextStyle(
-                                                                  fontFamily:
-                                                                      "Montserrat",
-                                                                  fontSize: 14,
+                                                                  fontSize: 15,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold)),
@@ -159,13 +158,11 @@ class _CabsListScreenState extends State<cashwallethistory> {
                                                                         .center,
                                                                 // Text(snapshot.data![index].message,
                                                                 style: TextStyle(
-                                                                    fontFamily:
-                                                                        "Montserrat",
                                                                     fontSize:
-                                                                        14,
+                                                                        15,
                                                                     fontWeight:
                                                                         FontWeight
-                                                                            .normal),
+                                                                            .w500),
                                                               ),
                                                               SizedBox(
                                                                 width: 55,
@@ -186,15 +183,13 @@ class _CabsListScreenState extends State<cashwallethistory> {
 
                                                                   //Text(snapshot.data![index].username,
                                                                   style: TextStyle(
-                                                                      fontFamily:
-                                                                          "Montserrat",
                                                                       fontSize:
                                                                           12,
                                                                       color: Colors
                                                                           .green,
                                                                       fontWeight:
                                                                           FontWeight
-                                                                              .bold)),
+                                                                              .w500)),
                                                             ],
                                                           ),
                                                           SizedBox(
@@ -220,13 +215,18 @@ class _CabsListScreenState extends State<cashwallethistory> {
                                                                         vertical:
                                                                             2),
                                                                 child: Text(
-                                                                    'Cash Wallet',
+                                                                    'CASH WALLET',
                                                                     style: TextStyle(
                                                                         fontSize:
-                                                                            13)),
+                                                                            14,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w500,
+                                                                        color: Color(
+                                                                            0xFF000C66))),
                                                               ),
                                                               SizedBox(
-                                                                width: 55,
+                                                                width: 20,
                                                               ),
                                                               Image.asset(
                                                                 "assets/images/tickiconpng.png",
@@ -244,15 +244,13 @@ class _CabsListScreenState extends State<cashwallethistory> {
 
                                                                   //Text(,
                                                                   style: TextStyle(
-                                                                      fontFamily:
-                                                                          "Montserrat",
                                                                       fontSize:
                                                                           12,
                                                                       color: Colors
                                                                           .green,
                                                                       fontWeight:
                                                                           FontWeight
-                                                                              .bold)),
+                                                                              .w500)),
                                                             ],
                                                           ),
                                                           SizedBox(
@@ -267,12 +265,10 @@ class _CabsListScreenState extends State<cashwallethistory> {
                                                                       .ellipsis,
                                                               //Text(snapshot.data![index].type,
                                                               style: TextStyle(
-                                                                  fontFamily:
-                                                                      "Montserrat",
-                                                                  fontSize: 13,
+                                                                  fontSize: 14,
                                                                   fontWeight:
                                                                       FontWeight
-                                                                          .normal)),
+                                                                          .w500)),
                                                         ],
                                                       ),
                                                     ],
@@ -291,7 +287,9 @@ class _CabsListScreenState extends State<cashwallethistory> {
                                                     Text(
                                                       ' Net Amount',
                                                       style: TextStyle(
-                                                          fontSize: 12),
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.w500),
                                                     ),
                                                   ],
                                                 ),
@@ -314,7 +312,10 @@ class _CabsListScreenState extends State<cashwallethistory> {
                                                       Text(
                                                         ' User ID: ',
                                                         style: TextStyle(
-                                                            fontSize: 14),
+                                                            fontSize: 14,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
                                                       ),
                                                       SizedBox(
                                                         width: 5,
@@ -323,14 +324,18 @@ class _CabsListScreenState extends State<cashwallethistory> {
                                                         snapshot.data![index]
                                                             .username,
                                                         style: TextStyle(
-                                                            fontSize: 14),
+                                                            fontSize: 14,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            color:
+                                                                Colors.black),
                                                       ),
                                                       SizedBox(width: 123),
                                                       Text(
                                                         snapshot.data![index]
                                                             .amount,
                                                         style: TextStyle(
-                                                            fontSize: 14,
+                                                            fontSize: 18,
                                                             fontWeight:
                                                                 FontWeight
                                                                     .bold),

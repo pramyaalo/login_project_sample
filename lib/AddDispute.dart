@@ -55,7 +55,8 @@ class _SignUpPageState extends State<AddDispute> {
           'Pios \nCS1000000',
           style: TextStyle(
               color: Colors.black, fontSize: 17, fontWeight: FontWeight.bold),
-        ),
+        ), titleSpacing: 15,
+        leadingWidth: 30,
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 16.0, bottom: 10),
@@ -94,7 +95,7 @@ class _SignUpPageState extends State<AddDispute> {
                         controller: _userNameController,
                         decoration: InputDecoration(
                           hintText: 'Enter First Name',
-                          hintStyle: TextStyle(fontFamily: "Montserrat"),
+
                           prefixIcon: Image.asset(
                             "assets/images/profile_icon.png",
                             color: Colors.black,
@@ -127,7 +128,7 @@ class _SignUpPageState extends State<AddDispute> {
                         textAlignVertical: TextAlignVertical.bottom,
                         decoration: InputDecoration(
                           hintText: 'User ID',
-                          hintStyle: TextStyle(fontFamily: "Montserrat"),
+
                           prefixIcon: Image.asset(
                             "assets/images/profile_icon.png",
                             color: Colors.black,
@@ -394,7 +395,7 @@ class _SignUpPageState extends State<AddDispute> {
                 child: TextField(
                   decoration: InputDecoration(
                     hintText: '  Tell us about the dispute',
-                    hintStyle: TextStyle(fontFamily: "Montserrat"),
+
                     border: InputBorder.none,
                   ),
                   style: TextStyle(

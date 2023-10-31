@@ -9,26 +9,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart'
     show SystemChrome, SystemUiOverlayStyle, rootBundle;
-import 'package:login_project_sample/AddDispute.dart';
-import 'package:login_project_sample/BankDetails.dart';
-import 'package:login_project_sample/BinaryIncomeReport.dart';
-import 'package:login_project_sample/CashWalletHistory.dart';
+
 import 'package:login_project_sample/DashBoard.dart';
-import 'package:login_project_sample/DirectIncomeReport.dart';
-import 'package:login_project_sample/EditProfile.dart';
-import 'package:login_project_sample/IncomeReport.dart';
-import 'package:login_project_sample/KYCApplication.dart';
-import 'package:login_project_sample/KYCList.dart';
-import 'package:login_project_sample/KYCProcessing.dart';
-import 'package:login_project_sample/Models/SignupModel.dart';
-import 'package:login_project_sample/PayoutHistory.dart';
-import 'package:login_project_sample/Payouts.dart';
-import 'package:login_project_sample/PendingOrders.dart';
-import 'package:login_project_sample/Reported_Dispute.dart';
-import 'package:login_project_sample/Wallet_n.dart';
-import 'package:login_project_sample/WithDrawFund.dart';
-import 'package:login_project_sample/WithdrawList.dart';
-import 'package:login_project_sample/pairIncomeReport.dart';
+
 import 'package:login_project_sample/utils/response_handler.dart';
 import 'package:login_project_sample/utils/shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -58,6 +41,7 @@ class _SignUpPageState extends State<signup> {
       state,
       pincode,
       postal;
+  String selectedOption = 'Self';
   bool _passwordVisible = false;
   bool _confirmpasswordVisible = false;
   bool _transactionpasswordVisible = false;
@@ -121,36 +105,101 @@ class _SignUpPageState extends State<signup> {
   String? _keyValue;
   final ImagePicker _imagePicker = ImagePicker();
 
-  void _showSelectionDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Select Source"),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: [
-                GestureDetector(
-                  child: Text("Open Camera"),
-                  onTap: () {
-                    _openCamera();
-                    Navigator.of(context).pop(); // Close the dialog
-                  },
-                ),
-                SizedBox(height: 16),
-                GestureDetector(
-                  child: Text("Open Gallery"),
-                  onTap: () {
-                    _openGallery();
-                    Navigator.of(context).pop(); // Close the dialog
-                  },
-                ),
-              ],
+  Future _showSelectionDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            titlePadding: EdgeInsets.all(0),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
             ),
-          ),
-        );
-      },
-    );
+            title: Container(
+              height: 50,
+              decoration: BoxDecoration(
+                color: Color(0xFF007E01),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+              ),
+              child: Center(
+                child: Text(
+                  "Add Photo",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            contentPadding: EdgeInsets.only(top: 10.0),
+            content: Container(
+              width: 100.0,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: GestureDetector(
+                      child: Center(
+                          child: Text("Gallery",
+                              style: TextStyle(
+                                  fontSize: 13, color: Colors.black))),
+                      onTap: () {
+                        _openGallery();
+                        Navigator.of(context).pop(); // Close the dialog
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Divider(color: Colors.grey, thickness: 1),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  GestureDetector(
+                    child: Center(
+                        child: Text("Take Photo",
+                            style:
+                                TextStyle(fontSize: 13, color: Colors.black))),
+                    onTap: () {
+                      _openCamera();
+                      Navigator.of(context).pop(); // Close the dialog
+                    },
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  InkWell(
+                    child: Container(
+                      padding: EdgeInsets.only(top: 15.0, bottom: 10.0),
+                      decoration: BoxDecoration(
+                        color: Color(0xFF007E01),
+                        borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(20),
+                            bottomRight: Radius.circular(20)),
+                      ),
+                      child: Text(
+                        "Cancel",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
   }
 
   Future<void> _openCamera() async {
@@ -329,6 +378,9 @@ class _SignUpPageState extends State<signup> {
     await prefs.setString('lastName', LastName);
     await prefs.setString('email', Email);
     await prefs.setString('mobile', mobile);
+    Prefs.saveStringValue(Prefs.ADDRESS1, address1);
+    Prefs.saveStringValue(Prefs.ADDRESS2, address2);
+    Prefs.saveStringValue(Prefs.CITY, city);
     await prefs.setString('address1', address1);
     await prefs.setString('address2', address2);
     await prefs.setString('city', city);
@@ -656,6 +708,8 @@ class _SignUpPageState extends State<signup> {
           style: TextStyle(
               color: Colors.black, fontSize: 17, fontWeight: FontWeight.bold),
         ),
+        titleSpacing: 15,
+        leadingWidth: 30,
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 16.0, bottom: 10),
@@ -677,20 +731,31 @@ class _SignUpPageState extends State<signup> {
               alignment: Alignment.bottomRight,
               children: <Widget>[
                 SizedBox(height: 20),
-                if (base64Image != null)
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundColor: Colors.white,
-                    backgroundImage: MemoryImage(
-                      base64Decode(base64Image!),
-                    ),
-                  ),
+                Container(
+                  width: 130,
+                  height: 100,
+                  child: base64Image != null
+                      ? CircleAvatar(
+                          radius: 50,
+                          backgroundColor: Colors.white,
+                          backgroundImage: MemoryImage(
+                            base64Decode(base64Image!),
+                          ),
+                        )
+                      : Image.asset(
+                          'assets/images/profile.png'), // Display nothing if base64Image is null
+                ),
                 IconButton(
-                  icon: Icon(Icons.camera_alt),
+                  icon: Icon(
+                    Icons.camera_alt,
+                    color: Colors.grey, // Set the icon color to dark grey
+                  ),
                   onPressed: () {
                     _showSelectionDialog(context);
                   },
-                ),
+                  color: Color(
+                      0xFFD3D3D3), // Set the background color to light grey
+                )
               ],
             ),
             SizedBox(height: 20),
@@ -708,7 +773,6 @@ class _SignUpPageState extends State<signup> {
                         textAlignVertical: TextAlignVertical.bottom,
                         decoration: InputDecoration(
                           hintText: 'Referral ID',
-                          hintStyle: TextStyle(fontFamily: "Montserrat"),
                           prefixIcon: Image.asset(
                             "assets/images/id_icon.png",
                             alignment: Alignment.center,
@@ -749,89 +813,69 @@ class _SignUpPageState extends State<signup> {
                       ),
                     ),
                     Row(
-                      // Use a Row for horizontal alignment
                       children: [
-                        SizedBox(
-                          width: 129,
-                          height: 40,
-                          child: Expanded(
-                            child: ListTile(
-                              title: Text('Self'),
-                              leading: Radio<Gender>(
-                                value: Gender.self,
-                                groupValue: _selectedGender,
-                                onChanged: (Gender? value) {
-                                  setState(() {
-                                    _selectedGender = value;
-                                    _isTextFieldVisible = true;
-                                  });
-                                },
-                              ),
+                        Row(
+                          children: [
+                            Radio(
+                              value: 'Self',
+                              groupValue: selectedOption,
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedOption = value as String;
+                                });
+                              },
                             ),
-                          ),
+                            Text('Self'),
+                          ],
                         ),
-                        SizedBox(
-                          height: 40,
-                          width: 172,
-                          child: Flexible(
-                            child: ListTile(
-                              title: Text('Franchise'),
-                              leading: Radio<Gender>(
-                                value: Gender.franchise,
-                                groupValue: _selectedGender,
-                                onChanged: (Gender? value) {
-                                  setState(() {
-                                    _selectedGender = value;
-                                    _isTextFieldVisible = false;
-                                  });
-                                },
-                              ),
+                        Row(
+                          children: [
+                            Radio(
+                              value: 'Franchise',
+                              groupValue: selectedOption,
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedOption = value as String;
+                                });
+                              },
                             ),
-                          ),
+                            Text('Franchise'),
+                          ],
                         ),
                       ],
-                    ),
+                    )
                   ],
                 ),
               ),
             ),
             SizedBox(height: 16.0),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 45,
-                      width: 310,
-                      child: Visibility(
-                        maintainSize: false,
-                        visible: _selectedGender == Gender.franchise,
-                        // Show the TextField only when "Self" is selected
-                        child: TextField(
-                          controller: _locationController,
-                          textAlignVertical: TextAlignVertical.bottom,
-                          decoration: InputDecoration(
-                            hintText: 'Location',
-                            prefixIcon: Image.asset(
-                              "assets/images/locationjpg.jpg",
-                              alignment: Alignment.center,
-                              cacheHeight: 21,
-                              cacheWidth: 20,
-                            ),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                          ),
-                        ),
+            Visibility(
+              visible: selectedOption ==
+                  'Franchise', // Show the field when 'Franchise' is selected
+              maintainState: true,
+              child: Align(
+                alignment: Alignment.center,
+                child: SizedBox(
+                  height: 45, // Set the desired height
+                  width: 310, // Set the desired width
+                  child: TextField(
+                    controller: _locationController,
+                    textAlignVertical: TextAlignVertical.bottom,
+                    decoration: InputDecoration(
+                      hintText: 'Location',
+                      prefixIcon: Image.asset(
+                        "assets/images/locationjpg.jpg",
+                        alignment: Alignment.center,
+                        cacheHeight: 21,
+                        cacheWidth: 20,
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
                       ),
                     ),
-                  ],
-                )
-              ],
+                  ),
+                ),
+              ),
             ),
             SizedBox(height: 16.0),
             Column(

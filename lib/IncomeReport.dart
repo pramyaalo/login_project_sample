@@ -32,7 +32,8 @@ class _MyHomePageState extends State<IncomeReport> {
           'Income Report',
           style: TextStyle(
               color: Colors.black, fontSize: 17, fontWeight: FontWeight.bold),
-        ),
+        ), titleSpacing: 15,
+        leadingWidth: 30,
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 16.0, bottom: 10),
@@ -123,9 +124,9 @@ class _MyHomePageState extends State<IncomeReport> {
                                     child: Text(
                                       'Direct Income',
                                       style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 17,
-                                          fontFamily: "Montserrat"),
+                                        color: Colors.white,
+                                        fontSize: 17,
+                                      ),
                                     )),
                               ]),
                           height: 120,
@@ -165,9 +166,9 @@ class _MyHomePageState extends State<IncomeReport> {
                                     child: Text(
                                       'Pair Income Bonus',
                                       style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 17,
-                                          fontFamily: "Montserrat"),
+                                        color: Colors.white,
+                                        fontSize: 17,
+                                      ),
                                     )),
                               ]),
 
@@ -212,9 +213,9 @@ class _MyHomePageState extends State<IncomeReport> {
                                 child: Text(
                                   'Franchise Income',
                                   style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 17,
-                                      fontFamily: "Montserrat"),
+                                    color: Colors.white,
+                                    fontSize: 17,
+                                  ),
                                 ),
                               )
                             ],
@@ -255,9 +256,9 @@ class _MyHomePageState extends State<IncomeReport> {
                                 child: Text(
                                   'Franchise Referral',
                                   style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 17,
-                                      fontFamily: "Montserrat"),
+                                    color: Colors.white,
+                                    fontSize: 17,
+                                  ),
                                 ),
                               ),
                             ],
@@ -294,9 +295,9 @@ class _MyHomePageState extends State<IncomeReport> {
                               Text(
                                 'Pair Income Report',
                                 style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 17,
-                                    fontFamily: "Montserrat"),
+                                  color: Colors.white,
+                                  fontSize: 17,
+                                ),
                               ),
                             ],
                           ),
@@ -336,9 +337,9 @@ class _MyHomePageState extends State<IncomeReport> {
                                 child: Text(
                                   'Franchise Monthly \n          Income',
                                   style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 17,
-                                      fontFamily: "Montserrat"),
+                                    color: Colors.white,
+                                    fontSize: 17,
+                                  ),
                                 ),
                               ),
                             ],

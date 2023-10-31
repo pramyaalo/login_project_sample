@@ -32,7 +32,8 @@ class _MyHomePageState extends State<ForgotPassword> {
           'Forgot Password',
           style: TextStyle(
               color: Colors.black, fontSize: 17, fontWeight: FontWeight.bold),
-        ),
+        ), titleSpacing: 15,
+        leadingWidth: 30,
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 16.0, bottom: 10),
@@ -73,7 +74,7 @@ class _MyHomePageState extends State<ForgotPassword> {
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20,
-                                    fontFamily: "Montserrat")),
+                                   )),
                           ),
                           SizedBox(height: 8),
                           SizedBox(
@@ -83,7 +84,7 @@ class _MyHomePageState extends State<ForgotPassword> {
                                 style: TextStyle(
                                     fontSize: 17,
                                     fontWeight: FontWeight.bold,
-                                    fontFamily: "Montserrat")),
+                                     )),
                           ),
                         ],
                       ),
@@ -113,8 +114,7 @@ class _MyHomePageState extends State<ForgotPassword> {
                                 color: Colors.black,
                               ),
                               hintText: 'Old Password',
-                              hintStyle: TextStyle(fontFamily: "Montserrat"),
-                              contentPadding: EdgeInsets.only(bottom: 5)),
+                               contentPadding: EdgeInsets.only(bottom: 5)),
                           style: TextStyle(
                             fontSize: 17,
                           ),
@@ -133,8 +133,7 @@ class _MyHomePageState extends State<ForgotPassword> {
                                   cacheWidth: 20,
                                   color: Colors.black),
                               hintText: 'New Password',
-                              hintStyle: TextStyle(fontFamily: "Montserrat"),
-                              contentPadding: EdgeInsets.only(bottom: 5)),
+                               contentPadding: EdgeInsets.only(bottom: 5)),
                           style: TextStyle(
                             fontSize: 17,
                           ),
@@ -154,8 +153,7 @@ class _MyHomePageState extends State<ForgotPassword> {
                                   cacheWidth: 20,
                                   color: Colors.black),
                               hintText: 'Confirm New Password',
-                              hintStyle: TextStyle(fontFamily: "Montserrat"),
-                              contentPadding: EdgeInsets.only(bottom: 5)),
+                               contentPadding: EdgeInsets.only(bottom: 5)),
                           style: TextStyle(
                             fontSize: 17,
                           ),

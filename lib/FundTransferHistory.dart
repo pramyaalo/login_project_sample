@@ -13,13 +13,13 @@ import 'package:login_project_sample/utils/shared_preferences.dart';
 
 class FundTransferHistory extends StatefulWidget {
   const FundTransferHistory({Key? key}) : super(key: key);
-
   @override
   _CabsListScreenState createState() => _CabsListScreenState();
 }
 
 class _CabsListScreenState extends State<FundTransferHistory> {
   String _selectedMonth = 'January'; // Default selected month
+  static List<dynamic> decodedJson = [];
 
   List<String> months = [
     'January',
@@ -96,7 +96,7 @@ class _CabsListScreenState extends State<FundTransferHistory> {
       log(jsonResponse);
       try {
         //Map<String, dynamic> map = json.decode(jsonResponse);
-        List<dynamic> decodedJson = json.decode(jsonResponse);
+        decodedJson = json.decode(jsonResponse);
 
         print('json : ${decodedJson}');
 
@@ -133,11 +133,9 @@ class _CabsListScreenState extends State<FundTransferHistory> {
           title: const Text(
             'Fund Wallet History',
             style: TextStyle(
-                color: Colors.black,
-                fontSize: 15,
-                fontFamily: "Montserrat",
-                fontWeight: FontWeight.bold),
-          ),
+                color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
+          ), titleSpacing: 15,
+          leadingWidth: 30,
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 16.0, bottom: 10),
@@ -153,225 +151,228 @@ class _CabsListScreenState extends State<FundTransferHistory> {
           child: FutureBuilder<List<FundWalletHistoryModel>?>(
               future: getPartPaymentData(),
               builder: (context, snapshot) {
-                if (snapshot.hasData &&
-                    snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator(); // Show a loading indicator while data is loading.
+                } else if (snapshot.hasError) {
+                  return Text("Error: ${snapshot.error}");
+                } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                  // Data is available and not empty, display the list of records.
                   return ListView.builder(
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        return Container(
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                              SingleChildScrollView(
-                                  child: Column(
-                                children: [
-                                  Card(
-                                      margin: const EdgeInsets.only(
-                                          right: 10, left: 10, top: 15),
-                                      elevation: 5,
-                                      color: Colors.white,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            padding: const EdgeInsets.all(10),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                const Image(
-                                                  image: AssetImage(
-                                                      "assets/images/incomeiconpng.png"),
-                                                  width: 70,
-                                                  height: 80,
-                                                ),
-                                                Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                            SingleChildScrollView(
+                                child: Column(
+                              children: [
+                                Card(
+                                    margin: const EdgeInsets.only(
+                                        right: 10, left: 10, top: 7),
+                                    elevation: 5,
+                                    color: Colors.white,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.all(10),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Image(
+                                                image: AssetImage(
+                                                    "assets/images/incomeiconpng.png"),
+                                                width: 70,
+                                                height: 80,
+                                              ),
+                                              Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                      snapshot.data![index]
+                                                          .username,
+                                                      textAlign: TextAlign.end,
+                                                      //Text(snapshot.data![index].username,
+                                                      style: TextStyle(
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.bold)),
+                                                  const SizedBox(
+                                                    height: 4,
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Text(
                                                         snapshot.data![index]
-                                                            .username,
+                                                            .Message,
                                                         textAlign:
-                                                            TextAlign.end,
-                                                        //Text(snapshot.data![index].username,
+                                                            TextAlign.center,
+                                                        // Text(snapshot.data![index].message,
                                                         style: TextStyle(
-                                                            fontFamily:
-                                                                "Montserrat",
                                                             fontSize: 14,
                                                             fontWeight:
                                                                 FontWeight
-                                                                    .bold)),
-                                                    const SizedBox(
-                                                      height: 4,
-                                                    ),
-                                                    Row(
-                                                      children: [
-                                                        Text(
-                                                          snapshot.data![index]
-                                                              .Message,
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          // Text(snapshot.data![index].message,
+                                                                    .w500),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 4.5,
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          border: Border.all(
+                                                              color:
+                                                                  Colors.black),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(4),
+                                                        ),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                horizontal: 6,
+                                                                vertical: 2),
+                                                        child: const Text(
+                                                          'FUND WALLET',
                                                           style: TextStyle(
-                                                              fontFamily:
-                                                                  "Montserrat",
-                                                              fontSize: 13,
+                                                              fontSize: 14,
                                                               fontWeight:
                                                                   FontWeight
-                                                                      .normal),
+                                                                      .w500),
                                                         ),
-                                                      ],
-                                                    ),
-                                                    const SizedBox(
-                                                      height: 4.5,
-                                                    ),
-                                                    Row(
-                                                      children: [
-                                                        Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            border: Border.all(
-                                                                color: Colors
-                                                                    .black),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        4),
-                                                          ),
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .symmetric(
-                                                                  horizontal: 6,
-                                                                  vertical: 2),
-                                                          child: const Text(
-                                                            'FUND WALLET',
-                                                            style: TextStyle(
-                                                                fontSize: 11.5),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    const SizedBox(
-                                                      height: 4.5,
-                                                    ),
-                                                    Row(
-                                                      children: [
-                                                        Text(
-                                                          snapshot.data![index]
-                                                              .CustomerName,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 4.5,
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        snapshot.data![index]
+                                                            .CustomerName,
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        // Text(snapshot.data![index].message,
+                                                        style: TextStyle(
+                                                            fontSize: 14,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                      ),
+                                                      const SizedBox(
+                                                        width: 40,
+                                                      ),
+                                                      Image.asset(
+                                                        "assets/images/tickiconpng.png",
+                                                        cacheWidth: 15,
+                                                        cacheHeight: 15,
+                                                        color: Colors.green,
+                                                      ),
+                                                      Text(
                                                           textAlign:
-                                                              TextAlign.center,
-                                                          // Text(snapshot.data![index].message,
+                                                              TextAlign.end,
+                                                          snapshot.data![index]
+                                                              .Datecreated,
+                                                          //Text(snapshot.data![index].username,
                                                           style: TextStyle(
-                                                              fontFamily:
-                                                                  "Montserrat",
-                                                              fontSize: 13,
+                                                              fontSize: 14,
+                                                              color:
+                                                                  Colors.green,
                                                               fontWeight:
                                                                   FontWeight
-                                                                      .normal),
-                                                        ),
-                                                        const SizedBox(
-                                                          width: 40,
-                                                        ),
-                                                        Image.asset(
-                                                          "assets/images/tickiconpng.png",
-                                                          cacheWidth: 15,
-                                                          cacheHeight: 15,
-                                                          color: Colors.green,
-                                                        ),
-                                                        Text(
-                                                            textAlign:
-                                                                TextAlign.end,
-                                                            snapshot
-                                                                .data![index]
-                                                                .Datecreated,
-                                                            //Text(snapshot.data![index].username,
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    "Montserrat",
-                                                                fontSize: 12,
-                                                                color: Colors
-                                                                    .green,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold)),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Row(
-                                            children: [
-                                              Container(
-                                                height: 1,
-                                                width: 250,
-                                                // Make the Divider span the full width
-                                                child: const Divider(
-                                                    thickness:
-                                                        2), // Divider after GridView
-                                              ),
-                                              const Text(
-                                                ' Debit Amount',
-                                                style: TextStyle(fontSize: 12),
+                                                                      .w500)),
+                                                    ],
+                                                  ),
+                                                ],
                                               ),
                                             ],
                                           ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 10, top: 4),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                const SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Image.asset(
-                                                  "assets/images/orderpng.png",
-                                                  cacheHeight: 12,
-                                                  cacheWidth: 12,
-                                                ),
-                                                const Text(
-                                                  ' User ID: ',
-                                                  style:
-                                                      TextStyle(fontSize: 14),
-                                                ),
-                                                const SizedBox(
-                                                  width: 5,
-                                                ),
-                                                Text(
-                                                  snapshot
-                                                      .data![index].username,
-                                                  style:
-                                                      TextStyle(fontSize: 14),
-                                                ),
-                                                const SizedBox(width: 115),
-                                                Text(
-                                                  snapshot.data![index].Amount,
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                                // User Type on the left side
-                                              ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Container(
+                                              height: 1,
+                                              width: 250,
+                                              // Make the Divider span the full width
+                                              child: const Divider(
+                                                  thickness:
+                                                      2), // Divider after GridView
                                             ),
+                                            const Text(
+                                              ' Debit Amount',
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ],
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 10, top: 4),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              Image.asset(
+                                                "assets/images/orderpng.png",
+                                                cacheHeight: 12,
+                                                cacheWidth: 12,
+                                              ),
+                                              const Text(
+                                                ' User ID: ',
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                              const SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                snapshot.data![index].username,
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                              const SizedBox(width: 115),
+                                              Text(
+                                                snapshot.data![index].Amount,
+                                                style: TextStyle(
+                                                    fontSize: 17,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              // User Type on the left side
+                                            ],
                                           ),
-                                        ],
-                                      )),
-                                ],
-                              ))
-                            ]));
-                      });
+                                        ),
+                                      ],
+                                    )),
+                              ],
+                            ))
+                          ]));
+                    },
+                  );
                 } else {
-                  return CircularProgressIndicator();
+                  // No data found, display "No Transfer Found" text.
+                  return Center(
+                    child: Text("No Transfer Found"),
+                  );
                 }
               }),
         ),

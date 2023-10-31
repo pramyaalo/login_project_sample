@@ -123,19 +123,19 @@ class _CabsListScreenState extends State<QCashWalletHistory> {
             icon: const Icon(
               Icons.arrow_back,
               color: Colors.black,
+              size: 30,
             ),
             onPressed: () {
               Navigator.pop(context);
             },
           ),
           title: const Text(
-            'QCash Wallet Report',
+            'QuCash Wallet History',
             style: TextStyle(
-                color: Colors.black,
-                fontSize: 15,
-                fontFamily: "Montserrat",
-                fontWeight: FontWeight.bold),
+                color: Colors.black, fontSize: 17, fontWeight: FontWeight.bold),
           ),
+          titleSpacing: 15,
+          leadingWidth: 30,
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 16.0, bottom: 10),
@@ -165,7 +165,7 @@ class _CabsListScreenState extends State<QCashWalletHistory> {
                                 children: [
                                   Card(
                                       margin: const EdgeInsets.only(
-                                          right: 10, left: 10, top: 15),
+                                          right: 10, left: 10, top: 7),
                                       elevation: 5,
                                       color: Colors.white,
                                       child: Column(
@@ -175,15 +175,15 @@ class _CabsListScreenState extends State<QCashWalletHistory> {
                                           Container(
                                             padding: const EdgeInsets.all(10),
                                             child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
                                               children: [
                                                 const Image(
                                                   image: AssetImage(
                                                       "assets/images/incomeiconpng.png"),
                                                   width: 70,
                                                   height: 80,
+                                                ),
+                                                SizedBox(
+                                                  width: 5,
                                                 ),
                                                 Column(
                                                   mainAxisAlignment:
@@ -192,19 +192,12 @@ class _CabsListScreenState extends State<QCashWalletHistory> {
                                                       CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                        "CheapShop" +
-                                                            " " +
-                                                            "(" +
-                                                            snapshot
-                                                                .data![index]
-                                                                .username +
-                                                            ")",
+                                                        snapshot.data![index]
+                                                            .customerName,
                                                         textAlign:
                                                             TextAlign.end,
                                                         //Text(snapshot.data![index].username,
                                                         style: TextStyle(
-                                                            fontFamily:
-                                                                "Montserrat",
                                                             fontSize: 14,
                                                             fontWeight:
                                                                 FontWeight
@@ -218,70 +211,16 @@ class _CabsListScreenState extends State<QCashWalletHistory> {
                                                     Row(
                                                       children: [
                                                         Text(
-                                                          "Amount :" +
-                                                              " " +
-                                                              snapshot
-                                                                  .data![index]
-                                                                  .amount,
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          // Text(snapshot.data![index].message,
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  "Montserrat",
-                                                              fontSize: 13,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .normal),
-                                                        ),
-                                                        const SizedBox(
-                                                          width: 20,
-                                                        ),
-                                                        Image.asset(
-                                                          "assets/images/tickiconpng.png",
-                                                          cacheWidth: 15,
-                                                          cacheHeight: 15,
-                                                          color: Colors.red,
-                                                        ),
-                                                        Text(
-                                                            textAlign:
-                                                                TextAlign.end,
-                                                            "Cash:" +
-                                                                " " +
-                                                                snapshot
-                                                                    .data![
-                                                                        index]
-                                                                    .type,
-                                                            //Text(snapshot.data![index].username,
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    "Montserrat",
-                                                                fontSize: 12,
-                                                                color:
-                                                                    Colors.red,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold)),
-                                                      ],
-                                                    ),
-                                                    const SizedBox(
-                                                      height: 4.5,
-                                                    ),
-                                                    Row(
-                                                      children: [
-                                                        Text(
                                                           snapshot.data![index]
-                                                              .dateCreated,
+                                                              .username,
                                                           textAlign:
                                                               TextAlign.center,
                                                           // Text(snapshot.data![index].message,
                                                           style: TextStyle(
-                                                              fontFamily:
-                                                                  "Montserrat",
-                                                              fontSize: 13,
+                                                              fontSize: 14,
                                                               fontWeight:
                                                                   FontWeight
-                                                                      .normal),
+                                                                      .w500),
                                                         ),
                                                         const SizedBox(
                                                           width: 60,
@@ -290,27 +229,22 @@ class _CabsListScreenState extends State<QCashWalletHistory> {
                                                           "assets/images/tickiconpng.png",
                                                           cacheWidth: 15,
                                                           cacheHeight: 15,
-                                                          color: Colors.red,
+                                                          color: Colors.green,
                                                         ),
                                                         Text(
                                                             textAlign:
                                                                 TextAlign.end,
-                                                            "TDS:" +
-                                                                " " +
-                                                                snapshot
-                                                                    .data![
-                                                                        index]
-                                                                    .type,
+                                                            snapshot
+                                                                .data![index]
+                                                                .type,
                                                             //Text(snapshot.data![index].username,
                                                             style: TextStyle(
-                                                                fontFamily:
-                                                                    "Montserrat",
-                                                                fontSize: 12,
-                                                                color:
-                                                                    Colors.red,
+                                                                fontSize: 13,
+                                                                color: Colors
+                                                                    .green,
                                                                 fontWeight:
                                                                     FontWeight
-                                                                        .bold)),
+                                                                        .w500)),
                                                       ],
                                                     ),
                                                     const SizedBox(
@@ -335,41 +269,55 @@ class _CabsListScreenState extends State<QCashWalletHistory> {
                                                                   horizontal: 6,
                                                                   vertical: 2),
                                                           child: const Text(
-                                                            'BINARY INCOME',
+                                                            'QUCASH WALLET',
                                                             style: TextStyle(
-                                                                fontSize: 11.5),
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                color: Color(
+                                                                    0xFF000080)),
                                                           ),
                                                         ),
                                                         const SizedBox(
-                                                          width: 5,
+                                                          width: 3,
                                                         ),
                                                         Image.asset(
                                                           "assets/images/tickiconpng.png",
                                                           cacheWidth: 15,
                                                           cacheHeight: 15,
-                                                          color: Colors.red,
+                                                          color: Colors.green,
                                                         ),
                                                         Text(
                                                             textAlign:
                                                                 TextAlign.end,
-                                                            "Service Tax :" +
-                                                                " " +
-                                                                snapshot
-                                                                    .data![
-                                                                        index]
-                                                                    .customerName,
+                                                            snapshot
+                                                                .data![index]
+                                                                .dateCreated,
                                                             //Text(snapshot.data![index].username,
                                                             style: TextStyle(
-                                                                fontFamily:
-                                                                    "Montserrat",
-                                                                fontSize: 12,
-                                                                color:
-                                                                    Colors.red,
+                                                                fontSize: 13,
+                                                                color: Colors
+                                                                    .green,
                                                                 fontWeight:
                                                                     FontWeight
-                                                                        .bold)),
+                                                                        .w500)),
                                                       ],
                                                     ),
+                                                    const SizedBox(
+                                                      height: 4.5,
+                                                    ),
+                                                    Text(
+                                                        snapshot.data![index]
+                                                            .message,
+                                                        textAlign:
+                                                            TextAlign.end,
+                                                        //Text(snapshot.data![index].username,
+                                                        style: TextStyle(
+                                                            fontSize: 14,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500)),
                                                   ],
                                                 ),
                                               ],
@@ -387,7 +335,10 @@ class _CabsListScreenState extends State<QCashWalletHistory> {
                                               ),
                                               const Text(
                                                 ' Net Amount',
-                                                style: TextStyle(fontSize: 12),
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight:
+                                                        FontWeight.w500),
                                               ),
                                             ],
                                           ),
@@ -408,23 +359,27 @@ class _CabsListScreenState extends State<QCashWalletHistory> {
                                                 ),
                                                 const Text(
                                                   ' User ID: ',
-                                                  style:
-                                                      TextStyle(fontSize: 14),
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w500),
                                                 ),
                                                 const SizedBox(
                                                   width: 5,
                                                 ),
                                                 Text(
-                                                  snapshot.data![index]
-                                                      .customerName,
-                                                  style:
-                                                      TextStyle(fontSize: 14),
-                                                ),
-                                                const SizedBox(width: 115),
-                                                Text(
-                                                  snapshot.data![index].message,
+                                                  snapshot
+                                                      .data![index].username,
                                                   style: TextStyle(
                                                       fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                                const SizedBox(width: 130),
+                                                Text(
+                                                  snapshot.data![index].amount,
+                                                  style: TextStyle(
+                                                      fontSize: 17,
                                                       fontWeight:
                                                           FontWeight.bold),
                                                 ),

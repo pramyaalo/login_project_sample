@@ -61,7 +61,8 @@ class _MyWidgetState extends State<KYCList> {
             'KYC List Details',
             style: TextStyle(
                 color: Colors.black, fontSize: 17, fontWeight: FontWeight.bold),
-          ),
+          ), titleSpacing: 15,
+          leadingWidth: 30,
           actions: [
             Padding(
               padding: EdgeInsets.only(right: 16.0, bottom: 10),
@@ -115,8 +116,7 @@ class _MyWidgetState extends State<KYCList> {
                                                 Text("Submitted By",
                                                     style: TextStyle(
                                                       fontSize: 16,
-                                                      fontFamily: "Montserrat",
-                                                    )),
+                                                     )),
                                                 SizedBox(
                                                   width: 38,
                                                 ),
@@ -129,8 +129,7 @@ class _MyWidgetState extends State<KYCList> {
                                                         .data![index].firstname,
                                                     style: TextStyle(
                                                       fontSize: 16,
-                                                      fontFamily: "Montserrat",
-                                                    )),
+                                                     )),
                                               ],
                                             ),
                                           ],
@@ -141,8 +140,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text("Submitted On",
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                             SizedBox(
                                               width: 35,
                                             ),
@@ -155,8 +153,7 @@ class _MyWidgetState extends State<KYCList> {
                                                     .data![index].customerid,
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                           ],
                                         ),
                                         SizedBox(height: 8),
@@ -165,8 +162,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text("Checked By",
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                             SizedBox(
                                               width: 52,
                                             ),
@@ -177,8 +173,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text(snapshot.data![index].checkby,
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                           ],
                                         ),
                                         SizedBox(height: 8),
@@ -187,8 +182,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text("Checked On",
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                             SizedBox(
                                               width: 48,
                                             ),
@@ -200,8 +194,7 @@ class _MyWidgetState extends State<KYCList> {
                                                 snapshot.data![index].checkdate,
                                                 style: TextStyle(
                                                   fontSize: 10,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                           ],
                                         ),
                                         SizedBox(height: 8),
@@ -210,8 +203,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text("Admin Note",
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                             SizedBox(
                                               width: 49,
                                             ),
@@ -228,8 +220,7 @@ class _MyWidgetState extends State<KYCList> {
                                                 snapshot.data![index].adminnote,
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                           ],
                                         ),
                                         SizedBox(height: 8),
@@ -238,8 +229,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text("Approved",
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                             SizedBox(
                                               width: 69,
                                             ),
@@ -255,8 +245,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text("Approved",
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                           ],
                                         ),
                                         SizedBox(height: 8),
@@ -295,8 +284,7 @@ class _MyWidgetState extends State<KYCList> {
                                                 Text("First Name",
                                                     style: TextStyle(
                                                       fontSize: 16,
-                                                      fontFamily: "Montserrat",
-                                                    )),
+                                                     )),
                                                 SizedBox(
                                                   width: 55,
                                                 ),
@@ -309,8 +297,7 @@ class _MyWidgetState extends State<KYCList> {
                                                         .data![index].firstname,
                                                     style: TextStyle(
                                                       fontSize: 16,
-                                                      fontFamily: "Montserrat",
-                                                    )),
+                                                     )),
                                               ],
                                             ),
                                           ],
@@ -321,8 +308,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text("Last Name",
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                             SizedBox(
                                               width: 55,
                                             ),
@@ -333,8 +319,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text(snapshot.data![index].lastname,
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                           ],
                                         ),
                                         SizedBox(height: 8),
@@ -343,8 +328,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text("Phone Number",
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                             SizedBox(
                                               width: 20,
                                             ),
@@ -355,8 +339,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text(snapshot.data![index].phone,
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                           ],
                                         ),
                                         SizedBox(height: 8),
@@ -365,8 +348,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text("Date of Birth",
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                             SizedBox(
                                               width: 40,
                                             ),
@@ -377,8 +359,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text(snapshot.data![index].dob,
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                           ],
                                         ),
                                         SizedBox(height: 8),
@@ -387,8 +368,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text("Gender",
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                             SizedBox(
                                               width: 84,
                                             ),
@@ -399,8 +379,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text(snapshot.data![index].gender,
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                           ],
                                         ),
                                         SizedBox(height: 8),
@@ -409,8 +388,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text("Username",
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                             SizedBox(
                                               width: 59,
                                             ),
@@ -421,8 +399,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text("susan",
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                           ],
                                         ),
                                         SizedBox(height: 8),
@@ -431,8 +408,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text("Address Line 1",
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                             SizedBox(
                                               width: 28,
                                             ),
@@ -443,8 +419,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text(snapshot.data![index].address1,
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                           ],
                                         ),
                                         SizedBox(height: 8),
@@ -453,8 +428,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text("Address Line 2",
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                             SizedBox(
                                               width: 27,
                                             ),
@@ -465,8 +439,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text(snapshot.data![index].address2,
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                           ],
                                         ),
                                         SizedBox(height: 8),
@@ -475,8 +448,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text("State",
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                             SizedBox(
                                               width: 102,
                                             ),
@@ -487,8 +459,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text(snapshot.data![index].state,
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                           ],
                                         ),
                                         SizedBox(height: 8),
@@ -497,8 +468,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text("City",
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                             SizedBox(width: 112),
                                             Text(": "),
                                             SizedBox(
@@ -507,8 +477,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text(snapshot.data![index].city,
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                           ],
                                         ),
                                         SizedBox(height: 8),
@@ -517,8 +486,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text("Zip Code",
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                             SizedBox(
                                               width: 72,
                                             ),
@@ -529,8 +497,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text(snapshot.data![index].zip,
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                           ],
                                         ),
                                         SizedBox(height: 8),
@@ -539,8 +506,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text("Country",
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                             SizedBox(
                                               width: 80,
                                             ),
@@ -551,8 +517,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text(snapshot.data![index].country,
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                           ],
                                         ),
                                       ],
@@ -586,8 +551,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text("Passport : ",
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                           ],
                                         ),
                                         SizedBox(height: 4),
@@ -609,8 +573,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text("Passport Photo : ",
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                           ],
                                         ),
                                         SizedBox(height: 4),
@@ -632,8 +595,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text("ID Front Side : ",
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                           ],
                                         ),
                                         SizedBox(height: 4),
@@ -655,8 +617,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text("ID Back Side : ",
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                           ],
                                         ),
                                         SizedBox(height: 4),
@@ -678,8 +639,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text("National Photo : ",
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
-                                                )),
+                                                 )),
                                           ],
                                         ),
                                         SizedBox(height: 4),
@@ -701,7 +661,7 @@ class _MyWidgetState extends State<KYCList> {
                                             Text("Driver Photo : ",
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily: "Montserrat",
+
                                                 )),
                                           ],
                                         ),

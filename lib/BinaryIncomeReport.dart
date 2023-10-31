@@ -127,9 +127,9 @@ class _CabsListScreenState extends State<BinaryIncomeReport> {
             style: TextStyle(
                 color: Colors.black,
                 fontSize: 15,
-                fontFamily: "Montserrat",
-                fontWeight: FontWeight.bold),
-          ),
+                 fontWeight: FontWeight.bold),
+          ), titleSpacing: 15,
+          leadingWidth: 30,
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 16.0, bottom: 10),
@@ -327,8 +327,7 @@ class _CabsListScreenState extends State<BinaryIncomeReport> {
                                                             TextAlign.end,
                                                         //Text(snapshot.data![index].username,
                                                         style: TextStyle(
-                                                            fontFamily:
-                                                                "Montserrat",
+
                                                             fontSize: 14,
                                                             fontWeight:
                                                                 FontWeight
@@ -351,8 +350,7 @@ class _CabsListScreenState extends State<BinaryIncomeReport> {
                                                               TextAlign.center,
                                                           // Text(snapshot.data![index].message,
                                                           style: TextStyle(
-                                                              fontFamily:
-                                                                  "Montserrat",
+
                                                               fontSize: 13,
                                                               fontWeight:
                                                                   FontWeight
@@ -378,8 +376,7 @@ class _CabsListScreenState extends State<BinaryIncomeReport> {
                                                                     .qcash,
                                                             //Text(snapshot.data![index].username,
                                                             style: TextStyle(
-                                                                fontFamily:
-                                                                    "Montserrat",
+
                                                                 fontSize: 12,
                                                                 color:
                                                                     Colors.red,
@@ -400,8 +397,7 @@ class _CabsListScreenState extends State<BinaryIncomeReport> {
                                                               TextAlign.center,
                                                           // Text(snapshot.data![index].message,
                                                           style: TextStyle(
-                                                              fontFamily:
-                                                                  "Montserrat",
+
                                                               fontSize: 13,
                                                               fontWeight:
                                                                   FontWeight
@@ -427,8 +423,7 @@ class _CabsListScreenState extends State<BinaryIncomeReport> {
                                                                     .TDS,
                                                             //Text(snapshot.data![index].username,
                                                             style: TextStyle(
-                                                                fontFamily:
-                                                                    "Montserrat",
+
                                                                 fontSize: 12,
                                                                 color:
                                                                     Colors.red,
@@ -484,8 +479,7 @@ class _CabsListScreenState extends State<BinaryIncomeReport> {
                                                                     .ServiceTax,
                                                             //Text(snapshot.data![index].username,
                                                             style: TextStyle(
-                                                                fontFamily:
-                                                                    "Montserrat",
+
                                                                 fontSize: 12,
                                                                 color:
                                                                     Colors.red,

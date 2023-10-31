@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:login_project_sample/BinaryIncomeReport.dart';
-import 'package:login_project_sample/CashWalletHistory.dart';
-import 'package:login_project_sample/IncomeReport.dart';
-import 'package:login_project_sample/PayoutHistory.dart';
-import 'package:login_project_sample/Payouts.dart';
+
 import 'package:login_project_sample/ReferandEarn.dart';
 import 'package:login_project_sample/WithDrawFund.dart';
 
@@ -36,7 +32,7 @@ class _MyHomePageState extends State<Changepassword> {
           Padding(
             padding: EdgeInsets.only(right: 16.0, bottom: 10),
             child: Image.asset(
-              'assets/images/logor.jpg', // Replace 'your_image.png' with your image asset path
+              'assets/images/logor.jpg',
               width: 90,
               height: 35,
             ),
@@ -103,7 +99,6 @@ class _MyHomePageState extends State<Changepassword> {
                                   cacheHeight: 20,
                                   cacheWidth: 20),
                               hintText: 'Old Password',
-                              hintStyle: TextStyle(fontFamily: "Montserrat"),
                               contentPadding: EdgeInsets.only(bottom: 5)),
                           style: TextStyle(
                             fontSize: 17,
@@ -122,7 +117,6 @@ class _MyHomePageState extends State<Changepassword> {
                                   cacheHeight: 20,
                                   cacheWidth: 20),
                               hintText: 'New Password',
-                              hintStyle: TextStyle(fontFamily: "Montserrat"),
                               contentPadding: EdgeInsets.only(bottom: 5)),
                           style: TextStyle(
                             fontSize: 17,
@@ -142,7 +136,6 @@ class _MyHomePageState extends State<Changepassword> {
                                   cacheHeight: 20,
                                   cacheWidth: 20),
                               hintText: 'Confirm New Password',
-                              hintStyle: TextStyle(fontFamily: "Montserrat"),
                               contentPadding: EdgeInsets.only(bottom: 5)),
                           style: TextStyle(
                             fontSize: 17,
@@ -189,8 +182,8 @@ class _MyHomePageState extends State<Changepassword> {
                                           WithdrawFund()));
                             },
                             style: ElevatedButton.styleFrom(
-                              primary: Colors.green, // Button color
-                              onPrimary: Colors.white, // Text color
+                              primary: Colors.green,
+                              onPrimary: Colors.white,
                             ),
                             child: SizedBox(
                                 width: 95,

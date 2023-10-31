@@ -26,42 +26,26 @@ class FundTransfer extends StatefulWidget {
 class _MyHomePageState extends State<FundTransfer> {
   bool isTextFieldEnabled = false;
   Future<http.Response>? __futureLogin;
+  late double floatBalance;
   final TextEditingController _EBalanceController = TextEditingController();
   bool _isFieldEmpty = false;
+  String password = '';
+  late String Balance = '',
+      TransactionPassword = "",
+      memberId = '',
+      UserName = '',
+      Name = '';
 
-  late String Balance = "";
   final TextEditingController _AmountController = TextEditingController();
+  final TextEditingController passwordcontroller = TextEditingController();
+  final TextEditingController _memberController = TextEditingController();
+
   void _validateAndSubmit() {
     setState(() {
       _isFieldEmpty = _AmountController.text.isEmpty;
       print('Submitted: ${_isFieldEmpty}');
       Fluttertoast.showToast(msg: 'Please Enter Withdraw Amount');
     });
-
-    if (!_isFieldEmpty) {
-      _function2();
-      // Perform your action with the non-empty value
-      print('Submitted: ${_AmountController.text}');
-    }
-  }
-
-  void _function2() async {
-    String memberid = await Prefs.getStringValue(Prefs.PREFS_USER_ID);
-    __futureLogin = ResponseHandler.performPost(
-        "WithdrawfundSave",
-        'MemberId=1000000'
-                '&Debit=' +
-            _AmountController.text);
-    __futureLogin?.then((value) {
-      print('Response body: ${value.body}');
-
-      String jsonResponse = ResponseHandler.parseData(value.body);
-
-      print('JSON Response: ${jsonResponse}');
-      Navigator.push(context,
-          MaterialPageRoute(builder: (BuildContext context) => IncomeReport()));
-    });
-    log('buttonPress' + _AmountController.text);
   }
 
   @override
@@ -70,38 +54,155 @@ class _MyHomePageState extends State<FundTransfer> {
     super.dispose();
   }
 
+  Future<void> _savewithdrawfund() async {
+    try {
+      memberId = await Prefs.getStringValue(Prefs.PREFS_USER_ID);
+      log("memberfhhjykkId" + memberId);
+      UserName = await Prefs.getStringValue(Prefs.PREFS_USER_NAME);
+      Name = await Prefs.getStringValue(Prefs.PREFS_NAME);
+
+      __futureLogin = ResponseHandler.performPost(
+          "WithdrawfundSave",
+          'MemberId=$memberId'
+                  '&Debit=' +
+              _AmountController.text);
+      __futureLogin?.then((value) {
+        print('Response body: ${value.body}');
+
+        String jsonResponse = ResponseHandler.parseData(value.body);
+
+        print('JSON Response: ${jsonResponse}');
+      });
+      log('buttonPress' + _AmountController.text);
+    } catch (e) {
+      print("Error: $e");
+      Fluttertoast.showToast(msg: "An error occurred");
+    }
+  }
+
+  Future<void> _loadmemberid() async {
+    try {
+      memberId = await Prefs.getStringValue(Prefs.PREFS_USER_ID);
+      log("memberfhhjykkId" + memberId);
+      UserName = await Prefs.getStringValue(Prefs.PREFS_USER_NAME);
+      Name = await Prefs.getStringValue(Prefs.PREFS_NAME);
+
+      __futureLogin = ResponseHandler.performPost(
+          "GetEwalletbalanceTranspwd", 'MemberId=$memberId');
+      __futureLogin?.then((value) {
+        print('Response body: ${value.body}');
+
+        String jsonResponse = ResponseHandler.parseData(value.body);
+
+        print('JSON Response: ${jsonResponse}');
+        String balance = "";
+        try {
+          //Map<String, dynamic> map = json.decode(jsonResponse);
+          List<dynamic> decodedJson = json.decode(jsonResponse);
+          Map<String, dynamic> firstUser = decodedJson[0];
+
+          print('CustomerId ${firstUser["CustomerId"]}');
+          print('Balance ${firstUser["Balance"]}');
+          setState(() {
+            Balance = double.parse(firstUser["Balance"].toString())
+                .toStringAsFixed(2);
+            TransactionPassword = firstUser["TransactionPassword"].toString();
+            print('Balance:$Balance');
+          });
+
+          print('TransactionPassword: ${firstUser["TransactionPassword"]}');
+          print('------------------');
+        } catch (error) {
+          Fluttertoast.showToast(msg: "Login Failed");
+          log(error.toString());
+        }
+      });
+    } catch (e) {
+      print("Error: $e");
+      Fluttertoast.showToast(msg: "An error occurred");
+    }
+  }
+
+  void validation() {
+    String amount = _AmountController.text;
+    String enteredPassword = passwordcontroller.text;
+    String MemberidController = _memberController.text;
+    double floatAmount;
+    floatBalance = double.parse(Balance);
+    print(floatBalance);
+    password = TransactionPassword;
+    try {
+      floatAmount = double.parse(amount);
+    } catch (FormatException) {
+      floatAmount = 0.0; // Set a default value if parsing fails
+    }
+
+    bool cancel = false;
+
+    if (MemberidController.isEmpty) {
+      cancel = true;
+      Fluttertoast.showToast(
+        msg: 'Enter To User ID',
+        gravity: ToastGravity.BOTTOM,
+        textColor: Colors.white,
+      );
+    } else if (enteredPassword.isEmpty) {
+      cancel = true;
+      Fluttertoast.showToast(
+        msg: 'Enter Transaction Password',
+        gravity: ToastGravity.BOTTOM,
+        textColor: Colors.white,
+      );
+    } else if (amount.isEmpty) {
+      cancel = true;
+      Fluttertoast.showToast(
+        msg: 'Enter Amount',
+        gravity: ToastGravity.BOTTOM,
+        textColor: Colors.white,
+      );
+    } else if (enteredPassword != password) {
+      cancel = true;
+      Fluttertoast.showToast(
+        msg: 'Passwords mismatch',
+        gravity: ToastGravity.BOTTOM,
+        textColor: Colors.white,
+      );
+    } else if (floatAmount <= 0) {
+      cancel = true;
+      Fluttertoast.showToast(
+        msg: 'Amount must be greater than zero',
+        gravity: ToastGravity.BOTTOM,
+        textColor: Colors.white,
+      );
+    } else if (floatAmount > floatBalance) {
+      cancel = true;
+      Fluttertoast.showToast(
+        msg: 'Available balance is low',
+        gravity: ToastGravity.BOTTOM,
+        textColor: Colors.white,
+      );
+    }
+
+    if (!cancel) {
+      _savewithdrawfund();
+      Fluttertoast.showToast(
+        msg: 'Fund Withdrawn Successfully',
+        gravity: ToastGravity.BOTTOM,
+        textColor: Colors.white,
+      );
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => Dashboard(
+              data: memberId,
+              data1: ''), // Replace with the actual name of your dashboard page
+        ),
+      );
+    }
+  }
+
   @override
   void initState() {
-    //String userid = Prefs.getStringValue(Prefs.PREFS_USER_ID);
-    __futureLogin = ResponseHandler.performPost(
-        "GetEwalletbalanceTranspwd", 'MemberId=1000000');
-    __futureLogin?.then((value) {
-      print('Response body: ${value.body}');
-
-      String jsonResponse = ResponseHandler.parseData(value.body);
-
-      print('JSON Response: ${jsonResponse}');
-      String balance = "";
-      try {
-        //Map<String, dynamic> map = json.decode(jsonResponse);
-        List<dynamic> decodedJson = json.decode(jsonResponse);
-        Map<String, dynamic> firstUser = decodedJson[0];
-
-        print('CustomerId ${firstUser["CustomerId"]}');
-        print('Balance ${firstUser["Balance"]}');
-        setState(() {
-          Balance = firstUser["Balance"].toString();
-
-          print('Balance:$Balance');
-        });
-
-        print('TransactionPassword: ${firstUser["TransactionPassword"]}');
-        print('------------------');
-      } catch (error) {
-        Fluttertoast.showToast(msg: "Login Failed");
-        log(error.toString());
-      }
-    });
+    _loadmemberid();
 
     super.initState();
   }
@@ -116,13 +217,17 @@ class _MyHomePageState extends State<FundTransfer> {
             Icons.arrow_back,
             color: Colors.black,
           ),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
         title: Text(
           'Fund Transfer',
           style: TextStyle(
               color: Colors.black, fontSize: 17, fontWeight: FontWeight.bold),
         ),
+        titleSpacing: 15,
+        leadingWidth: 30,
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 16.0, bottom: 10),
@@ -152,22 +257,23 @@ class _MyHomePageState extends State<FundTransfer> {
                             "assets/images/rupee.png",
                             height: 40,
                             width: 40,
-                            color: Colors.green,
+                            color: Color(0xFF007E01),
                           ),
-                          SizedBox(height: 8),
+                          SizedBox(height: 5),
                           SizedBox(
                             width: 280,
-                            child: Text(Balance,
+                            child: Text("₹" + Balance,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 20)),
+                                    fontWeight: FontWeight.bold, fontSize: 30)),
                           ),
-                          SizedBox(height: 8),
+                          SizedBox(height: 4),
                           SizedBox(
                             width: 310,
                             child: Text('Available E - Wallet Balance',
                                 textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 13)),
+                                style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.w500)),
                           ),
                         ],
                       ),
@@ -195,18 +301,17 @@ class _MyHomePageState extends State<FundTransfer> {
                             Image.asset(
                               'assets/images/profile_icon.png',
                               cacheHeight: 20,
-                              color: Colors.green,
+                              color: Color(0xFF007E01),
                               cacheWidth: 20,
                             ),
                             SizedBox(
                               width: 25,
                             ),
-                            Text("UserName",
+                            Text(UserName,
                                 style: TextStyle(
-                                    fontFamily: "Montserrat",
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black54)),
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black)),
                           ],
                         ),
                       ),
@@ -214,7 +319,7 @@ class _MyHomePageState extends State<FundTransfer> {
                       SizedBox(
                         height: 45,
                         child: TextField(
-                          controller: _AmountController,
+                          controller: _memberController,
                           decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               prefixIcon: Image.asset(
@@ -222,16 +327,16 @@ class _MyHomePageState extends State<FundTransfer> {
                                   alignment: Alignment.center,
                                   cacheHeight: 20,
                                   cacheWidth: 20,
-                                  color: Colors.green),
+                                  color: Color(0xFF007E01)),
                               hintText: 'Transer to MemberId',
                               errorText: _isFieldEmpty
                                   ? 'Field can\'t be empty'
                                   : null,
-                              hintStyle: TextStyle(fontFamily: "Montserrat"),
                               contentPadding: EdgeInsets.only(bottom: 5)),
                           style: TextStyle(
-                            fontSize: 17,
-                          ),
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black),
                         ),
                       ),
                       SizedBox(height: 16),
@@ -239,6 +344,7 @@ class _MyHomePageState extends State<FundTransfer> {
                         height: 45,
                         width: 300,
                         child: TextField(
+                          controller: _AmountController,
                           decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               prefixIcon: Image.asset(
@@ -246,13 +352,13 @@ class _MyHomePageState extends State<FundTransfer> {
                                   alignment: Alignment.center,
                                   cacheHeight: 20,
                                   cacheWidth: 20,
-                                  color: Colors.green),
+                                  color: Color(0xFF007E01)),
                               hintText: 'Enter Amount to Transfer',
-                              hintStyle: TextStyle(fontFamily: "Montserrat"),
                               contentPadding: EdgeInsets.only(bottom: 5)),
                           style: TextStyle(
-                            fontSize: 17,
-                          ),
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black),
                         ),
                       ),
                       SizedBox(height: 16),
@@ -260,6 +366,8 @@ class _MyHomePageState extends State<FundTransfer> {
                         height: 45,
                         width: 300,
                         child: TextField(
+                          obscureText: true,
+                          controller: passwordcontroller,
                           decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               prefixIcon: Image.asset(
@@ -267,13 +375,13 @@ class _MyHomePageState extends State<FundTransfer> {
                                   alignment: Alignment.center,
                                   cacheHeight: 20,
                                   cacheWidth: 20,
-                                  color: Colors.green),
+                                  color: Color(0xFF007E01)),
                               hintText: 'Enter Transaction Password',
-                              hintStyle: TextStyle(fontFamily: "Montserrat"),
                               contentPadding: EdgeInsets.only(bottom: 5)),
                           style: TextStyle(
-                            fontSize: 17,
-                          ),
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black),
                         ),
                       ),
                       SizedBox(height: 16),
@@ -282,45 +390,49 @@ class _MyHomePageState extends State<FundTransfer> {
                         children: [
                           ElevatedButton(
                             onPressed: () {
-                              _function2();
+                              validation();
                             },
                             style: ElevatedButton.styleFrom(
-                              primary: Colors.deepPurpleAccent, // Button color
-                              onPrimary: Colors.white, // Text color
+                              primary: Colors.indigoAccent, // Button color
+                              onPrimary: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    10), // Adjust the radius as needed
+                              ), // Text color
                             ),
                             child: SizedBox(
-                                width: 115.5,
+                                width: 129,
                                 height: 45,
                                 child: Center(
                                   child: Text(
                                     'Transfer Amount',
                                     style: TextStyle(
-                                      fontSize: 15,
+                                      fontSize: 17,
                                     ),
                                   ),
                                 )),
                           ),
                           SizedBox(
-                            width: 10,
+                            width: 5,
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          Payouts()));
+                              Navigator.pop(context);
                             },
                             style: ElevatedButton.styleFrom(
-                              primary: Colors.green, // Button color
-                              onPrimary: Colors.white, // Text color
+                              primary: Color(0xFF007E01), // Button color
+                              onPrimary: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    10), // Adjust the radius as needed
+                              ), // Text color
                             ),
                             child: SizedBox(
-                                width: 115,
+                                width: 110,
                                 height: 45,
                                 child: Center(
                                   child: Text(
-                                    'Close',
+                                    'Cancel',
                                     style: TextStyle(
                                       fontSize: 17,
                                     ),

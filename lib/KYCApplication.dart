@@ -5,8 +5,6 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:login_project_sample/KYCProcessing.dart';
 import 'package:login_project_sample/utils/response_handler.dart';
-import 'package:login_project_sample/utils/shared_preferences.dart';
-import 'package:quickalert/quickalert.dart';
 
 void main() {
   runApp(KYCApplication());
@@ -117,11 +115,13 @@ class _MyHomePageState extends State<MyHomePage> {
           style: TextStyle(
               color: Colors.black, fontSize: 17, fontWeight: FontWeight.bold),
         ),
+        titleSpacing: 15,
+        leadingWidth: 30,
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 16.0, bottom: 10),
             child: Image.asset(
-              'assets/images/logor.jpg', // Replace 'your_image.png' with your image asset path
+              'assets/images/logor.jpg',
               width: 90,
               height: 35,
             ),
@@ -145,9 +145,9 @@ class _MyHomePageState extends State<MyHomePage> {
                           vertical: 10, horizontal: 8),
                       child: Text("KYC Verification",
                           style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                              fontFamily: "Montserrat")),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          )),
                     ),
                     Divider(thickness: 2),
                     Padding(
@@ -155,10 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Text(
                         "To comply with regulation, each participant will have to go through identity verification (KYC/AML) to prevent fraud causes.",
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontFamily: "Montserrat",
-                            color: Colors.black),
+                        style: TextStyle(fontSize: 16, color: Colors.black),
                       ),
                     ),
                     Padding(
@@ -166,10 +163,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Text(
                         "          Please complete our fast and \n          secure verification process to\n          participate in our token sale.",
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontFamily: "Montserrat",
-                            color: Colors.black),
+                        style: TextStyle(fontSize: 16, color: Colors.black),
                       ),
                     ),
                     Align(
@@ -188,7 +182,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         style: TextStyle(
                             color: Colors.black,
                             fontSize: 18,
-                            fontFamily: "Montserrat",
                             fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -200,7 +193,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.black,
-                          fontFamily: "Montserrat",
                         ),
                       ),
                     ),
@@ -233,8 +225,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         style: ElevatedButton.styleFrom(
                           primary: Colors.green, // Change button color to green
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                                25), // Circular radius of 15
+                            borderRadius: BorderRadius.circular(25),
                           ),
                         ),
                         child: Text("CLICK TO COMPLETE YOUR KYC",

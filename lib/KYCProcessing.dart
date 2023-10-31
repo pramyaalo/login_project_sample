@@ -4,9 +4,12 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:login_project_sample/KYCList.dart';
 import 'package:login_project_sample/utils/response_handler.dart';
 import 'dart:io';
+import 'package:get/get.dart';
+import 'package:login_project_sample/utils/shared_preferences.dart';
 
 void main() {
   runApp(KYCProcessing());
@@ -27,7 +30,52 @@ class KycVerificationScreen extends StatefulWidget {
 }
 
 class _KycVerificationScreenState extends State<KycVerificationScreen> {
-  String? base64Image;
+  var selectedDate = DateTime.now().obs;
+  String SelectedValue = '';
+  String status = "1";
+  int selectstatus = -1;
+  TextEditingController dateController = TextEditingController();
+  late String memberId;
+  void chooseDate() async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: selectedDate.value,
+      firstDate: DateTime(1800),
+      lastDate: DateTime(2024),
+      helpText: 'Select DOB',
+      cancelText: 'Close',
+      confirmText: 'Confirm',
+      errorFormatText: 'Enter a valid date',
+      errorInvalidText: 'Enter a valid date range',
+      fieldLabelText: 'DOB',
+      fieldHintText: 'Month/Date/Year',
+    );
+    if (pickedDate != null && pickedDate != selectedDate.value) {
+      selectedDate.value = pickedDate;
+      dateController.text = DateFormat('dd/MM/yyyy').format(pickedDate);
+    }
+  }
+
+  bool disableDate(DateTime day) {
+    if ((day.isAfter(DateTime.now().subtract(Duration(days: 1))) &&
+        day.isBefore(DateTime.now().add(Duration(days: 5))))) {
+      return true;
+    }
+    return false;
+  }
+
+  String FirstName = '',
+      LastName = '',
+      EMail = '',
+      Address1 = '',
+      Address2 = '',
+      DOB = '',
+      State = '',
+      City = '',
+      ZipCode = '',
+      Country = '',
+      MobileNumber = '';
+  String? base64Image, imageToUpload;
   String? PassportByHand;
 
   String? NationalIdImage;
@@ -40,13 +88,11 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
   Future<http.Response>? __futureLogin;
   bool isProofCopyVisible = true;
   bool isPhotoFaceVisible = true;
-  DateTime selectedDate = DateTime.now();
   String checkboxStatus = "0";
   String checkboxStatus1 = "0";
   TextEditingController textFNameController = TextEditingController();
   TextEditingController textLNameController = TextEditingController();
   TextEditingController textMNumberController = TextEditingController();
-  TextEditingController textDOBController = TextEditingController();
   TextEditingController textEMailController = TextEditingController();
   TextEditingController textAddress1Controller = TextEditingController();
   TextEditingController textAddress2Controller = TextEditingController();
@@ -84,21 +130,43 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
     FocusFirstName.requestFocus();
   }
 
-  Future<void> selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
-    );
+  Future<void> _loadImage() async {
+    print('stvv5yatus:${base64Image}');
+    imageToUpload = base64Image;
+    try {
+      print('status:${status}');
+      if (status == "1") {
+        imageToUpload = base64Image!;
+        print('imageTorttUpload: $imageToUpload');
+      } else if (status == "5") {
+        imageToUpload = PassportByHand;
+      } else if (status == "2") {
+        imageToUpload = NationalIdImage;
+      } else if (status == "3") {
+        imageToUpload = NationalIdBack;
+      } else if (status == "4") {
+        imageToUpload = DriverLicencecopy;
+      } else if (status == "6") {
+        imageToUpload = DiverLicenceCopyHand;
+      } else {
+        imageToUpload = NationalIdCopyHand;
+        print('imageToUpload: $imageToUpload');
+      }
+      print('Image to Upload: $imageToUpload');
 
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
+      __futureLogin = ResponseHandler.performPost("KycUploadImage",
+          'ID=$memberId&Colname=$SelectedValue&KeyValue=$imageToUpload');
+      print('Respfhgfgonse body: ${SelectedValue}${imageToUpload}');
+      __futureLogin?.then((value) {
+        print('Respuiewweonse body: ${value.body}');
+
+        String jsonResponse = ResponseHandler.parseData(value.body);
+
+        print('JSONerty Response: ${jsonResponse}');
       });
-
-      String formattedDate = "${picked.year}-${picked.month}-${picked.day}";
-      print('Selected date: $formattedDate');
+    } catch (e) {
+      print("Error: $e");
+      Fluttertoast.showToast(msg: "An error occurred");
     }
   }
 
@@ -114,6 +182,7 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
         base64Image = encodedImage;
         print('baseeeeeeb4:$base64Image');
       });
+      _loadImage();
     }
   }
 
@@ -129,6 +198,7 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
         DriverLicencecopy = encodedImage;
         print('baseeeeeeb4:$DriverLicencecopy');
       });
+      _loadImage();
     }
   }
 
@@ -144,6 +214,7 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
         DiverLicenceCopyHand = encodedImage;
         print('baseeeeeeb4:$DiverLicenceCopyHand');
       });
+      _loadImage();
     }
   }
 
@@ -159,6 +230,7 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
         NationalIdImage = encodedImage;
         print('baseeeeeeb4:$NationalIdImage');
       });
+      _loadImage();
     }
   }
 
@@ -174,6 +246,7 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
         NationalIdBack = encodedImage;
         print('baseeeeeeb4:$NationalIdBack');
       });
+      _loadImage();
     }
   }
 
@@ -189,6 +262,7 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
         NationalIdCopyHand = encodedImage;
         print('baseeeeeeb4:$NationalIdCopyHand');
       });
+      _loadImage();
     }
   }
 
@@ -206,22 +280,23 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
         PassportByHand = encodedImage;
         print('baseeeeeeb4:$PassportByHand');
       });
+      _loadImage();
     }
   }
   //_openPassportGallery
 
   void validateTextField() {
-    String FirstName = textFNameController.text.trim();
-    String LastName = textLNameController.text.trim();
-    String EMail = textEMailController.text.trim();
-    String Address1 = textAddress1Controller.text.trim();
-    String Address2 = textAddress2Controller.text.trim();
-    String DOB = textDOBController.text.trim();
-    String State = textStateController.text.trim();
-    String City = textCityController.text.trim();
-    String ZipCode = textZipCodeController.text.trim();
-    String Country = textCountryController.text.trim();
-    String MobileNumber = textMNumberController.text.trim();
+    FirstName = textFNameController.text.trim();
+    LastName = textLNameController.text.trim();
+    EMail = textEMailController.text.trim();
+    Address1 = textAddress1Controller.text.trim();
+    Address2 = textAddress2Controller.text.trim();
+    DOB = dateController.text.trim();
+    State = textStateController.text.trim();
+    City = textCityController.text.trim();
+    ZipCode = textZipCodeController.text.trim();
+    Country = textCountryController.text.trim();
+    MobileNumber = textMNumberController.text.trim();
     if (checkboxStatus == "0") {
       Fluttertoast.showToast(
         msg: 'Please accept Terms and Conditions',
@@ -229,7 +304,7 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
         textColor: Colors.white,
       );
     }
-    if (checkboxStatus1 == "0") {
+    if (checkboxStatus1 == "") {
       Fluttertoast.showToast(
         msg: 'Please accept Terms and Conditions',
         gravity: ToastGravity.BOTTOM,
@@ -326,38 +401,43 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
       );
       FocusCountry.requestFocus();
     }
+    _uploadImageAndRegister();
+  }
+
+  Future<void> _uploadImageAndRegister() async {
+    memberId = await Prefs.getStringValue(Prefs.PREFS_USER_ID);
+
+    log("memberId" + memberId!);
     __futureLogin = ResponseHandler.performPost(
         "KYCAdd",
-        'customerid=1000000'
-                '&date=&firstname=' +
-            textFNameController.text +
-            '&lastname=' +
-            textLNameController.text +
-            '&phone=' +
-            textMNumberController.text +
-            '&dob=' +
-            textDOBController.text +
-            '&gender=&telegram=&address1=' +
-            textAddress1Controller.text +
-            '&address2=' +
-            textAddress2Controller.text +
-            '&state=' +
-            textStateController.text +
-            '&city=' +
-            textCityController.text +
-            '&zip=' +
-            textZipCodeController.text +
-            '&country=' +
-            textCountryController.text +
-            '&submitdate=&submitkby=');
+        'customerid=$memberId&date=&firstname=$FirstName&lastname=$LastName'
+            '&phone=$MobileNumber&dob=$DOB&gender=1&telegram='
+            '&address1=$Address1&address2=$Address2'
+            '&state=$State&city=$City&zip=$ZipCode'
+            '&country=$Country&submitdate=&submitkby=');
+    print('Customer ID: $memberId');
+    print('Date: ');
+    print('First Name: ${textFNameController.text}');
+    print('Last Name: ${textLNameController.text}');
+    print('Phone: ${textMNumberController.text}');
+    print('Date of Birth: ${dateController.text}');
+    print('Gender: ');
+    print('Telegram: ');
+    print('Address 1: ${textAddress1Controller.text}');
+    print('Address 2: ${textAddress2Controller.text}');
+    print('State: ${textStateController.text}');
+    print('City: ${textCityController.text}');
+    print('ZIP Code: ${textZipCodeController.text}');
+    print('Country: ${textCountryController.text}');
+    print('Submit Date: ');
+    print('Submitted by: ');
+
     __futureLogin?.then((value) {
       print('Response body: ${value.body}');
 
       String jsonResponse = ResponseHandler.parseData(value.body);
 
       print('JSON Response: ${jsonResponse}');
-      Navigator.push(context,
-          MaterialPageRoute(builder: (BuildContext context) => KYCList()));
     });
   }
 
@@ -457,7 +537,7 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
     }
   }
 
-  Future<void> _openDriverLicenseCopyHandCamera() async {
+  Future<void> _openDriverLienseCopyHandCamera() async {
     final picker = ImagePicker();
     final pickedFile = await picker.getImage(source: ImageSource.camera);
 
@@ -475,6 +555,7 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
   //_openNtionalIdCopyHand
   //_openDriverLicenceId
   Future _showSelectionDialog(BuildContext context) {
+    selectstatus = 1;
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -572,6 +653,7 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
   }
 
   Future _showNationalId(BuildContext context) {
+    selectstatus = 2;
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -669,6 +751,7 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
   }
 
   Future _showNationalIdBack(BuildContext context) {
+    selectstatus = 2;
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -766,6 +849,7 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
   }
 
   Future _OpenNationalCopyHand(BuildContext context) {
+    selectstatus = 2;
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -862,7 +946,8 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
         });
   }
 
-  Future _OpenDriverLicenceID(BuildContext context) {
+  Future _showDriverLicenceID(BuildContext context) {
+    selectstatus = 3;
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -960,6 +1045,7 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
   }
 
   Future _showPassportByHand(BuildContext context) {
+    selectstatus = 1;
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -1057,6 +1143,7 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
   }
 
   Future _showDriverLicenseCopyHand(BuildContext context) {
+    selectstatus = 3;
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -1119,7 +1206,7 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
                             style:
                                 TextStyle(fontSize: 13, color: Colors.black))),
                     onTap: () {
-                      _openDriverLicenseCopyHandCamera();
+                      _openDriverLienseCopyHandCamera();
                       Navigator.of(context).pop(); // Close the dialog
                     },
                   ),
@@ -1165,7 +1252,8 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
               // Handle back button action
             },
           ),
-          title: Text('KYC Verification Details'),
+          title: Text('KYC Verification Details'), titleSpacing: 15,
+          leadingWidth: 30,
         ),
         body: SingleChildScrollView(
             child: Padding(
@@ -1257,8 +1345,7 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
                           textAlignVertical: TextAlignVertical.bottom,
                           decoration: InputDecoration(
                             hintText: 'Firstname',
-                            hintStyle: TextStyle(fontFamily: "Montserrat"),
-                            border: OutlineInputBorder(
+                             border: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.white),
                             ),
                           ),
@@ -1281,7 +1368,7 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
                           textAlignVertical: TextAlignVertical.bottom,
                           decoration: InputDecoration(
                             hintText: 'Lastname',
-                            hintStyle: TextStyle(fontFamily: "Montserrat"),
+
                             border: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.white),
                             ),
@@ -1306,7 +1393,7 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
                           textAlignVertical: TextAlignVertical.bottom,
                           decoration: InputDecoration(
                             hintText: 'Phone Number',
-                            hintStyle: TextStyle(fontFamily: "Montserrat"),
+
                             border: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.white),
                             ),
@@ -1325,16 +1412,25 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
                         height: 45,
                         width: 310,
                         child: TextField(
-                          controller: textDOBController,
-                          focusNode: FocusDOB,
-                          textAlignVertical: TextAlignVertical.bottom,
+                          onTap: () {},
                           decoration: InputDecoration(
-                            hintText: 'Date of Birth',
-                            hintStyle: TextStyle(fontFamily: "Montserrat"),
+                            hintText: 'Select DOB',
+                            suffixIcon: GestureDetector(
+                              onTap: () {
+                                chooseDate();
+                              },
+                              child: Image.asset('assets/images/calendar.png',
+                                  cacheWidth: 25,
+                                  cacheHeight:
+                                      25), // Replace with your desired icon
+                            ),
                             border: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.white),
                             ),
                           ),
+                          readOnly: true,
+                          controller:
+                              dateController, // Use the TextEditingController
                         ),
                       ),
                       SizedBox(height: 10),
@@ -1348,8 +1444,7 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
                           textAlignVertical: TextAlignVertical.bottom,
                           decoration: InputDecoration(
                             hintText: 'Email Address',
-                            hintStyle: TextStyle(fontFamily: "Montserrat"),
-                            border: OutlineInputBorder(
+                             border: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.white),
                             ),
                           ),
@@ -1372,8 +1467,7 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
                           textAlignVertical: TextAlignVertical.bottom,
                           decoration: InputDecoration(
                             hintText: 'Address Line 1',
-                            hintStyle: TextStyle(fontFamily: "Montserrat"),
-                            border: OutlineInputBorder(
+                             border: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.white),
                             ),
                           ),
@@ -1396,8 +1490,7 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
                           textAlignVertical: TextAlignVertical.bottom,
                           decoration: InputDecoration(
                             hintText: 'Address Line 2',
-                            hintStyle: TextStyle(fontFamily: "Montserrat"),
-                            border: OutlineInputBorder(
+                             border: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.white),
                             ),
                           ),
@@ -1420,8 +1513,7 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
                           textAlignVertical: TextAlignVertical.bottom,
                           decoration: InputDecoration(
                             hintText: 'State',
-                            hintStyle: TextStyle(fontFamily: "Montserrat"),
-                            border: OutlineInputBorder(
+                             border: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.white),
                             ),
                           ),
@@ -1444,8 +1536,7 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
                           textAlignVertical: TextAlignVertical.bottom,
                           decoration: InputDecoration(
                             hintText: 'City',
-                            hintStyle: TextStyle(fontFamily: "Montserrat"),
-                            border: OutlineInputBorder(
+                             border: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.white),
                             ),
                           ),
@@ -1469,8 +1560,7 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
                           textAlignVertical: TextAlignVertical.bottom,
                           decoration: InputDecoration(
                             hintText: 'Zip Code',
-                            hintStyle: TextStyle(fontFamily: "Montserrat"),
-                            border: OutlineInputBorder(
+                             border: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.white),
                             ),
                           ),
@@ -1493,8 +1583,7 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
                           textAlignVertical: TextAlignVertical.bottom,
                           decoration: InputDecoration(
                             hintText: 'Country',
-                            hintStyle: TextStyle(fontFamily: "Montserrat"),
-                            border: OutlineInputBorder(
+                             border: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.white),
                             ),
                           ),
@@ -1976,6 +2065,11 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
                               children: [
                                 ElevatedButton(
                                   onPressed: () {
+                                    setState(() {
+                                      SelectedValue = 'Passport';
+                                      status = "1";
+                                    });
+
                                     _showSelectionDialog(context);
                                   },
                                   style: ElevatedButton.styleFrom(
@@ -2016,6 +2110,8 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
                               children: [
                                 ElevatedButton(
                                   onPressed: () {
+                                    SelectedValue = 'passportphoto';
+                                    status = "5";
                                     _showPassportByHand(context);
                                   },
                                   style: ElevatedButton.styleFrom(
@@ -2062,6 +2158,8 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
                               children: [
                                 ElevatedButton(
                                   onPressed: () {
+                                    SelectedValue = 'idfront';
+                                    status = "2";
                                     _showNationalId(context);
                                   },
                                   style: ElevatedButton.styleFrom(
@@ -2102,6 +2200,8 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
                               children: [
                                 ElevatedButton(
                                   onPressed: () {
+                                    SelectedValue = 'idback';
+                                    status = "3";
                                     _showNationalIdBack(context);
                                   },
                                   style: ElevatedButton.styleFrom(
@@ -2142,6 +2242,8 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
                               children: [
                                 ElevatedButton(
                                   onPressed: () {
+                                    SelectedValue = 'nationalidphoto';
+                                    status = "7";
                                     _OpenNationalCopyHand(context);
                                   },
                                   style: ElevatedButton.styleFrom(
@@ -2188,7 +2290,9 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
                               children: [
                                 ElevatedButton(
                                   onPressed: () {
-                                    _OpenDriverLicenceID(context);
+                                    SelectedValue = 'driver';
+                                    status = "4";
+                                    _showDriverLicenceID(context);
                                   },
                                   style: ElevatedButton.styleFrom(
                                     primary: Color(0xFF007E01),
@@ -2228,6 +2332,8 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
                               children: [
                                 ElevatedButton(
                                   onPressed: () {
+                                    SelectedValue = 'driverphoto';
+                                    status = "6";
                                     _showDriverLicenseCopyHand(context);
                                   },
                                   style: ElevatedButton.styleFrom(
@@ -2282,10 +2388,9 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
                               value: checkboxStatus1 == "1",
                               onChanged: (bool? newValue) {
                                 setState(() {
-                                  checkboxStatus1 =
-                                      newValue == true ? "1" : "0";
+                                  checkboxStatus = newValue == true ? "1" : "0";
                                 });
-                                print('cjeckbosfstsyd:$checkboxStatus1');
+                                print('cjeckbosfstsyd:$checkboxStatus');
                               }),
                           Text(
                               'I have read the terms and Condition and \n Privacy and Policy.',
@@ -2295,7 +2400,7 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          // Handle "Process for Verify" button click
+                          validateTextField();
                         },
                         style: ElevatedButton.styleFrom(
                           primary: Colors.blue, // Change to your desired color
@@ -2353,7 +2458,7 @@ class _KycVerificationScreenState extends State<KycVerificationScreen> {
     textCountryController.dispose();
     textCityController.dispose();
     textZipCodeController.dispose();
-    textDOBController.dispose();
+    dateController.dispose();
     super.dispose();
   }
 }

@@ -60,7 +60,7 @@ class _MyScreenState extends State<MyScreen> {
               'Worst',
               style: TextStyle(
                   color: Colors.purple,
-                  fontFamily: "Montserrat",
+
                   fontSize: 17,
                   fontWeight: FontWeight.bold),
             ),

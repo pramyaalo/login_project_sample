@@ -31,7 +31,8 @@ class _MyHomePageState extends State<ChangeTransactionpassword> {
           'Transaction Password',
           style: TextStyle(
               color: Colors.black, fontSize: 17, fontWeight: FontWeight.bold),
-        ),
+        ), titleSpacing: 15,
+        leadingWidth: 30,
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 16.0, bottom: 10),
@@ -103,8 +104,7 @@ class _MyHomePageState extends State<ChangeTransactionpassword> {
                                   cacheHeight: 20,
                                   cacheWidth: 20),
                               hintText: 'Old Password',
-                              hintStyle: TextStyle(fontFamily: "Montserrat"),
-                              contentPadding: EdgeInsets.only(bottom: 5)),
+                               contentPadding: EdgeInsets.only(bottom: 5)),
                           style: TextStyle(
                             fontSize: 17,
                           ),
@@ -122,8 +122,7 @@ class _MyHomePageState extends State<ChangeTransactionpassword> {
                                   cacheHeight: 20,
                                   cacheWidth: 20),
                               hintText: 'New Password',
-                              hintStyle: TextStyle(fontFamily: "Montserrat"),
-                              contentPadding: EdgeInsets.only(bottom: 5)),
+                               contentPadding: EdgeInsets.only(bottom: 5)),
                           style: TextStyle(
                             fontSize: 17,
                           ),
@@ -142,8 +141,7 @@ class _MyHomePageState extends State<ChangeTransactionpassword> {
                                   cacheHeight: 20,
                                   cacheWidth: 20),
                               hintText: 'Confirm New Password',
-                              hintStyle: TextStyle(fontFamily: "Montserrat"),
-                              contentPadding: EdgeInsets.only(bottom: 5)),
+                               contentPadding: EdgeInsets.only(bottom: 5)),
                           style: TextStyle(
                             fontSize: 17,
                           ),
